@@ -22,4 +22,11 @@ public class ScalarToken extends Token{
     public ScalarToken(String value,boolean plain){
         this((char)0, value, plain);
     }
+
+    @Override
+    public String toString() {
+        return super.toString() + "{value= " + value
+                + "} {style= " + style
+                + "} {plain= " + plain + "}";
+    }
 }

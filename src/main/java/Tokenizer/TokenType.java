@@ -16,6 +16,6 @@ public enum TokenType {
 
     @Override
     public String toString() {
-        return name().replace("_"," ");
+        return name().replace('_',' ');
     }
 }

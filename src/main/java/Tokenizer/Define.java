@@ -22,7 +22,12 @@ public class Define {
     public final static String ALPHA = "abcdefghijklmnopqrstuvwxyz0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
     public final static String NOT_ALPHA_OR_NUM = "\0 \t\r\n\u0085?:,]}%@`";
 
+    public final static String NULL_OR_OTHER = "\0 \t\r\n\u0085";
+    public final static String NON_ALPHA_OR_NUM = "\0 \t\r\n\u0085?:,]}%@`";
     public final static String S4 = "\0 \t\r\n\u0028[]{}";
+
+    public final static String SPACES_AND_STUFF = "'\"\\\0 \t\r\n\u0085";
+    public final static String DOUBLE_ESC = "\"\\";
 
     public final static Pattern R_FLOW_ZERO = Pattern.compile("[\0 \t\r\n\u0085]|(:[\0 \t\r\n\u0085])");
     public final static Pattern R_FLOW_NOT_ZERO = Pattern.compile("[\0 \t\r\n\u0085\\[\\]{},:?]");
