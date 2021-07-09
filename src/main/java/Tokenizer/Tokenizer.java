@@ -87,18 +87,15 @@ public class Tokenizer {
             case '"'  :
                 fetchFlowScalar('"');
                 return;
-            case '?'  :
-                if (ts.canGetKV()) {
-                    fetchKey();
-                    return;
-                }
-                break;
             case ':'  :
                 if(ts.canGetKV()) {
                     fetchValue();
                     return;
                 }
                 break;
+            case '!' :
+                fetchClassName();
+                return;
         }
         if(Define.BEG.matcher(ts.getString(2)).find())
             fetchPlain();
@@ -142,18 +139,10 @@ public class Tokenizer {
         tokens.add(Token.VALUE);
     }
 
-    private void fetchKey() {
-        if(ts.getDepth() == 0) {
-            if(!ts.isTkGetAble()){
-                throw new TokenizerException("Found a mapping key where it is not allowed.");
-            }
-            if(ts.addIndent()) {
-                tokens.add(Token.BLOCK_MAPPING_START);
-            }
-        }
-        ts.setTkGetAble(ts.isDepthZero());
-        ts.toNext();
-        tokens.add(Token.VALUE);
+    private void fetchClassName() {
+        savePossibleTokenKey();
+        ts.setTkGetAble(false);
+        tokens.add(ts.scanClassName());
     }
 
     private void fetchPlain() {

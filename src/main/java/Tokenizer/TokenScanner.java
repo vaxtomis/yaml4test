@@ -239,6 +239,29 @@ public class TokenScanner {
     }
 
     /**
+     *
+     */
+    public Token scanClassName() {
+        int length = 1;
+        char ch = bf.peek(length++);
+        if(Define.FULL_LINEBREAK.indexOf(ch) != -1 || ch == '.'){
+            throw new TokenScanningException("Scanning class name but find linebreaks and '.' .");
+        }
+        StringBuilder chunks = new StringBuilder();
+        boolean doubleDot = false;
+        while(Define.ALPHA.indexOf(ch) != -1 || ch == '.') {
+            if (ch == '.' && doubleDot){
+                throw new TokenScanningException("Scanning class name but find wrong format.");
+            }
+            doubleDot = false;
+            if(ch == '.') doubleDot = true;
+            chunks.append(ch);
+            ch = bf.peek(length++);
+        }
+        return new ClassNameToken(chunks.toString());
+    }
+
+    /**
      * Scan the linebreak.
      * @return boolean
      * */

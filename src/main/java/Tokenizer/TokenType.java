@@ -7,6 +7,7 @@ public enum TokenType {
     KEY,
     VALUE,
     SCALAR,
+    CLASSNAME,
     STREAM_START,
     STREAM_END,
     BLOCK_MAPPING_START,

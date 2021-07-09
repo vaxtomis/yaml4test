@@ -1,2 +1,5 @@
-?ABC
-AAA: BBB
+A:
+  !class.name
+  B: b
+  C: c
+  D: d
