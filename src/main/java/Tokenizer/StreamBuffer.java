@@ -83,6 +83,7 @@ public class StreamBuffer {
         if(cursor + offset >= builder.length()){
             flushIn(1 + offset);
         }
+        //System.out.println(builder.charAt(cursor + offset));
         return builder.charAt(cursor + offset);
     }
 

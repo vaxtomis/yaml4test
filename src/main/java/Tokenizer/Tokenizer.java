@@ -88,11 +88,17 @@ public class Tokenizer {
                 fetchFlowScalar('"');
                 return;
             case '?'  :
-                if (ts.canGetKV()) fetchKey();
-                return;
+                if (ts.canGetKV()) {
+                    fetchKey();
+                    return;
+                }
+                break;
             case ':'  :
-                if(ts.canGetKV()) fetchValue();
-                return;
+                if(ts.canGetKV()) {
+                    fetchValue();
+                    return;
+                }
+                break;
         }
         if(Define.BEG.matcher(ts.getString(2)).find())
             fetchPlain();
