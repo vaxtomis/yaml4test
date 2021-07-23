@@ -142,6 +142,7 @@ public class Tokenizer {
     private void fetchClassName() {
         savePossibleTokenKey();
         ts.setTkGetAble(false);
+        ts.toNext();
         tokens.add(ts.scanClassName());
     }
 

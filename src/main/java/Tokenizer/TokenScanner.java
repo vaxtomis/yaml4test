@@ -126,7 +126,7 @@ public class TokenScanner {
         char quote = bf.peek();
         bf.forward();
         chunks.append(scanFlowScalarNonSpaces(dbl));
-        while (bf.peek() != quote) {
+        while(bf.peek() != quote) {
             chunks.append(scanFlowScalarSpaces());
             chunks.append(scanFlowScalarNonSpaces(dbl));
         }
@@ -239,10 +239,11 @@ public class TokenScanner {
     }
 
     /**
-     *
+     * Scan the Class Name like {xxx.xxx.xxx}
+     * @return Token
      */
     public Token scanClassName() {
-        int length = 1;
+        int length = 0;
         char ch = bf.peek(length++);
         if(Define.FULL_LINEBREAK.indexOf(ch) != -1 || ch == '.'){
             throw new TokenScanningException("Scanning class name but find linebreaks and '.' .");
@@ -258,6 +259,7 @@ public class TokenScanner {
             chunks.append(ch);
             ch = bf.peek(length++);
         }
+        bf.forward(length);
         return new ClassNameToken(chunks.toString());
     }
 
