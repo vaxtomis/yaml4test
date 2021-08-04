@@ -4,36 +4,32 @@ package Parser;
 import Tokenizer.Tokenizer;
 import Tokenizer.Token;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
-import java.util.Iterator;
-
 /**
  * @description:
  * @author: vaxtomis
- * @date: 2021/7/23
  */
 public class Parser {
     private Tokenizer tokenizer;
-    private SlidingWin slidingWin;
+    private Parser.SlidingWindow slidingWindow;
+    private EventQueue queue;
     private boolean flagTokensEnd = false;
 
-    public Parser(Tokenizer tokenizer) {
-        this.tokenizer = tokenizer;
+    public Parser(String yaml) {
+        this.tokenizer = new Tokenizer(yaml);
+        this.slidingWindow = new SlidingWindow();
     }
 
     /**
-     *
+     * @description: Sliding Window. Used to store recently used tokens.
      */
-    class SlidingWin {
+    class SlidingWindow {
         private int count = 0;
         private Token[] tks = new Token[3];
-
         public void forward() {
-            if(flagTokensEnd) return;
+            if (flagTokensEnd) return;
             Token tk = tokenizer.getNextToken();
-            if(tk != null) {
-                if(count < 3) {
+            if (tk != null) {
+                if (count < 3) {
                     tks[count++] = tk;
                 } else {
                     tks[0] = tks[1];
@@ -44,8 +40,36 @@ public class Parser {
                 flagTokensEnd = true;
             }
         }
+
+        public boolean fillTheWindow() {
+            while (count < 3) {
+                forward();
+            }
+            return !flagTokensEnd;
+        }
+
+        public Token getCurToken() {
+            if (count == 0) return null;
+            if (count < 3) {
+                return tks[tks.length-1];
+            } else {
+                return tks[2];
+            }
+        }
+
+        public Token getFirstToken() {
+            if (count == 0) return null;
+            return tks[0];
+        }
+
+        public Token getSecondToken() {
+            if (count < 2) return null;
+            return tks[1];
+        }
     }
 
+
     public static void main(String[] args) {
+
     }
 }
