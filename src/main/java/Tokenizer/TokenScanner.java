@@ -25,13 +25,13 @@ public class TokenScanner {
      */
     public void scanNextToken() {
         for(;;){
-            while(bf.peek() == ' ')
-                bf.forward();
+            while (peekChar() == ' ')
+                toNext();
             //Skip the annotation.
-            if(bf.peek() == '#')
-                while (Define.NULL_OR_LINEBREAK.indexOf(bf.peek()) == -1)
-                    bf.forward();
-            if(isLineBreak()){
+            if (peekChar() == '#')
+                while (Define.NULL_OR_LINEBREAK.indexOf(peekChar()) == -1)
+                    toNext();
+            if (isLineBreak()) {
                 if(depth == 0) tkGetAble = true;
             } else break;
         }
@@ -47,35 +47,35 @@ public class TokenScanner {
         boolean isDepthZero = false;
         //[\0 \t\r\n\u0085\\[\\]{},:?]
         Pattern rule = Define.R_FLOW_NOT_ZERO;
-        if(depth == 0){
+        if (depth == 0) {
             isDepthZero = true;
             //[\0 \t\r\n\u0085]|(:[\0 \t\r\n\u0085])
             rule = Define.R_FLOW_ZERO;
         }
-        while(bf.peek() != '#'){
+        while (peekChar() != '#') {
             int length = 0;
             int chunkSize = 32;
             Matcher m = null;
-            while (!(m = rule.matcher(bf.preSub(chunkSize))).find()) {
+            while (!(m = rule.matcher(peekString(chunkSize))).find()) {
                 chunkSize += 32;
             }
             //Get the start index of the matched substring
             length = m.start();
-            char ch = bf.peek(length);
+            char ch = peekChar(length);
             //If it is confirmed that it is a block,
             //find ':' and the next character is not \0 \t\r\n\u0028[]{}
             //throws an error
-            if (!isDepthZero && ch == ':' && Define.S4.indexOf(bf.peek(length + 1)) == -1) {
-                bf.forward(length);
+            if (!isDepthZero && ch == ':' && Define.S4.indexOf(peekChar(length + 1)) == -1) {
+                toNext(length);
                 throw new TokenScanningException("Scanning a plain scalar," +
                         " found unexpected ':'");
             }
-            if(length == 0) break;
+            if (length == 0) break;
             tkGetAble = false;
             chunks.append(spaces);
-            chunks.append(bf.preForward(length));
+            chunks.append(getString(length));
             spaces = scanPlainSpaces();
-            if(spaces.length() == 0 || depth == 0 && bf.getCno() < indent + 1) break;
+            if (spaces.length() == 0 || depth == 0 && getCno() < indent + 1) break;
         }
         return new ScalarToken(chunks.toString(),true);
     }
@@ -93,23 +93,23 @@ public class TokenScanner {
      */
     public String scanPlainSpaces() {
         StringBuilder chunks = new StringBuilder();
-        String spaces = bf.preForward(bf.spacesCount());
-        char ch = bf.peek();
-        if(Define.FULL_LINEBREAK.indexOf(ch) != -1){
+        String spaces = getString(bf.spacesCount());
+        char ch = peekChar();
+        if (Define.FULL_LINEBREAK.indexOf(ch) != -1) {
             tkGetAble = true;
             //Determine if it is start/end or not.
-            if(Define.END_OR_START.matcher(bf.preSub(4)).matches()) return "";
+            if (Define.END_OR_START.matcher(peekString(4)).matches()) return "";
             StringBuilder breaks = new StringBuilder();
             //Count the number of linebreaks.
-            while(Define.BLANK_OR_LINEBREAK.indexOf(bf.peek()) != -1)
-                if(' ' == bf.peek())
-                    bf.forward();
+            while (Define.BLANK_OR_LINEBREAK.indexOf(peekChar()) != -1)
+                if (' ' == peekChar())
+                    toNext();
                 else {
-                    if(isLineBreak())  breaks.append("\n");
-                    if(Define.END_OR_START.matcher(bf.preSub(4)).matches())
+                    if (isLineBreak())  breaks.append("\n");
+                    if (Define.END_OR_START.matcher(peekString(4)).matches())
                         return "";
                 }
-            if(breaks.length() == 0) chunks.append(" ");
+            if (breaks.length() == 0) chunks.append(" ");
             chunks.append(breaks);
         } else
             chunks.append(spaces);
@@ -123,14 +123,14 @@ public class TokenScanner {
     public Token scanFlowScalar(char style) {
         boolean dbl = style == '"';
         StringBuilder chunks = new StringBuilder();
-        char quote = bf.peek();
-        bf.forward();
+        char quote = peekChar();
+        toNext();
         chunks.append(scanFlowScalarNonSpaces(dbl));
-        while(bf.peek() != quote) {
+        while (peekChar() != quote) {
             chunks.append(scanFlowScalarSpaces());
             chunks.append(scanFlowScalarNonSpaces(dbl));
         }
-        bf.forward();
+        toNext();
         return new ScalarToken(style, chunks.toString(), false);
     }
 
@@ -143,44 +143,44 @@ public class TokenScanner {
         for (;;) {
             int length = 0;
             //Not '\"\\\0 \t\r\n\u0085
-            while(Define.SPACES_AND_STUFF.indexOf(bf.peek(length)) == -1)
+            while (Define.SPACES_AND_STUFF.indexOf(peekChar(length)) == -1)
                 length++;
-            if(length != 0) chunks.append(bf.preForward(length));
-            char ch = bf.peek();
+            if (length != 0) chunks.append(getString(length));
+            char ch = peekChar();
             //Like 'abc''
-            if(!dbl && ch == '\'' && bf.peek(1) == '\'') {
+            if (!dbl && ch == '\'' && peekChar(1) == '\'') {
                 chunks.append("'");
-                bf.forward(2);
+                toNext(2);
                 //Like "abc' or 'abc" or 'abc\
-            } else if(dbl && ch == '\'' || !dbl && Define.DOUBLE_ESC.indexOf(ch) != -1) {
+            } else if (dbl && ch == '\'' || !dbl && Define.DOUBLE_ESC.indexOf(ch) != -1) {
                 chunks.append(ch);
-                bf.forward();
+                toNext();
                 //Like "abc\
-            } else if(dbl && ch == '\\') {
-                bf.forward();
+            } else if (dbl && ch == '\\') {
+                toNext();
                 //Get next char
-                ch = bf.peek();
-                if(Define.ESCAPE_REPLACEMENTS.containsKey(ch)) {
+                ch = peekChar();
+                if (Define.ESCAPE_REPLACEMENTS.containsKey(ch)) {
                     // 'ch' to "ch"
                     chunks.append(Define.ESCAPE_REPLACEMENTS.get(ch));
-                    bf.forward();
+                    toNext();
                     /**
                      * 'x' -> 2   Hex, followed by 2 hex digits
                      * 'u' -> 4   Hex, followed by 4 hex digits
                      * 'U' -> 8
                      */
-                } else if(Define.ESCAPE_CODES.containsKey(ch)) {
+                } else if (Define.ESCAPE_CODES.containsKey(ch)) {
                     length = Define.ESCAPE_CODES.get(ch);
-                    bf.forward();
-                    String val = bf.preSub(length);
-                    if(Define.NOT_HEX.matcher(val).find()){
+                    toNext();
+                    String val = peekString(length);
+                    if (Define.NOT_HEX.matcher(val).find()) {
                         throw new TokenScanningException("Scanning a double quoted scalar" +
                                 ", expected an escape sequence of" + length +
-                                " hexadecimal numbers but found: " + bf.ch(bf.peek()));
+                                " hexadecimal numbers but found: " + bf.ch(peekChar()));
                     }
                     chunks.append(Character.toChars(Integer.parseInt(val, 16)));
-                    bf.forward(length);
-                } else if(Define.FULL_LINEBREAK.indexOf(ch) != -1) {
+                    toNext(length);
+                } else if (Define.FULL_LINEBREAK.indexOf(ch) != -1) {
                     isLineBreak();
                     chunks.append(scanFlowScalarBreaks());
                 }
@@ -196,10 +196,10 @@ public class TokenScanner {
      */
     private String scanFlowScalarSpaces() {
         StringBuilder chunks = new StringBuilder();
-        String spaces = bf.preForward(bf.spacesCount());
+        String spaces = getString(bf.spacesCount());
         // forward(length);
-        char ch = bf.peek();
-        if (ch == '\0'){
+        char ch = peekChar();
+        if (ch == '\0') {
             throw new TokenScanningException("Scanning a quoted scalar," +
                     " found unexpected end of stream.");
         }
@@ -223,16 +223,16 @@ public class TokenScanner {
         StringBuilder chunks = new StringBuilder();
         String pre = null;
         for (;;) {
-            pre = bf.preSub(3);
+            pre = peekString(3);
             if ((pre.equals("---") || pre.equals("...")) &&
-                    Define.NULL_BLANK_T_LINEBREAK.indexOf(bf.peek(3)) != -1) {
+                    Define.NULL_BLANK_T_LINEBREAK.indexOf(peekChar(3)) != -1) {
                 throw new TokenScanningException("Scanning a quoted scalar," +
                         " found unexpected document separator.");
             }
-            while(Define.BLANK_T.indexOf(bf.peek()) != -1)
-                bf.forward();
-            if (Define.FULL_LINEBREAK.indexOf(bf.peek()) != -1)
-                if(isLineBreak()) chunks.append("\n");
+            while (Define.BLANK_T.indexOf(peekChar()) != -1)
+                toNext();
+            if (Define.FULL_LINEBREAK.indexOf(peekChar()) != -1)
+                if (isLineBreak()) chunks.append("\n");
             else
                 return chunks.toString();
         }
@@ -244,36 +244,36 @@ public class TokenScanner {
      */
     public Token scanClassName() {
         int length = 0;
-        char ch = bf.peek(length++);
-        if(Define.FULL_LINEBREAK.indexOf(ch) != -1 || ch == '.'){
+        char ch = peekChar(length++);
+        if (Define.FULL_LINEBREAK.indexOf(ch) != -1 || ch == '.') {
             throw new TokenScanningException("Scanning class name but find linebreaks and '.' .");
         }
         StringBuilder chunks = new StringBuilder();
         boolean doubleDot = false;
-        while(Define.ALPHA.indexOf(ch) != -1 || ch == '.') {
-            if (ch == '.' && doubleDot){
+        while (Define.ALPHA.indexOf(ch) != -1 || ch == '.') {
+            if (ch == '.' && doubleDot) {
                 throw new TokenScanningException("Scanning class name but find wrong format.");
             }
             doubleDot = false;
-            if(ch == '.') doubleDot = true;
+            if (ch == '.') doubleDot = true;
             chunks.append(ch);
-            ch = bf.peek(length++);
+            ch = peekChar(length++);
         }
-        bf.forward(length);
+        toNext(length);
         return new ClassNameToken(chunks.toString());
     }
 
     /**
      * Scan the linebreak.
      * @return boolean
-     * */
+     */
     public boolean isLineBreak() {
-        char ch = bf.peek();
+        char ch = peekChar();
         if (Define.FULL_LINEBREAK.indexOf(ch) != -1) {
-            if (Define.RN.equals(bf.preSub(2)))
-                bf.forward(2);
+            if (Define.RN.equals(peekString(2)))
+                toNext(2);
             else
-                bf.forward();
+                toNext();
             return true;
         }
         return false;
@@ -281,19 +281,19 @@ public class TokenScanner {
 
 
     public boolean addIndent() {
-        return addIndent(bf.getCno());
+        return addIndent(getCno());
     }
 
     /**
      * Increase the indentation.
-     * If the indentation is less than the current position,
-     * it means that the new block is opened, record the indentation position indents header,
-     * and then set curMaxIndent to the current line number as the current maximum indentation
+     * If the indentation is less than the current position
+     * it means that the new block is opened, record the indentation position indents header
+     * then set curMaxIndent to the current line number as the current maximum indentation
      * @param col
-     * @return
+     * @return boolean
      */
     public boolean addIndent(int col){
-        if(indent < col) {
+        if (indent < col) {
             indents.push(indent);
             indent = col;
             return true;
@@ -302,7 +302,7 @@ public class TokenScanner {
     }
 
     public int countCloseBlock() {
-        return countCloseBlock(bf.getCno());
+        return countCloseBlock(getCno());
     }
 
     /**
@@ -313,23 +313,23 @@ public class TokenScanner {
      */
     public int countCloseBlock(int col) {
         int count = 0;
-        if(!isDepthZero()) return count;
-        while(indent > col){
+        if (!isDepthZero()) return count;
+        while (indent > col) {
             indent = indents.pop();
             count++;
         }
         return count;
     }
 
-    public char getChar() {
-        return getChar(0);
+    public char peekChar() {
+        return bf.peek(0);
     }
 
-    public char getChar(int length) {
+    public char peekChar(int length) {
         return bf.peek(length);
     }
 
-    public String getString(int length) {
+    public String peekString(int length) {
         return bf.preSub(length);
     }
 
@@ -341,8 +341,8 @@ public class TokenScanner {
         return depth == 0;
     }
 
-    public boolean canGetKV(){
-        return depth != 0 || Define.NULL_OR_OTHER.indexOf(bf.peek(1)) != -1;
+    public boolean canGetKV() {
+        return depth != 0 || Define.NULL_OR_OTHER.indexOf(peekChar(1)) != -1;
     }
 
     public void setTkGetAble(boolean tkGetAble) {
@@ -357,11 +357,24 @@ public class TokenScanner {
         return depth;
     }
 
-    public void toNext() {
-        bf.forward();
+    public void toNext(int length) {
+        bf.forward(length);
     }
+
+    public void toNext() {
+        bf.forward(1);
+    }
+
+    public String getString(int length) {
+        return bf.preForward(length);
+    }
+
     public int getCno() {
         return bf.getCno();
+    }
+
+    public int getLno() {
+        return bf.getLno();
     }
 
     /**
@@ -369,10 +382,10 @@ public class TokenScanner {
      */
     public class TokenScanningException extends RuntimeException {
         public TokenScanningException (String msg, Throwable cause){
-            super("Line " + bf.getLno() + ",Column "+ bf.getCno()
+            super("Line " + getLno() + ",Column "+ getCno()
                     + ": "+ msg,cause);
         }
-        public TokenScanningException (String msg){
+        public TokenScanningException (String msg) {
             super(msg,null);
         }
     }

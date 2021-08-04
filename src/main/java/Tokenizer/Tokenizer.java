@@ -4,7 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * @description:
+ * @description: Tokenizer
+ * Reference -> com.esotericsoftware.yamlbeans
  */
 public class Tokenizer {
     private TokenScanner ts;
@@ -14,7 +15,7 @@ public class Tokenizer {
     private final List<Token> tokens = new LinkedList<Token>();
     private final Map<Integer,TokenKey> tokenKeyMap = new HashMap<>();
 
-    static class TokenKey{
+    static class TokenKey {
         public final int tkn;
         public final int cno;
         TokenKey(int tkn, int cno) {
@@ -23,36 +24,36 @@ public class Tokenizer {
         }
     }
 
-    public Tokenizer(TokenScanner ts){
+    public Tokenizer(TokenScanner ts) {
         this.ts = ts;
         fetchStreamStart();
     }
 
-    public Tokenizer(String yaml){
+    public Tokenizer(String yaml) {
         this(new TokenScanner(yaml));
     }
 
 
     public Iterator iterator () {
         return new Iterator() {
-            public boolean hasNext () {
+            public boolean hasNext() {
                 return null != peekNextToken();
             }
 
-            public Object next () {
+            public Object next() {
                 return getNextToken();
             }
 
-            public void remove () {
+            public void remove() {
                 throw new UnsupportedOperationException();
             }
         };
     }
 
     public Token getNextToken() {
-        while(isNeedMoreTokens())
+        while (isNeedMoreTokens())
             fetchToken();
-        if(!tokens.isEmpty()){
+        if (!tokens.isEmpty()) {
                 taken++;
                 return tokens.remove(0);
         }
@@ -60,23 +61,23 @@ public class Tokenizer {
     }
 
     public Token peekNextToken() {
-        while(isNeedMoreTokens()){
+        while (isNeedMoreTokens()) {
             fetchToken();
         }
         return tokens.isEmpty() ? null : tokens.get(0);
     }
 
     private boolean isNeedMoreTokens() {
-        if(flagStreamEnd) return false;
+        if (flagStreamEnd) return false;
         return tokens.isEmpty() || nextPossibleTokenNo() == taken;
     }
 
     private void fetchToken() {
         ts.scanNextToken();
-        for(int i = ts.countCloseBlock();i > 0;i--){
+        for (int i = ts.countCloseBlock(); i > 0; i--) {
             tokens.add(Token.BLOCK_END);
         }
-        char ch = ts.getChar();
+        char ch = ts.peekChar();
         switch (ch) {
             case '\0' :
                 fetchStreamEnd();
@@ -88,8 +89,14 @@ public class Tokenizer {
                 fetchFlowScalar('"');
                 return;
             case ':'  :
-                if(ts.canGetKV()) {
+                if (ts.canGetKV()) {
                     fetchValue();
+                    return;
+                }
+                break;
+            case '-' :
+                if (Define.NULL_OR_OTHER.indexOf(ts.peekChar(1)) != -1) {
+                    fetchBlockEntry();
                     return;
                 }
                 break;
@@ -97,7 +104,7 @@ public class Tokenizer {
                 fetchClassName();
                 return;
         }
-        if(Define.BEG.matcher(ts.getString(2)).find())
+        if (Define.BEG.matcher(ts.peekString(2)).find())
             fetchPlain();
     }
 
@@ -106,7 +113,7 @@ public class Tokenizer {
         flagStreamStart = true;
     }
     private void fetchStreamEnd() {
-        for(int i = ts.countCloseBlock(-1);i > 0;i--){
+        for (int i = ts.countCloseBlock(-1); i > 0; i--) {
             tokens.add(Token.BLOCK_END);
         }
         ts.setTkGetAble(false);
@@ -121,16 +128,26 @@ public class Tokenizer {
         tokens.add(ts.scanFlowScalar(style));
     }
 
+    private void fetchKey() {
+        if (ts.isDepthZero()) {
+            if (!ts.isTkGetAble()) throw new TokenizerException("Found a mapping key where it is not allowed.");
+            if (ts.addIndent(ts.getCno())) tokens.add(Token.BLOCK_MAPPING_START);
+        }
+        ts.setTkGetAble(ts.isDepthZero());
+        ts.toNext();
+        tokens.add(Token.KEY);
+    }
+
     private void fetchValue() {
         TokenKey tk = tokenKeyMap.get(ts.getDepth());
-        if(tk == null){
-            if(ts.isDepthZero() && !ts.isTkGetAble()){
+        if (tk == null) {
+            if (ts.isDepthZero() && !ts.isTkGetAble()) {
                 throw new TokenizerException("Found a mapping value where it is not allowed.");
             }
         } else {
-            tokenKeyMap.remove(tk);
+            tokenKeyMap.remove(ts.getDepth());
             tokens.add(tk.tkn - taken, Token.KEY);
-            if(ts.isDepthZero() && ts.addIndent(tk.cno)){
+            if (ts.isDepthZero() && ts.addIndent(tk.cno)) {
                 tokens.add(tk.tkn - taken, Token.BLOCK_MAPPING_START);
             }
             ts.setTkGetAble(false);
@@ -152,25 +169,35 @@ public class Tokenizer {
         tokens.add(ts.scanPlain());
     }
 
+    private void fetchBlockEntry() {
+        if (ts.getDepth() == 0) {
+            if (!ts.isTkGetAble()) throw new TokenizerException("Found a sequence entry where it is not allowed.");
+            if (ts.addIndent(ts.getCno())) tokens.add(Token.BLOCK_SEQUENCE_START);
+        }
+        ts.setTkGetAble(true);
+        ts.toNext();
+        tokens.add(Token.BLOCK_ENTRY);
+    }
+
     private void savePossibleTokenKey() {
-        if(ts.isTkGetAble()){
+        if (ts.isTkGetAble()) {
             tokenKeyMap.put(ts.getDepth(),
                     new TokenKey(tokens.size() + taken, ts.getCno()));
         }
     }
 
     private int nextPossibleTokenNo() {
-        for(TokenKey tk : tokenKeyMap.values()){
-            if(tk.tkn > 0) return tk.tkn;
+        for (TokenKey tk : tokenKeyMap.values()) {
+            if (tk.tkn > 0) return tk.tkn;
         }
         return -1;
     }
 
     public class TokenizerException extends RuntimeException {
-        public TokenizerException (String msg, Throwable cause){
+        public TokenizerException (String msg, Throwable cause) {
             super(msg, cause);
         }
-        public TokenizerException (String msg){
+        public TokenizerException (String msg) {
             super(msg, null);
         }
     }
@@ -179,7 +206,7 @@ public class Tokenizer {
     public static void main(String[] args) throws FileNotFoundException {
             Tokenizer tokenizer = new Tokenizer("test/test.yml");
             Iterator iterator = tokenizer.iterator();
-            while(iterator.hasNext()){
+            while (iterator.hasNext()) {
                 System.out.println(iterator.next());
             }
     }

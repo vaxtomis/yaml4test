@@ -3,7 +3,7 @@ package Tokenizer;
 /**
  * @description: Scalar Token.
  */
-public class ScalarToken extends Token{
+public class ScalarToken extends Token {
     private char style;
     private boolean plain;
     private String value;
@@ -15,11 +15,11 @@ public class ScalarToken extends Token{
         this.plain = plain;
     }
 
-    public ScalarToken(String value){
+    public ScalarToken(String value) {
         this((char)0, value,true);
     }
 
-    public ScalarToken(String value,boolean plain){
+    public ScalarToken(String value,boolean plain) {
         this((char)0, value, plain);
     }
 

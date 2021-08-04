@@ -14,7 +14,7 @@ public class Token {
     final static Token BLOCK_ENTRY = new Token(TokenType.BLOCK_ENTRY);
     final static Token BLOCK_END = new Token(TokenType.BLOCK_END);
 
-    public Token(TokenType type){
+    public Token(TokenType type) {
         this.type = type;
     }
 

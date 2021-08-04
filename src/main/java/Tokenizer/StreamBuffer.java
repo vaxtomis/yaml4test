@@ -42,6 +42,7 @@ public class StreamBuffer {
     /**
      * Flush stream into builder.
      * @param length
+     * @return null
      */
     public void flushIn(int length) {
         builder.delete(0,cursor);
@@ -69,15 +70,9 @@ public class StreamBuffer {
     }
 
     /**
-     * Peek the most recent character.
-     * @return char
-     **/
-    public char peek () {
-        return peek(0);
-    }
-
-    /**
      * Peek the most recent (offset)th character.
+     * @param offset
+     * @return char
      */
     public char peek (int offset) {
         if(cursor + offset >= builder.length()){
@@ -88,7 +83,8 @@ public class StreamBuffer {
     }
 
     /**
-     * Get the n-length part after the cursor and return to the end of the buffer if it exceeds.
+     * Get the n-length part after the cursor
+     * and return to the end of the buffer if it exceeds.
      *
      * [--cursor--][----length=7----]
      *            56               12
@@ -102,6 +98,9 @@ public class StreamBuffer {
      * [-----builder.length-----]
      *                         10
      * return substring(5,8)
+     *
+     * @param length
+     * @return String
      */
     public String preSub (int length) {
         if(cursor + length >= builder.length()) {
@@ -129,12 +128,9 @@ public class StreamBuffer {
 
     /**
      * The cursor advances, and if it reaches the end of the builder, reads new content.
+     * @param length
      * @return null
      */
-    public void forward() {
-        forward(1);
-    }
-
     public void forward(int length) {
         if(cursor + 1 + length >= builder.length()){
             flushIn(1 + length);
