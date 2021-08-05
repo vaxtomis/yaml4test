@@ -5,8 +5,8 @@ import Tokenizer.Tokenizer;
 import Tokenizer.Token;
 
 /**
- * @description:
- * @author: vaxtomis
+ * @description
+ * @author vaxtomis
  */
 public class Parser {
     private Tokenizer tokenizer;
