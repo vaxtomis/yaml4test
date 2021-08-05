@@ -1,7 +1,5 @@
-classA:
-  !com.pojo.people
-  people:
-    name: pName
-    age: pAge
-  prop2: 2
-  prop3: 3
+class:
+  !className
+  subclass:
+    suba: aaa
+    subb: bbb
