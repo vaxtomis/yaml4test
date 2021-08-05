@@ -1,7 +1,7 @@
 package Tokenizer;
 
 /**
- * @description: Tokenizer.Token.
+ * @description Tokenizer.Token.
  */
 public class Token {
     private TokenType type;

@@ -5,14 +5,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @description:
+ * @description
  */
 public class TokenScanner {
     private StreamBuffer bf;
     private int indent = -1;
     private int depth = 0;
     private boolean tkGetAble = true;
-    private final Stack<Integer> indents = new Stack<>();
+    private final Stack<Integer> indents = new Stack();
 
 
     public TokenScanner(String yaml) {
@@ -24,7 +24,7 @@ public class TokenScanner {
      * @return null
      */
     public void scanNextToken() {
-        for(;;){
+        for (;;) {
             while (peekChar() == ' ')
                 toNext();
             //Skip the annotation.
@@ -32,7 +32,7 @@ public class TokenScanner {
                 while (Define.NULL_OR_LINEBREAK.indexOf(peekChar()) == -1)
                     toNext();
             if (isLineBreak()) {
-                if(depth == 0) tkGetAble = true;
+                if (depth == 0) tkGetAble = true;
             } else break;
         }
     }
@@ -83,7 +83,7 @@ public class TokenScanner {
     /**
      * Scan for spaces, including possible line breaks.
      * @return String
-     * @Examples:
+     * @Examples
      * "ab" return " "
      * "  ab" return "  "
      * "

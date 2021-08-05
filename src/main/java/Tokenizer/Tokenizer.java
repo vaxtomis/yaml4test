@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
- * @description: Tokenizer
+ * @description Tokenizer
  * Reference -> com.esotericsoftware.yamlbeans
  */
 public class Tokenizer {

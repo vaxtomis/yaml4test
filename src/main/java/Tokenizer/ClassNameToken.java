@@ -1,7 +1,7 @@
 package Tokenizer;
 
 /**
- * @description: Class name token.
+ * @description Class name token.
  */
 public class ClassNameToken extends Token {
     private String name;

@@ -1,9 +1,10 @@
 package Tokenizer;
 
 import java.io.*;
+import java.util.stream.Stream;
 
 /**
- * @description: Tokenizer.StreamBuffer is used to process the data stream.
+ * @description Tokenizer.StreamBuffer is used to process the data stream.
  **/
 public class StreamBuffer {
     private static StreamBuffer streamBuffer = null;
@@ -29,7 +30,7 @@ public class StreamBuffer {
 
 
     public static StreamBuffer getInstance(String yaml) {
-        if(streamBuffer == null) {
+        if (streamBuffer == null) {
             try {
                 streamBuffer = new StreamBuffer(yaml);
             } catch (Exception e) {
@@ -47,8 +48,8 @@ public class StreamBuffer {
     public void flushIn(int length) {
         builder.delete(0,cursor);
         cursor = 0;
-        while(builder.length() < length) {
-            if(!flagEndOfFile) {
+        while (builder.length() < length) {
+            if (!flagEndOfFile) {
                 int readLength = 0;
                 char[] data = new char[1024];
                 try{
@@ -56,13 +57,13 @@ public class StreamBuffer {
                 } catch(IOException ioe) {
                     ioe.printStackTrace();
                 }
-                if(readLength == -1) {
+                if (readLength == -1) {
                     flagEndOfFile = true;
-                } else{
+                } else {
                     builder.append(String.valueOf(data,0,readLength));
                 }
             }
-            if(flagEndOfFile) {
+            if (flagEndOfFile) {
                 builder.append('\0');
                 break;
             }
@@ -75,7 +76,7 @@ public class StreamBuffer {
      * @return char
      */
     public char peek (int offset) {
-        if(cursor + offset >= builder.length()){
+        if (cursor + offset >= builder.length()) {
             flushIn(1 + offset);
         }
         //System.out.println(builder.charAt(cursor + offset));
@@ -103,21 +104,21 @@ public class StreamBuffer {
      * @return String
      */
     public String preSub (int length) {
-        if(cursor + length >= builder.length()) {
+        if (cursor + length >= builder.length()) {
             flushIn(length);
         }
-        if(cursor + length > builder.length()) {
+        if (cursor + length > builder.length()) {
             return builder.substring(cursor, builder.length());
         }
         return builder.substring(cursor, cursor + length);
     }
 
     public String preForward(int length) {
-        int start = cursor;
         String buff = preSub(length);
-        for(char ch: buff.toCharArray()){
+        int start = cursor;
+        for (char ch: buff.toCharArray()) {
             cursor++;
-            if(Define.LINEBREAK.indexOf(ch) != -1 ||
+            if (Define.LINEBREAK.indexOf(ch) != -1 ||
                     ch == '\r' && buff.charAt(cursor - start) != '\n') {
                 cno = 0;
                 lno++;
@@ -136,13 +137,13 @@ public class StreamBuffer {
             flushIn(1 + length);
         }
         char ch = 0;
-        for(int i = 0; i<length; i++){
+        for (int i = 0; i<length; i++) {
             ch = builder.charAt(cursor);
             cursor++;
-            if(Define.LINEBREAK.indexOf(ch) != -1 || ch == '\r' && builder.charAt(cursor) != '\n') {
+            if (Define.LINEBREAK.indexOf(ch) != -1 || ch == '\r' && builder.charAt(cursor) != '\n') {
                 lno++;
                 cno = 0;
-            } else if(ch != '\uFEFF') {
+            } else if (ch != '\uFEFF') {
                 cno++;
             }
         }
@@ -156,7 +157,7 @@ public class StreamBuffer {
         return length;
     }
 
-    public String ch(char ch){
+    public String ch(char ch) {
         return "'" +
                 ch +
                 "' (" +
@@ -170,5 +171,9 @@ public class StreamBuffer {
 
     public int getLno() {
         return lno;
+    }
+
+    public boolean isFlagEndOfFile() {
+        return flagEndOfFile;
     }
 }

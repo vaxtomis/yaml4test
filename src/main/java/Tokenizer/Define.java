@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * @description: Static condition.
+ * @description Static condition.
  * '\u0085' Next Line
  * '\u2028' Line Separator
  * '\u2029' Paragraph Separator

@@ -1,7 +1,7 @@
 package Tokenizer;
 
 /**
- * @description: Scalar Token.
+ * @description Scalar Token.
  */
 public class ScalarToken extends Token {
     private char style;
