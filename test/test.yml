@@ -1,5 +1,4 @@
 class:
-  !className
-  subclass:
+  B: !classB
     suba: aaa
     subb: bbb
