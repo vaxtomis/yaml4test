@@ -4,8 +4,10 @@ package Parser;
  * @description Parser.Event Type num.
  */
 public enum EventType {
-    BUILD_OBJECT,
+    CREATE_OBJECT,
     INJECT_PROPERTY,
     SEQUENCE_START,
-    
+    SEQUENCE_END,
+    MAPPING_START,
+    MAPPING_END;
 }

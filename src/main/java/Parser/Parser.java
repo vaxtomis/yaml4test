@@ -20,17 +20,17 @@ public class Parser {
     }
 
     /**
-     * @description: Sliding Window. Used to store recently used tokens.
+     * @description Sliding Window. Used to store recently used tokens.
      */
     class SlidingWindow {
-        private int count = 0;
+        private int cursor = -1;
         private Token[] tks = new Token[3];
         public void forward() {
             if (flagTokensEnd) return;
             Token tk = tokenizer.getNextToken();
             if (tk != null) {
-                if (count < 3) {
-                    tks[count++] = tk;
+                if (cursor < 2) {
+                    tks[++cursor] = tk;
                 } else {
                     tks[0] = tks[1];
                     tks[1] = tks[2];
@@ -41,30 +41,19 @@ public class Parser {
             }
         }
 
-        public boolean fillTheWindow() {
-            while (count < 3) {
-                forward();
-            }
-            return !flagTokensEnd;
+        public Token getCur() {
+            if (cursor == -1) return null;
+            return tks[cursor];
         }
 
-        public Token getCurToken() {
-            if (count == 0) return null;
-            if (count < 3) {
-                return tks[tks.length-1];
-            } else {
-                return tks[2];
-            }
+        public Token getPre() {
+            if (cursor-1 < 0) return null;
+            return tks[cursor-1];
         }
 
-        public Token getFirstToken() {
-            if (count == 0) return null;
-            return tks[0];
-        }
-
-        public Token getSecondToken() {
-            if (count < 2) return null;
-            return tks[1];
+        public Token getDoublePre() {
+            if (cursor-2 < 0) return null;
+            return tks[cursor-2];
         }
     }
 
