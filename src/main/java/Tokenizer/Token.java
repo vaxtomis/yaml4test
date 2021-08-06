@@ -18,6 +18,10 @@ public class Token {
         this.type = type;
     }
 
+    public TokenType getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return "<" + type.toString() + ">";
