@@ -15,4 +15,8 @@ public class ClassNameToken extends Token {
         return super.toString() + "{className= " + name + "}";
     }
 
+    public String getName() {
+        return name;
+    }
+
 }
