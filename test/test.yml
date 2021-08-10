@@ -1,4 +1,8 @@
-class:
+classA:
   B: !classB
-    suba: aaa
+    suba: "!aaa"
     subb: bbb
+  C: CCC
+  D: DDD
+classE:
+  F: FFF
