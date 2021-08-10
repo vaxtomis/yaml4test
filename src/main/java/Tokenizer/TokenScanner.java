@@ -5,7 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @description
+ * @description Used to scan the stream and split out tokens.
  */
 public class TokenScanner {
     private StreamBuffer bf;

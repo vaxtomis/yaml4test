@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.stream.Stream;
 
 /**
- * @description Tokenizer.StreamBuffer is used to process the data stream.
+ * @description Used to process the data stream.
  **/
 public class StreamBuffer {
     private static StreamBuffer streamBuffer = null;

@@ -4,9 +4,9 @@ package Tokenizer;
  * @description Scalar Token.
  */
 public class ScalarToken extends Token {
-    private char style;
-    private boolean plain;
-    private String value;
+    private final char style;
+    private final boolean plain;
+    private final String value;
 
     public ScalarToken(char style, String value, boolean plain) {
         super(TokenType.SCALAR);
@@ -28,5 +28,12 @@ public class ScalarToken extends Token {
         return super.toString() + "{value= " + value
                 + "} {style= " + style
                 + "} {plain= " + plain + "}";
+    }
+    public char getStyle() {
+        return style;
+    }
+
+    public String getValue() {
+        return value;
     }
 }

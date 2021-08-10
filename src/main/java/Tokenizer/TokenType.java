@@ -1,7 +1,7 @@
 package Tokenizer;
 
 /**
- * @description Tokenizer.Token Type Enum.
+ * @description Token Type Enum.
  */
 public enum TokenType {
     KEY,
