@@ -21,5 +21,7 @@ public class ProducerTest {
         System.out.println(a.getD());
         System.out.println(a.getB().getSuba());
         System.out.println(a.getB().getSubb());
+        System.out.println(a.getB().getSubc().toString());
+        System.out.println(a.getB().getSubc().getE());
     }
 }
