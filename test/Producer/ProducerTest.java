@@ -1,6 +1,8 @@
 package Producer;
 
 import Parser.*;
+import org.junit.Test;
+
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -8,7 +10,8 @@ import java.util.Map;
  * @author vaxtomis
  */
 public class ProducerTest {
-    public static void main(String[] args) {
+    @Test
+    public void producerTest() {
         Parser parser = new Parser("test/test.yml");
         parser.loopProcessing();
         LinkedList<Event> events = parser.getEventList();
