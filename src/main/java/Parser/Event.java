@@ -16,6 +16,10 @@ public class Event {
         this.type = type;
     }
 
+    public EventType getType() {
+        return type;
+    }
+
     @Override
     public String toString() {
         return "<" + type.toString() + ">";

@@ -56,10 +56,6 @@ public class Parser {
             return tks[cursor-2];
         }
 
-        public int getCursor() {
-            return cursor;
-        }
-
         public TokenType getTokenType(String type) {
             Token tk = null;
             switch (type) {
@@ -148,7 +144,7 @@ public class Parser {
         blockStack.push(sw.getCur());
     }
 
-    public LinkedList<Event> getEventQueue() {
+    public LinkedList<Event> getEventList() {
         return events;
     }
 
@@ -164,7 +160,7 @@ public class Parser {
     public static void main(String[] args) {
         Parser parser = new Parser("test/test.yml");
         parser.loopProcessing();
-        for(Event e : parser.getEventQueue()) {
+        for(Event e : parser.getEventList()) {
             System.out.println(e.toString());
         }
     }
