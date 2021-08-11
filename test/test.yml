@@ -5,5 +5,5 @@ A: !Producer.classA
     subc: !Producer.classC
       E: eee
       F: fff
-  C: CCC
+  C: 123
   D: DDD
