@@ -30,11 +30,6 @@ public class PairContainer {
         return (T)rawPair.getValue();
     }
 
-    public RawPair getLatest() {
-        return queue.poll();
-    }
-
-
     public RawPair<?> pollLast() {
         return queue.pollLast();
     }
