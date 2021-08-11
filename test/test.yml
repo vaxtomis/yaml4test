@@ -2,5 +2,8 @@ A: !Producer.classA
   B: !Producer.classB
     suba: "!aaa"
     subb: bbb
-  C: 123
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: CCC
   D: DDD
