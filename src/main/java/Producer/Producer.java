@@ -56,7 +56,7 @@ public class Producer {
             case GET_CLASSNAME:
                 if (event instanceof ClassNameEvent) {
                     try {
-                        System.out.println(((ClassNameEvent)event).getName());
+                        //System.out.println(((ClassNameEvent)event).getName());
                         putClass(((ClassNameEvent)event).getName());
                     } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
                         e.printStackTrace();
@@ -153,6 +153,7 @@ public class Producer {
             }
             if (!setterSuccess) {
                 try {
+                    System.out.println(field.getGenericType());
                     field.set(obj, curContainer.getRawPairValue(field.getName()));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
