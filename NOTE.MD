@@ -40,8 +40,8 @@ Parser EXAMPLE:
 <BMS> (push "Map" in)
     <GET_NAME> -> class                 {Map1: class -> !Class}
     <BMS> (push "class" in)             {Stack: class}
-        <GET_NAME> -> B                 {Map2: B -> !classB, C -> CCC, D -> DDD}
-        <GET_CLASSNAME> -> classB
+        <GET_NAME> -> B                 {Map2: B -> !Producer.classB, C -> CCC, D -> DDD}
+        <GET_CLASSNAME> -> Producer.classB
         <CREATE_OBJECT>
             <BMS> (push "B" in)         {Stack: class, B}
                 <GET_NAME> <GET_VALUE>  {Map3: suba -> "!aaa", subb -> bbb}
