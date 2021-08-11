@@ -127,6 +127,7 @@ public class Parser {
 
     private void handleClassName(ClassNameToken tk) {
         events.add(new ClassNameEvent(tk.getName()));
+        events.add(Event.CREATE_OBJECT);
     }
 
     private void handleBlockEnd() {
@@ -147,7 +148,7 @@ public class Parser {
         blockStack.push(sw.getCur());
     }
 
-    public LinkedList<Event> getEventList() {
+    public LinkedList<Event> getEventQueue() {
         return events;
     }
 
@@ -163,7 +164,7 @@ public class Parser {
     public static void main(String[] args) {
         Parser parser = new Parser("test/test.yml");
         parser.loopProcessing();
-        for(Event e : parser.getEventList()) {
+        for(Event e : parser.getEventQueue()) {
             System.out.println(e.toString());
         }
     }
