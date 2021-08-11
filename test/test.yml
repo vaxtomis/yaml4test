@@ -1,8 +1,6 @@
-classA:
-  B: !classB
+A: !Producer.classA
+  B: !Producer.classB
     suba: "!aaa"
     subb: bbb
-  C: CCC
+  C: 123
   D: DDD
-classE:
-  F: FFF
