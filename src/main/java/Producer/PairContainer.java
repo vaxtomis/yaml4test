@@ -7,29 +7,43 @@ import java.util.WeakHashMap;
  * @description Used to store key-value pairs for later injection.
  * @author vaxtomis
  */
-public class PairContainer<T> {
-    private WeakHashMap<String, RawPair<T>> cacheMap;
-    private LinkedList<RawPair<T>> queue;
+public class PairContainer {
+    private WeakHashMap<String, RawPair<?>> cacheMap;
+    private LinkedList<RawPair<?>> queue;
 
     public PairContainer() {
         this.cacheMap = new WeakHashMap<>();
         this.queue = new LinkedList<>();
     }
 
-    public void add(RawPair<T> pair) {
+    public void add(RawPair<?> pair) {
         cacheMap.put(pair.getName(), pair);
-        queue.push(pair);
+        queue.add(pair);
     }
 
     public void clear() {
         queue.clear();
     }
 
-    public T getRawPairValue(String name) {
-        return cacheMap.get(name).getValue();
+    public <T> T getRawPairValue(String name) {
+        RawPair<?> rawPair = cacheMap.get(name);
+        return (T)rawPair.getValue();
     }
 
-    public RawPair<T> getLatest() {
+    public RawPair getLatest() {
         return queue.poll();
+    }
+
+
+    public RawPair<?> pollLast() {
+        return queue.pollLast();
+    }
+
+    public int size() {
+        return queue.size();
+    }
+
+    public RawPair<?> getLast() {
+        return queue.getLast();
     }
 }

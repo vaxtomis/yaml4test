@@ -15,10 +15,6 @@ public class RawPair<T> {
         this.value = null;
     }
 
-    public boolean isComplete() {
-        return value != null;
-    }
-
     public void setValue(T value) {
         this.value = value;
     }

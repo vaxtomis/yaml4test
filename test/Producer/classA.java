@@ -5,7 +5,7 @@ package Producer;
  */
 public class classA {
     private classB B;
-    private int C;
+    private String C;
     private String D;
 
     public classB getB() {
@@ -16,11 +16,11 @@ public class classA {
         B = b;
     }
 
-    public int getC() {
+    public String getC() {
         return C;
     }
 
-    public void setC(int c) {
+    public void setC(String c) {
         C = c;
     }
 
