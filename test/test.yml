@@ -1,9 +1,315 @@
-A: !Producer.classA
+A1: !Producer.classA
   B: !Producer.classB
-    suba: "!aaa"
+    suba: 1b
     subb: bbb
     subc: !Producer.classC
       E: eee
       F: fff
-  C: 123
-  D: DDD
+  C: 456
+  D: 2.3333333333333
+A2: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A3: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A4: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A5: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A6: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A7: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A8: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A9: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A10: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A11: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A12: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A13: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A14: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A15: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A16: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A17: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A18: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A19: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A20: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A21: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A22: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A23: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A24: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A25: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A26: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A27: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A28: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A29: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A30: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A31: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A32: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A33: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A34: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
+A35: !Producer.classA
+  B: !Producer.classB
+    suba: 1b
+    subb: bbb
+    subc: !Producer.classC
+      E: eee
+      F: fff
+  C: 456
+  D: 2.3333333333333
