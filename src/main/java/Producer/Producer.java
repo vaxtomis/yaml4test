@@ -5,10 +5,7 @@ import Parser.Event;
 import Parser.NameEvent;
 import Parser.ValueEvent;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -79,7 +76,6 @@ public class Producer {
             RawPair<?> rawPair = curContainer.pollLast();
             innerMap.put(rawPair.getName(), curContainer.getRawPairValue(rawPair.getName()));
         }
-
     }
 
     private void prepareEnvironment() {
@@ -107,6 +103,8 @@ public class Producer {
         if (curContainer != null && curContainer.size() > 0) {
             RawPair rawPair = curContainer.getLast();
             rawPair.setValue(value);
+        } else {
+            throw new ProducerException("Need a RawPair to set value but the Container is empty.");
         }
     }
 
@@ -115,6 +113,8 @@ public class Producer {
         if (curContainer != null && curContainer.size() > 0) {
             RawPair rawPair = curContainer.getLast();
             rawPair.setValue(clazz.newInstance());
+        } else {
+            throw new ProducerException("Need a RawPair to set value but the Container is empty.");
         }
     }
 
@@ -135,17 +135,39 @@ public class Producer {
             }
             field.setAccessible(true);
             boolean setterSuccess = false;
+            Type fType = field.getGenericType();
+            String fName = field.getName();
             try {
-                if (field.getGenericType().equals(String.class)) {
-                    String temp = curContainer.getRawPairValue(field.getName());
+                if (fType.equals(String.class)) {
+                    String temp = curContainer.getRawPairValue(fName);
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
-                else if (field.getGenericType().equals(Integer.class)) {
-                    Integer temp = (Integer)curContainer.getRawPairValue(field.getName());
+                else if (fType.equals(char.class) || fType.equals(Character.class)) {
+                    char temp = ((String)curContainer.getRawPairValue(fName)).charAt(0);
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
-                else if (field.getGenericType().equals(Long.class)) {
-                    Long temp = Long.parseLong(curContainer.getRawPairValue(field.getName()));
+                else if (fType.equals(int.class) || fType.equals(Integer.class)) {
+                    int temp = Integer.parseInt(curContainer.getRawPairValue(fName));
+                    setterSuccess = setterInject(methodMap, field, obj, temp);
+                }
+                else if (fType.equals(long.class) || fType.equals(Long.class)) {
+                    long temp = Long.parseLong(curContainer.getRawPairValue(fName));
+                    setterSuccess = setterInject(methodMap, field, obj, temp);
+                }
+                else if (fType.equals(double.class) || fType.equals(Double.class)) {
+                    double temp = Double.parseDouble(curContainer.getRawPairValue(fName));
+                    setterSuccess = setterInject(methodMap, field, obj, temp);
+                }
+                else if (fType.equals(float.class) || fType.equals(Float.class)) {
+                    float temp = Float.parseFloat(curContainer.getRawPairValue(fName));
+                    setterSuccess = setterInject(methodMap, field, obj, temp);
+                }
+                else if (fType.equals(short.class) || fType.equals(Short.class)) {
+                    short temp = Short.parseShort(curContainer.getRawPairValue(fName));
+                    setterSuccess = setterInject(methodMap, field, obj, temp);
+                }
+                else if (fType.equals(boolean.class) || fType.equals(Boolean.class)) {
+                    boolean temp = Boolean.parseBoolean(curContainer.getRawPairValue(fName));
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
             } catch (NumberFormatException e) {
@@ -153,8 +175,9 @@ public class Producer {
             }
             if (!setterSuccess) {
                 try {
-                    System.out.println(field.getGenericType());
-                    field.set(obj, curContainer.getRawPairValue(field.getName()));
+                    System.out.println("fType: " + fType);
+                    System.out.println("Class: " + curContainer.getRawPairValue(fName).getClass());
+                    field.set(obj, curContainer.getRawPairValue(fName));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -178,7 +201,17 @@ public class Producer {
         return true;
     }
 
+
     public Map<String,?> getInnerMap() {
         return innerMap;
+    }
+
+    public class ProducerException extends RuntimeException {
+        public ProducerException (String msg, Throwable cause) {
+            super(msg, cause);
+        }
+        public ProducerException (String msg) {
+            super(msg, null);
+        }
     }
 }
