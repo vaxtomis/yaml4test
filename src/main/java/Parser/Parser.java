@@ -56,6 +56,9 @@ public class Parser {
             return tks[cursor-2];
         }
 
+        /**
+         * Get the [cur, pre, pre-pre] type of Token in sliding window.
+         */
         public TokenType getTokenType(String type) {
             Token tk = null;
             switch (type) {
@@ -77,6 +80,9 @@ public class Parser {
         }
     }
 
+    /**
+     * Loop through the Token and get the Event.
+     */
     public void loopProcessing() {
         while (!flagTokensEnd) {
             sw.forward();
@@ -84,6 +90,10 @@ public class Parser {
         }
     }
 
+    /**
+     * ConstraintMap defines Token grammar rules
+     * Generates corresponding Event arrangement according to the grammar rules.
+     */
     private void fetchEvent() {
         if (!ConstraintsMap.isAllowed(sw)) {
             throw new ParserException("Found a Token where it is not allowed."

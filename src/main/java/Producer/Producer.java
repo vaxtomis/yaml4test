@@ -6,12 +6,15 @@ import Parser.NameEvent;
 import Parser.ValueEvent;
 
 import java.lang.reflect.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @description
+ * @description Perform the corresponding function execution according to Events,
+ * and finally store the mapping in the innerMap.
  * @author vaxtomis
  */
 public class Producer {
@@ -98,6 +101,8 @@ public class Producer {
 
     /**
      * Mark, need to be optimized.
+     * Put the value(primitive type and their encapsulation class)
+     * into RawPair
      */
     private void putValue(String style, String value) {
         if (curContainer != null && curContainer.size() > 0) {
@@ -108,6 +113,10 @@ public class Producer {
         }
     }
 
+    /**
+     * Obtain the {Class} through class name,
+     * create new instance and put it into RawPair.
+     */
     private void putClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         Class<?> clazz = Class.forName(className);
         if (curContainer != null && curContainer.size() > 0) {
@@ -118,6 +127,11 @@ public class Producer {
         }
     }
 
+    /**
+     * After a BLOCK is closed,
+     * a set of cached RawPairs are used to inject
+     * the created class instance in the stack.
+     */
     public void injectProperty() {
         RawPair<?> rawPair = objectStack.pollLast();
         curContainer = layerStack.pollLast();
@@ -126,10 +140,11 @@ public class Producer {
         HashMap<String, Method> methodMap = new HashMap<>();
         Field[] fields = clazz.getDeclaredFields();
         Method[] methods = clazz.getDeclaredMethods();
-        for(Method method : methods) {
+        for (Method method : methods) {
             methodMap.put(method.getName(), method);
         }
         for (Field field : fields) {
+            //Skip the serialVersionUID
             if (field.getModifiers() == (Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL)) {
                 continue;
             }
@@ -140,34 +155,57 @@ public class Producer {
             try {
                 if (fType.equals(String.class)) {
                     String temp = curContainer.getRawPairValue(fName);
+                    if (temp == null) temp = "";
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
                 else if (fType.equals(char.class) || fType.equals(Character.class)) {
-                    char temp = ((String)curContainer.getRawPairValue(fName)).charAt(0);
+                    String getV = curContainer.getRawPairValue(fName);
+                    char temp = (getV != null)?getV.charAt(0):'\u0000';
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
                 else if (fType.equals(int.class) || fType.equals(Integer.class)) {
-                    int temp = Integer.parseInt(curContainer.getRawPairValue(fName));
+                    String getV = curContainer.getRawPairValue(fName);
+                    int temp = (canParse(getV, "int"))?Integer.parseInt(getV):0;
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
                 else if (fType.equals(long.class) || fType.equals(Long.class)) {
-                    long temp = Long.parseLong(curContainer.getRawPairValue(fName));
+                    String getV = curContainer.getRawPairValue(fName);
+                    long temp = (canParse(getV, "long"))?Long.parseLong(getV):0L;
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
                 else if (fType.equals(double.class) || fType.equals(Double.class)) {
-                    double temp = Double.parseDouble(curContainer.getRawPairValue(fName));
+                    String getV = curContainer.getRawPairValue(fName);
+                    double temp = (canParse(getV, "double"))?Double.parseDouble(getV):0.0d;
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
                 else if (fType.equals(float.class) || fType.equals(Float.class)) {
-                    float temp = Float.parseFloat(curContainer.getRawPairValue(fName));
+                    String getV = curContainer.getRawPairValue(fName);
+                    float temp = (canParse(getV, "float"))?Float.parseFloat(getV):0.0f;
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
                 else if (fType.equals(short.class) || fType.equals(Short.class)) {
-                    short temp = Short.parseShort(curContainer.getRawPairValue(fName));
+                    String getV = curContainer.getRawPairValue(fName);
+                    short temp = (canParse(getV, "short"))?Short.parseShort(getV):0;
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
                 else if (fType.equals(boolean.class) || fType.equals(Boolean.class)) {
-                    boolean temp = Boolean.parseBoolean(curContainer.getRawPairValue(fName));
+                    String getV = curContainer.getRawPairValue(fName);
+                    boolean temp = (canParse(getV, "boolean")) && Boolean.parseBoolean(getV);
+                    setterSuccess = setterInject(methodMap, field, obj, temp);
+                }
+                else if (fType.equals(BigInteger.class)) {
+                    String getV = curContainer.getRawPairValue(fName);
+                    BigInteger temp = (canParse(getV, "bigInteger"))?new BigInteger(getV):new BigInteger("0");
+                    setterSuccess = setterInject(methodMap, field, obj, temp);
+                }
+                else if (fType.equals(BigDecimal.class)) {
+                    String getV = curContainer.getRawPairValue(fName);
+                    BigDecimal temp = (canParse(getV, "bigDecimal"))?new BigDecimal(getV):new BigDecimal("0.00");
+                    setterSuccess = setterInject(methodMap, field, obj, temp);
+                }
+                else if (fType.equals(Byte.class)) {
+                    String getV = curContainer.getRawPairValue(fName);
+                    Byte temp = (canParse(getV, "byte"))?Byte.parseByte(getV, 16):0;
                     setterSuccess = setterInject(methodMap, field, obj, temp);
                 }
             } catch (NumberFormatException e) {
@@ -175,8 +213,8 @@ public class Producer {
             }
             if (!setterSuccess) {
                 try {
-                    System.out.println("fType: " + fType);
-                    System.out.println("Class: " + curContainer.getRawPairValue(fName).getClass());
+                    //System.out.println("fType: " + fType);
+                    //System.out.println("Class: " + curContainer.getRawPairValue(fName).getClass());
                     field.set(obj, curContainer.getRawPairValue(fName));
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -201,6 +239,33 @@ public class Producer {
         return true;
     }
 
+    /**
+     * Need to be optimized.
+     * Determine whether this type can be parsed.
+     */
+    private boolean canParse(String getV, String type) {
+        if (getV == null) return false;
+        switch (type) {
+            case "int":
+            case "short":
+            case "long":
+            case "bigInteger":
+                return getV.matches("^(-|\\+)?\\d$");
+            case "double":
+            case "float":
+            case "bigDecimal":
+                return getV.matches("^(-?\\d+)(\\.\\d+)?$");
+            case "byte":
+                if (!getV.matches("^[0-9a-fA-F]+$")) {
+                    return false;
+                }
+                int i = Integer.parseInt(getV, 16);
+                return  i >= -128 && i <= 127;
+            case "boolean":
+                return true;
+        }
+        return false;
+    }
 
     public Map<String,?> getInnerMap() {
         return innerMap;

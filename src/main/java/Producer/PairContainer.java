@@ -27,6 +27,7 @@ public class PairContainer {
 
     public <T> T getRawPairValue(String name) {
         RawPair<?> rawPair = cacheMap.get(name);
+        if (rawPair == null) return null;
         return (T)rawPair.getValue();
     }
 
