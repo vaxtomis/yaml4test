@@ -81,7 +81,8 @@ public class Parser {
     }
 
     /**
-     * Loop through the Token and get the Event.
+     * Traverse the Token to determine the correctness of the syntax,
+     * and obtain a set of Events.
      */
     public void loopProcessing() {
         while (!flagTokensEnd) {
