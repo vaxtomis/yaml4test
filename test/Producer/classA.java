@@ -1,12 +1,14 @@
 package Producer;
 
+import java.math.BigDecimal;
+
 /**
  * @author vaxtomis
  */
 public class classA {
     private classB B;
     private int C;
-    private String D;
+    private BigDecimal D;
 
     public classB getB() {
         return B;
@@ -24,11 +26,11 @@ public class classA {
         C = c;
     }
 
-    public String getD() {
+    public BigDecimal getD() {
         return D;
     }
 
-    public void setD(String d) {
+    public void setD(BigDecimal d) {
         D = d;
     }
 

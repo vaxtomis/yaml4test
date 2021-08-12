@@ -12,19 +12,17 @@ import java.util.Map;
 public class ProducerTest {
     @Test
     public void producerTest() {
+        long start=System.currentTimeMillis();
         Parser parser = new Parser("test/test.yml");
         parser.loopProcessing();
         LinkedList<Event> events = parser.getEventList();
         Producer producer = new Producer(events);
         producer.build();
+        System.gc();
+        long end=System.currentTimeMillis();
+        System.out.println("程序运行时间： "+(end-start)+"ms");
         Map map = producer.getInnerMap();
-        classA a = (classA) map.get("A");
-        //System.out.println(a.toString());
-        System.out.println(a.getC());
-        System.out.println(a.getD());
-        System.out.println(a.getB().getSuba());
-        System.out.println(a.getB().getSubb());
-        System.out.println(a.getB().getSubc().toString());
-        System.out.println(a.getB().getSubc().getE());
+        classA a = (classA) map.get("A1");
+        System.out.println(a.toString());
     }
 }

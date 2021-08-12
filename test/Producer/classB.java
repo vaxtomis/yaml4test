@@ -5,7 +5,7 @@ package Producer;
  * @author vaxtomis
  */
 public class classB {
-    private String suba;
+    private Byte suba;
     private String subb;
     private classC subc;
 
@@ -17,7 +17,7 @@ public class classB {
         this.subc = subc;
     }
 
-    public String getSuba() {
+    public Byte getSuba() {
         return suba;
     }
 
@@ -25,7 +25,7 @@ public class classB {
         return subb;
     }
 
-    public void setSuba(String suba) {
+    public void setSuba(Byte suba) {
         this.suba = suba;
     }
 
