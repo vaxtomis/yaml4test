@@ -1,7 +1,6 @@
 package Tokenizer;
 
 import java.io.*;
-import java.util.stream.Stream;
 
 /**
  * @description Used to process the data stream.

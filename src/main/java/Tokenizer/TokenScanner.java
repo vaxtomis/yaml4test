@@ -254,8 +254,7 @@ public class TokenScanner {
             if (ch == '.' && doubleDot) {
                 throw new TokenScanningException("Scanning class name but find wrong format.");
             }
-            doubleDot = false;
-            if (ch == '.') doubleDot = true;
+            doubleDot = ch == '.';
             chunks.append(ch);
             ch = peekChar(length++);
         }
