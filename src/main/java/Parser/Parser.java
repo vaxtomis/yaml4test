@@ -10,13 +10,15 @@ import static Tokenizer.TokenType.*;
  */
 public class Parser {
     private Tokenizer tokenizer;
+    private String path;
     private Parser.SlidingWindow sw = new SlidingWindow();
     private LinkedList<Event> events = new LinkedList<>();
     private LinkedList<Token> blockStack = new LinkedList<Token>();
     private boolean flagTokensEnd = false;
 
-    public Parser(String yaml) {
-        this.tokenizer = new Tokenizer(yaml);
+    public Parser() {
+        tokenizer = null;
+        path = null;
     }
 
     /**
@@ -84,7 +86,11 @@ public class Parser {
      * Traverse the Token to determine the correctness of the syntax,
      * and obtain a set of Events.
      */
-    public void loopProcessing() {
+    private void loopProcessing() {
+        if (path == null) {
+            throw new ParserException("The path of file cannot be null.");
+        }
+        tokenizer = new Tokenizer(path);
         while (!flagTokensEnd) {
             sw.forward();
             fetchEvent();
@@ -134,7 +140,6 @@ public class Parser {
 
     private void handleClassName(ClassNameToken tk) {
         events.add(new ClassNameEvent(tk.getName()));
-        events.add(Event.CREATE_OBJECT);
     }
 
     private void handleBlockEnd() {
@@ -156,7 +161,12 @@ public class Parser {
     }
 
     public LinkedList<Event> getEventList() {
+        loopProcessing();
         return events;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public class ParserException extends RuntimeException {
@@ -169,8 +179,8 @@ public class Parser {
     }
 
     public static void main(String[] args) {
-        Parser parser = new Parser("test/test.yml");
-        parser.loopProcessing();
+        Parser parser = new Parser();
+        parser.setPath("test/test.yml");
         for(Event e : parser.getEventList()) {
             System.out.println(e.toString());
         }

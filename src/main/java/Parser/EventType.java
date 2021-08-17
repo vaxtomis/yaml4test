@@ -8,7 +8,6 @@ public enum EventType {
     GET_CLASSNAME,
     GET_VALUE,
     GET_ENTRY,
-    CREATE_OBJECT,
     SEQUENCE_START,
     SEQUENCE_END,
     MAPPING_START,
