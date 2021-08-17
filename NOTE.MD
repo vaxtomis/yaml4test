@@ -51,3 +51,29 @@ Parser EXAMPLE:
         <GET_NAME> <GET_VALUE>
     <BMS> (pop "class" out) (Inject the map2 into class)
 <BMS>
+
+Parser EXAMPLE:
+<BMS>
+    <GET_NAME>
+    <BSS>
+        <GET_CLASSNAME>
+        <BMS>
+            <GET_NAME> <GET_VALUE>
+            <GET_NAME> <GET_VALUE>
+        <BME>
+        <GET_CLASSNAME>
+        <BMS>
+            <GET_NAME> <GET_VALUE>
+            <GET_NAME> <GET_VALUE>
+        <BME>       
+    <BSE>
+<BME>    
+
+Parser EXAMPLE:
+<BMS>
+    <GET_NAME>
+    <BSS>
+        <GET_ENTRY>
+        <GET_ENTRY>
+    <BSE>
+<BMS>        
