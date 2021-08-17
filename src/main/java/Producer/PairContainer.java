@@ -8,8 +8,8 @@ import java.util.WeakHashMap;
  * @author vaxtomis
  */
 public class PairContainer {
-    private WeakHashMap<String, RawPair<?>> cacheMap;
-    private LinkedList<RawPair<?>> queue;
+    private final WeakHashMap<String, RawPair<?>> cacheMap;
+    private final LinkedList<RawPair<?>> queue;
 
     public PairContainer() {
         this.cacheMap = new WeakHashMap<>();

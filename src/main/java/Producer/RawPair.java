@@ -7,7 +7,7 @@ import java.util.Objects;
  * @author vaxtomis
  */
 public class RawPair<T> {
-    private String name;
+    private final String name;
     private T value;
 
     public RawPair(String name) {

@@ -24,26 +24,36 @@ public class Producer {
     private PairContainer curContainer;
     private Map<String,?> innerMap;
 
-    public Producer(LinkedList<Event> events) {
+    public Producer() {
         objectStack = new LinkedList<>();
         layerStack = new LinkedList<PairContainer>();
-        this.events = events;
+        events = null;
         curContainer = null;
-        innerMap = new HashMap<>();
+        innerMap = null;
     }
 
     public void build() {
+        if (events == null) {
+            throw new ProducerException("Events are not set.");
+        }
+        if (innerMap == null) {
+            throw new ProducerException("InnerMap are not set.");
+        }
         while (!events.isEmpty()) {
             Event event = events.getFirst();
             processEvent(event);
             events.removeFirst();
         }
+        System.gc();
     }
 
     private void processEvent(Event event) {
         switch (event.getType()) {
             case MAPPING_START:
-                prepareEnvironment();
+                prepareMapping();
+                break;
+            case SEQUENCE_START:
+                prepareSequence();
                 break;
             case GET_NAME:
                 createRawPair(((NameEvent)event).getName());
@@ -63,6 +73,8 @@ public class Producer {
                     }
                 }
                 break;
+            case GET_ENTRY:
+                break;
             case MAPPING_END:
                 if (1 == layerStack.size()) {
                     injectMap();
@@ -70,8 +82,12 @@ public class Producer {
                     injectProperty();
                 }
                 break;
+            case SEQUENCE_END:
+                addElement();
+                break;
         }
     }
+
 
     private void injectMap() {
         curContainer = layerStack.pollLast();
@@ -81,7 +97,7 @@ public class Producer {
         }
     }
 
-    private void prepareEnvironment() {
+    private void prepareMapping() {
         if (0 == layerStack.size()) {
             layerStack.add(new PairContainer());
             curContainer = layerStack.getLast();
@@ -94,13 +110,18 @@ public class Producer {
         curContainer = layerStack.getLast();
     }
 
+    private void prepareSequence() {
+
+    }
+
     private void createRawPair(String name) {
         RawPair<?> pair = new RawPair<>(name);
         curContainer.add(pair);
     }
 
     /**
-     * Mark, need to be optimized.
+     * <=== Mark, need to be optimized. ===>
+     *
      * Put the value(primitive type and their encapsulation class)
      * into RawPair
      */
@@ -211,6 +232,8 @@ public class Producer {
             } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
+            //If the injection fails (using the setter method),
+            //try to assign the value directly.
             if (!setterSuccess) {
                 try {
                     //System.out.println("fType: " + fType);
@@ -221,6 +244,15 @@ public class Producer {
                 }
             }
         }
+        curContainer.clear();
+        curContainer = layerStack.peekLast();
+    }
+
+    private void addElement() {
+        RawPair<?> rawPair = objectStack.pollLast();
+        curContainer = layerStack.pollLast();
+        Class<?> clazz = rawPair.getValue().getClass();
+
         curContainer.clear();
         curContainer = layerStack.peekLast();
     }
@@ -240,7 +272,8 @@ public class Producer {
     }
 
     /**
-     * Need to be optimized.
+     * <=== Mark, Need to be optimized. ===>
+     *
      * Determine whether this type can be parsed.
      */
     private boolean canParse(String getV, String type) {
@@ -267,8 +300,12 @@ public class Producer {
         return false;
     }
 
-    public Map<String,?> getInnerMap() {
-        return innerMap;
+    public void setEvents(LinkedList<Event> events) {
+        this.events = events;
+    }
+
+    public void setInnerMap(Map innerMap) {
+        this.innerMap = innerMap;
     }
 
     public class ProducerException extends RuntimeException {
