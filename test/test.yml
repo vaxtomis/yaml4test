@@ -1,315 +1,54 @@
 A1: !Producer.classA
   B: !Producer.classB
-    suba: 1b
-    subb: bbb
+    suba: 1
+    subb: A1-B-subb
     subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
+      E: A1-B-subc-E
+      F: A1-B-subc-F
+  C: 1
+  D: 1.1111111
 A2: !Producer.classA
   B: !Producer.classB
-    suba: 1b
-    subb: bbb
+    suba: 2
+    subb: A2-B-subb
     subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
+      E: A2-B-subc-E
+      F: A2-B-subc-F
+  C: 2
+  D: 2.2222222
 A3: !Producer.classA
   B: !Producer.classB
-    suba: 1b
-    subb: bbb
+    suba: 3
+    subb: A3-B-subb
     subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
+      E: A3-B-subc-E
+      F: A3-B-subc-F
+  C: 3
+  D: 3.3333333
 A4: !Producer.classA
   B: !Producer.classB
-    suba: 1b
-    subb: bbb
+    suba: 4
+    subb: A4-B-subb
     subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
+      E: A4-B-subc-E
+      F: A4-B-subc-F
+  C: 4
+  D: 4.4444444
 A5: !Producer.classA
   B: !Producer.classB
-    suba: 1b
-    subb: bbb
+    suba: 5
+    subb: A5-B-subb
     subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
+      E: A5-B-subc-E
+      F: A5-B-subc-F
+  C: 5
+  D: 5.5555555
 A6: !Producer.classA
   B: !Producer.classB
-    suba: 1b
-    subb: bbb
+    suba: 6
+    subb: A6-B-subb
     subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A7: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A8: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A9: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A10: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A11: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A12: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A13: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A14: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A15: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A16: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A17: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A18: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A19: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A20: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A21: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A22: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A23: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A24: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A25: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A26: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A27: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A28: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A29: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A30: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A31: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A32: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A33: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A34: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
-A35: !Producer.classA
-  B: !Producer.classB
-    suba: 1b
-    subb: bbb
-    subc: !Producer.classC
-      E: eee
-      F: fff
-  C: 456
-  D: 2.3333333333333
+      E: A6-B-subc-E
+      F: A6-B-subc-F
+  C: 6
+  D: 6.6666666
