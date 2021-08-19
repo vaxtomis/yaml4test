@@ -204,7 +204,7 @@ public class Tokenizer {
 
 
     public static void main(String[] args) throws FileNotFoundException {
-            Tokenizer tokenizer = new Tokenizer("test/test.yml");
+            Tokenizer tokenizer = new Tokenizer("test/test2.yml");
             Iterator iterator = tokenizer.iterator();
             while (iterator.hasNext()) {
                 System.out.println(iterator.next());
