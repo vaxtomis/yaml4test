@@ -1,4 +1,4 @@
-package annotation;
+package Annotation;
 
 import java.lang.annotation.*;
 
@@ -9,4 +9,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface YamlInject {
+    String Name() default "";
 }
