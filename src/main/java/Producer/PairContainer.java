@@ -1,6 +1,7 @@
 package Producer;
 
 import java.util.LinkedList;
+import java.util.Objects;
 import java.util.WeakHashMap;
 
 /**
@@ -10,6 +11,7 @@ import java.util.WeakHashMap;
 public class PairContainer {
     private final WeakHashMap<String, RawPair<?>> cacheMap;
     private final LinkedList<RawPair<?>> queue;
+    private int pairNo = 0;
 
     public PairContainer() {
         this.cacheMap = new WeakHashMap<>();
@@ -31,6 +33,10 @@ public class PairContainer {
         return (T)rawPair.getValue();
     }
 
+    public RawPair<?> getRawPair(String name) {
+        return cacheMap.get(name);
+    }
+
     public RawPair<?> pollLast() {
         return queue.pollLast();
     }
@@ -41,5 +47,9 @@ public class PairContainer {
 
     public RawPair<?> getLast() {
         return queue.getLast();
+    }
+
+    public int getPairNo() {
+        return pairNo++;
     }
 }

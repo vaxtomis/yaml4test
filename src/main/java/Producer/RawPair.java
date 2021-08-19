@@ -1,5 +1,4 @@
 package Producer;
-
 import java.util.Objects;
 
 /**
@@ -14,10 +13,10 @@ public class RawPair<T> {
         this.name = name;
         this.value = null;
     }
-
-    public void setValue(T value) {
-        this.value = value;
+    public void setValue(Object value) {
+        this.value = (T) value;
     }
+
 
     public String getName() {
         return name;
@@ -26,7 +25,6 @@ public class RawPair<T> {
     public T getValue() {
         return value;
     }
-
 
     @Override
     public boolean equals(Object o) {
