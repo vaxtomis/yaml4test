@@ -1,10 +1,7 @@
-package Producer;
+package TestPojo;
 
 import java.math.BigDecimal;
 
-/**
- * @author vaxtomis
- */
 public class classA {
     private classB B;
     private int C;
@@ -36,7 +33,7 @@ public class classA {
 
     @Override
     public String toString() {
-        return "classA{" +
+        return "TestPojo.classA{" +
                 "B=" + B +
                 ", C='" + C + '\'' +
                 ", D='" + D + '\'' +

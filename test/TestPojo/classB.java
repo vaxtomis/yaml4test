@@ -1,9 +1,5 @@
-package Producer;
+package TestPojo;
 
-
-/**
- * @author vaxtomis
- */
 public class classB {
     private Byte suba;
     private String subb;
@@ -35,7 +31,7 @@ public class classB {
 
     @Override
     public String toString() {
-        return "classB{" +
+        return "TestPojo.classB{" +
                 "suba='" + suba + '\'' +
                 ", subb='" + subb + '\'' +
                 ", subc=" + subc +

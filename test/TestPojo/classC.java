@@ -1,8 +1,5 @@
-package Producer;
+package TestPojo;
 
-/**
- * @author vaxtomis
- */
 public class classC {
     private String E;
     private String F;
@@ -25,7 +22,7 @@ public class classC {
 
     @Override
     public String toString() {
-        return "classC{" +
+        return "TestPojo.classC{" +
                 "E='" + E + '\'' +
                 ", F='" + F + '\'' +
                 '}';
