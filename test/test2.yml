@@ -1,3 +1,20 @@
-B:
-  - 123
-  - 234
+D: !TestPojo.classD
+  cs:
+    - !TestPojo.classC
+      E: e1
+      F: f1
+    - !TestPojo.classC
+      E: e2
+      F: f2
+  d: 111
+  e:
+    - 1
+    - 2
+    - 3
+C:
+  - !TestPojo.classC
+    E: E1
+    F: F1
+  - !TestPojo.classC
+    E: E2
+    F: F2
