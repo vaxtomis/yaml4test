@@ -1,6 +1,7 @@
 package Producer;
 
 import Parser.Parser;
+import TestPojo.classA;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class ProducerTest {
     Producer producer = new Producer();
     Map<String, ?> map = new HashMap<>();
     @Test
-    public void producerTest() {
+    public void producerTest() throws ClassNotFoundException {
         long start=System.currentTimeMillis();
         parser.setPath("test/test.yml");
         producer.setInnerMap(map);
