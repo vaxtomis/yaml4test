@@ -1,11 +1,13 @@
+import Annotation.Yaml4test;
+import Annotation.YamlInject;
 import Parser.Parser;
 import Producer.Producer;
-import annotation.Yaml4test;
-import annotation.YamlInject;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @description
@@ -26,6 +28,13 @@ public class YamlFactory {
         producer.setInnerMap(storageMap);
     }
 
+    /**
+     * Get the address of the yaml file in the annotation,
+     * create instances and store them in the storageMap,
+     * inject the corresponding instances into the annotated field.
+     * @param context
+     * @param <T>
+     */
     public static <T> void refreshFactory(T context) {
         if (yamlFactory == null) {
             yamlFactory = new YamlFactory();
@@ -37,6 +46,15 @@ public class YamlFactory {
         yamlFactory.producer.setEvents(yamlFactory.parser.getEventList());
         yamlFactory.producer.build();
         yamlFactory.autowiring(context);
+    }
+
+    /**
+     * Get object in storageMap by name.
+     * @param name
+     * @return Object
+     */
+    public static Object getBean(String name) {
+        return yamlFactory.storageMap.get(name);
     }
 
     private void setPathByAnnotation() {
@@ -61,8 +79,10 @@ public class YamlFactory {
                 continue;
             }
             field.setAccessible(true);
+            String name = field.getAnnotation(YamlInject.class).Name();
+            name = name.equals("")?field.getName():name;
             try {
-                field.set(context, storageMap.get(field.getName()));
+                field.set(context, storageMap.get(name));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
