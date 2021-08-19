@@ -134,12 +134,17 @@ public class Parser {
             events.add(new ValueEvent(tk.getStyle(), tk.getValue()));
         }
         else if (pre.getType() == BLOCK_ENTRY) {
-            events.add(Event.GET_ENTRY);
+            events.add(new EntryEvent("value", tk.getValue()));
         }
     }
 
     private void handleClassName(ClassNameToken tk) {
-        events.add(new ClassNameEvent(tk.getName()));
+        Token pre = sw.getPre();
+        if (pre.getType() == BLOCK_ENTRY) {
+            events.add(new EntryEvent("class", tk.getName()));
+        } else {
+            events.add(new ClassNameEvent(tk.getName()));
+        }
     }
 
     private void handleBlockEnd() {
@@ -180,7 +185,7 @@ public class Parser {
 
     public static void main(String[] args) {
         Parser parser = new Parser();
-        parser.setPath("test/test.yml");
+        parser.setPath("test/test2.yml");
         for(Event e : parser.getEventList()) {
             System.out.println(e.toString());
         }
