@@ -1,9 +1,6 @@
 package Producer;
 
-import Parser.ClassNameEvent;
-import Parser.Event;
-import Parser.NameEvent;
-import Parser.ValueEvent;
+import Parser.*;
 
 import java.lang.reflect.*;
 import java.math.BigDecimal;
@@ -74,6 +71,25 @@ public class Producer {
                 }
                 break;
             case GET_ENTRY:
+                if (event instanceof EntryEvent) {
+                    String entryType = ((EntryEvent)event).getEntryType();
+                    String className = ((EntryEvent)event).getValue();
+                    if (entryType.equals("class")) {
+                        createRawPair();
+                        try {
+                            putClass(className);
+                        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+                            e.printStackTrace();
+                        }
+                        objectStack.getLast().setValue(className);
+                    }
+                    else if (entryType.equals("value")) {
+                        createRawPair();
+                        // <=== Need to optimize. ===>
+                        putValue("String", ((EntryEvent)event).getValue());
+                        objectStack.getLast().setValue("java.lang.String");
+                    }
+                }
                 break;
             case MAPPING_END:
                 if (1 == layerStack.size()) {
@@ -111,7 +127,11 @@ public class Producer {
     }
 
     private void prepareSequence() {
-
+        if (curContainer != null && curContainer.size() > 0) {
+            objectStack.add(curContainer.getLast());
+        }
+        layerStack.add(new PairContainer());
+        curContainer = layerStack.getLast();
     }
 
     private void createRawPair(String name) {
@@ -119,8 +139,13 @@ public class Producer {
         curContainer.add(pair);
     }
 
+    private void createRawPair() {
+        RawPair<?> pair = new RawPair<>(String.valueOf(curContainer.getPairNo()));
+        curContainer.add(pair);
+    }
+
     /**
-     * <=== Mark, need to be optimized. ===>
+     * <=== Mark, need to optimize. ===>
      *
      * Put the value(primitive type and their encapsulation class)
      * into RawPair
@@ -139,6 +164,7 @@ public class Producer {
      * create new instance and put it into RawPair.
      */
     private void putClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        System.out.println(className);
         Class<?> clazz = Class.forName(className);
         if (curContainer != null && curContainer.size() > 0) {
             RawPair rawPair = curContainer.getLast();
@@ -156,8 +182,11 @@ public class Producer {
     public void injectProperty() {
         RawPair<?> rawPair = objectStack.pollLast();
         curContainer = layerStack.pollLast();
-        Class<?> clazz = rawPair.getValue().getClass();
+
+        //System.out.println(rawPair.getName() + " - " + rawPair.getValue());
         Object obj = rawPair.getValue();
+        Class<?> clazz = obj.getClass();
+
         HashMap<String, Method> methodMap = new HashMap<>();
         Field[] fields = clazz.getDeclaredFields();
         Method[] methods = clazz.getDeclaredMethods();
@@ -236,9 +265,11 @@ public class Producer {
             //try to assign the value directly.
             if (!setterSuccess) {
                 try {
-                    //System.out.println("fType: " + fType);
-                    //System.out.println("Class: " + curContainer.getRawPairValue(fName).getClass());
-                    field.set(obj, curContainer.getRawPairValue(fName));
+                    if (field.getType().isArray()) {
+                        //String 更新成自定义类型
+                    } else {
+                        field.set(obj, curContainer.getRawPairValue(fName));
+                    }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -251,8 +282,18 @@ public class Producer {
     private void addElement() {
         RawPair<?> rawPair = objectStack.pollLast();
         curContainer = layerStack.pollLast();
-        Class<?> clazz = rawPair.getValue().getClass();
-
+        String className = (String) rawPair.getValue();
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        Object array =  Array.newInstance(clazz, curContainer.size());
+        for (int i = 0; i < curContainer.size(); i++) {
+            Array.set(array, i, curContainer.getRawPairValue(String.valueOf(i)));
+        }
+        rawPair.setValue(array);
         curContainer.clear();
         curContainer = layerStack.peekLast();
     }
@@ -272,7 +313,7 @@ public class Producer {
     }
 
     /**
-     * <=== Mark, Need to be optimized. ===>
+     * <=== Mark, Need to optimize. ===>
      *
      * Determine whether this type can be parsed.
      */
