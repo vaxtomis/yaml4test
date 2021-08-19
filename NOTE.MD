@@ -39,10 +39,10 @@ E   -> S         :value of entry
 Parser EXAMPLE:
 <BMS> (push "Map" in)
     <GET_NAME> -> class                 {Map1: class -> !Class}
+    <GET_CLASSNAME>
     <BMS> (push "class" in)             {Stack: class}
-        <GET_NAME> -> B                 {Map2: B -> !Producer.classB, C -> CCC, D -> DDD}
-        <GET_CLASSNAME> -> Producer.classB
-        <CREATE_OBJECT>
+        <GET_NAME> -> B                 {Map2: B -> !TestPojo.classB, C -> CCC, D -> DDD}
+        <GET_CLASSNAME> -> TestPojo.classB
             <BMS> (push "B" in)         {Stack: class, B}
                 <GET_NAME> <GET_VALUE>  {Map3: suba -> "!aaa", subb -> bbb}
                 <GET_NAME> <GET_VALUE>
@@ -56,12 +56,12 @@ Parser EXAMPLE:
 <BMS>
     <GET_NAME>
     <BSS>
-        <GET_CLASSNAME>
+        <GET_ENTRY (class)>
         <BMS>
             <GET_NAME> <GET_VALUE>
             <GET_NAME> <GET_VALUE>
         <BME>
-        <GET_CLASSNAME>
+        <GET_ENTRY (class)>
         <BMS>
             <GET_NAME> <GET_VALUE>
             <GET_NAME> <GET_VALUE>
@@ -73,7 +73,7 @@ Parser EXAMPLE:
 <BMS>
     <GET_NAME>
     <BSS>
-        <GET_ENTRY>
-        <GET_ENTRY>
+        <GET_ENTRY (value)>
+        <GET_ENTRY (value)>
     <BSE>
-<BMS>        
+<BMS>
