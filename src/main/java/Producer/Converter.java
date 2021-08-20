@@ -6,12 +6,22 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * @author vaxtomis
  */
 public class Converter {
+    private static final HashSet<Class<?>> classSet = new HashSet<>();
+    static {
+        Class<?>[] classes = new Class[] {String.class, int.class, Integer.class, char.class,
+        Character.class, long.class, Long.class, double.class, Double.class, float.class,
+        Float.class, BigInteger.class, BigDecimal.class, Byte.class};
+        classSet.addAll(Arrays.asList(classes));
+    }
+
     public static boolean convertObj(HashMap<String, Method> methodMap, Class<?> fClazz, Field field, Object beInject, Object rawPairValue) {
         String getV = rawPairValue.toString();
         String setMethodName = "set" + field.getName().substring(0,1).toUpperCase() + field.getName().substring(1);
@@ -67,7 +77,10 @@ public class Converter {
         }
         return res;
     }
-
+    public static boolean isPrimitiveObjArray(Class<?> clazz) {
+        if (clazz.isArray() && classSet.contains(clazz.getComponentType())) return true;
+        return false;
+    }
     public static void convertObjs(Class<?> componentType, Field field, Object beInject, Object rawPairValue) {
         String[] rawPairArray = (String[]) rawPairValue;
         Object newArray = Array.newInstance(componentType, rawPairArray.length);
