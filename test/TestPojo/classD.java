@@ -1,5 +1,7 @@
 package TestPojo;
 
+import java.util.Arrays;
+
 public class classD {
     private classC[] cs;
     private int d;
@@ -19,5 +21,14 @@ public class classD {
 
     public int[] getE() {
         return e;
+    }
+
+    @Override
+    public String toString() {
+        return "classD{" +
+                "cs=" + Arrays.toString(cs) +
+                ", d=" + d +
+                ", e=" + Arrays.toString(e) +
+                '}';
     }
 }
