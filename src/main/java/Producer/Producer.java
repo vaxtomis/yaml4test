@@ -198,10 +198,11 @@ public class Producer {
                 continue;
             }
             field.setAccessible(true);
+            boolean setterSuccess = false;
             Class<?> fClazz = field.getType();
             String fName = field.getName();
             Object rawPairValue = curContainer.getRawPairValue(fName);
-            boolean setterSuccess = convertObj(methodMap, fClazz, field, obj, rawPairValue);
+            setterSuccess = convertObj(methodMap, fClazz, field, obj, rawPairValue);
             //If the injection fails (using the setter method),
             //try to assign the value directly.
             if (!setterSuccess) {
