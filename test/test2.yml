@@ -3,9 +3,17 @@ D: !TestPojo.classD
     - !TestPojo.classC
       E: e1
       F: f1
+      G:
+        - 11
+        - 22
+        - 33
     - !TestPojo.classC
       E: e2
       F: f2
+      G:
+        - 44
+        - 55
+        - 66
   d: 111
   e:
     - 1
