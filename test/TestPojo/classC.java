@@ -3,6 +3,15 @@ package TestPojo;
 public class classC {
     private String E;
     private String F;
+    private int[] G;
+
+    public int[] getG() {
+        return G;
+    }
+
+    public void setG(int[] g) {
+        G = g;
+    }
 
     public String getE() {
         return E;
