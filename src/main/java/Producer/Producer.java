@@ -3,11 +3,12 @@ package Producer;
 import Parser.*;
 
 import java.lang.reflect.*;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
+
+import static Producer.Converter.convertObj;
+import static Producer.Converter.convertObjs;
 
 /**
  * @description Perform the corresponding function execution according to Events,
@@ -164,7 +165,6 @@ public class Producer {
      * create new instance and put it into RawPair.
      */
     private void putClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        System.out.println(className);
         Class<?> clazz = Class.forName(className);
         if (curContainer != null && curContainer.size() > 0) {
             RawPair rawPair = curContainer.getLast();
@@ -186,7 +186,6 @@ public class Producer {
         //System.out.println(rawPair.getName() + " - " + rawPair.getValue());
         Object obj = rawPair.getValue();
         Class<?> clazz = obj.getClass();
-
         HashMap<String, Method> methodMap = new HashMap<>();
         Field[] fields = clazz.getDeclaredFields();
         Method[] methods = clazz.getDeclaredMethods();
@@ -199,76 +198,20 @@ public class Producer {
                 continue;
             }
             field.setAccessible(true);
-            boolean setterSuccess = false;
-            Type fType = field.getGenericType();
+            Class<?> fClazz = field.getType();
             String fName = field.getName();
-            try {
-                if (fType.equals(String.class)) {
-                    String temp = curContainer.getRawPairValue(fName);
-                    if (temp == null) temp = "";
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(char.class) || fType.equals(Character.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    char temp = (getV != null)?getV.charAt(0):'\u0000';
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(int.class) || fType.equals(Integer.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    int temp = (canParse(getV, "int"))?Integer.parseInt(getV):0;
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(long.class) || fType.equals(Long.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    long temp = (canParse(getV, "long"))?Long.parseLong(getV):0L;
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(double.class) || fType.equals(Double.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    double temp = (canParse(getV, "double"))?Double.parseDouble(getV):0.0d;
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(float.class) || fType.equals(Float.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    float temp = (canParse(getV, "float"))?Float.parseFloat(getV):0.0f;
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(short.class) || fType.equals(Short.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    short temp = (canParse(getV, "short"))?Short.parseShort(getV):0;
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(boolean.class) || fType.equals(Boolean.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    boolean temp = (canParse(getV, "boolean")) && Boolean.parseBoolean(getV);
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(BigInteger.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    BigInteger temp = (canParse(getV, "bigInteger"))?new BigInteger(getV):new BigInteger("0");
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(BigDecimal.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    BigDecimal temp = (canParse(getV, "bigDecimal"))?new BigDecimal(getV):new BigDecimal("0.00");
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-                else if (fType.equals(Byte.class)) {
-                    String getV = curContainer.getRawPairValue(fName);
-                    Byte temp = (canParse(getV, "byte"))?Byte.parseByte(getV, 16):0;
-                    setterSuccess = setterInject(methodMap, field, obj, temp);
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+            Object rawPairValue = curContainer.getRawPairValue(fName);
+            boolean setterSuccess = convertObj(methodMap, fClazz, field, obj, rawPairValue);
             //If the injection fails (using the setter method),
             //try to assign the value directly.
             if (!setterSuccess) {
                 try {
-                    if (field.getType().isArray()) {
-                        //String 更新成自定义类型
+                    if (fClazz.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
+                        //Convert string array.
+                        Class<?> componentType = fClazz.getComponentType();
+                        convertObjs(componentType, field, obj, rawPairValue);
                     } else {
-                        field.set(obj, curContainer.getRawPairValue(fName));
+                        field.set(obj, rawPairValue);
                     }
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -296,49 +239,6 @@ public class Producer {
         rawPair.setValue(array);
         curContainer.clear();
         curContainer = layerStack.peekLast();
-    }
-
-    private boolean setterInject(HashMap<String, Method> methodMap, Field field, Object obj, Object...temp) {
-        String setMethodName = "set" + field.getName().substring(0,1).toUpperCase() + field.getName().substring(1);
-        Method setMethod = methodMap.get(setMethodName);
-        if (setMethod == null || obj == null) {
-            return false;
-        }
-        try {
-            setMethod.invoke(obj, temp);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
-        }
-        return true;
-    }
-
-    /**
-     * <=== Mark, Need to optimize. ===>
-     *
-     * Determine whether this type can be parsed.
-     */
-    private boolean canParse(String getV, String type) {
-        if (getV == null) return false;
-        switch (type) {
-            case "int":
-            case "short":
-            case "long":
-            case "bigInteger":
-                return getV.matches("^(-|\\+)?\\d$");
-            case "double":
-            case "float":
-            case "bigDecimal":
-                return getV.matches("^(-?\\d+)(\\.\\d+)?$");
-            case "byte":
-                if (!getV.matches("^[0-9a-fA-F]+$")) {
-                    return false;
-                }
-                int i = Integer.parseInt(getV, 16);
-                return  i >= -128 && i <= 127;
-            case "boolean":
-                return true;
-        }
-        return false;
     }
 
     public void setEvents(LinkedList<Event> events) {
