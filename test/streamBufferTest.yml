@@ -1,5 +1,0 @@
-class:
-  !className
-  subclass:
-    suba: aaa
-    subb: bbb
