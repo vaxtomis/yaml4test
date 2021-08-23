@@ -23,6 +23,8 @@ C:
   - !TestPojo.classC
     E: E1
     F: F1
+    G:
+      - 77
   - !TestPojo.classC
     E: E2
     F: F2

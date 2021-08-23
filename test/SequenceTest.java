@@ -4,6 +4,8 @@ import TestPojo.classC;
 import TestPojo.classD;
 import org.junit.Test;
 
+import java.util.Arrays;
+
 
 /**
  * @author vaxtomis
@@ -18,8 +20,6 @@ public class SequenceTest {
     public void SequenceTest() {
         YamlFactory.refreshFactory(this);
         System.out.println(D);
-        for (classC cc : C) {
-            System.out.println(cc);
-        }
+        System.out.println(Arrays.toString(C));
     }
 }
