@@ -1,5 +1,7 @@
 package TestPojo;
 
+import java.util.Arrays;
+
 public class classC {
     private String E;
     private String F;
@@ -31,9 +33,10 @@ public class classC {
 
     @Override
     public String toString() {
-        return "TestPojo.classC{" +
+        return "classC{" +
                 "E='" + E + '\'' +
                 ", F='" + F + '\'' +
+                ", G=" + Arrays.toString(G) +
                 '}';
     }
 }
