@@ -16,10 +16,13 @@ public class SequenceTest {
     private classD D;
     @YamlInject
     private classC[] C;
+    @YamlInject
+    private classD[] E;
     @Test
     public void SequenceTest() {
         YamlFactory.refreshFactory(this);
         System.out.println(D);
         System.out.println(Arrays.toString(C));
+        System.out.println(Arrays.toString(E));
     }
 }

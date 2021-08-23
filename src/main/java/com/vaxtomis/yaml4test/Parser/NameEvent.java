@@ -2,6 +2,7 @@ package com.vaxtomis.yaml4test.Parser;
 
 /**
  * @description Indicator for get name event.
+ * 获取键值对中的键的事件标志
  */
 public class NameEvent extends Event {
     private String name;

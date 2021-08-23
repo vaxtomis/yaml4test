@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import static com.vaxtomis.yaml4test.Tokenizer.TokenType.*;
 
 /**
- * @description com.vaxtomis.yaml4test.Parser.
+ * @description Parser.
  * @author vaxtomis
  */
 public class Parser {

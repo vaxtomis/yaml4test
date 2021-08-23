@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 /**
  * @description Define the constraints for tokens parser.
+ * 定义了分词语法限制的映射关系，用了最简单的办法，路径不通即为语法错误
  * @author vaxtomis
  *
  * K   -> S         :k-v get key's scalar

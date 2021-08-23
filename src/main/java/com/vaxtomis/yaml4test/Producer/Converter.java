@@ -80,10 +80,7 @@ public class Converter {
         }
         return res;
     }
-    public static boolean isPrimitiveObjArray(Class<?> clazz) {
-        if (clazz.isArray() && classSet.contains(clazz.getComponentType())) return true;
-        return false;
-    }
+
     public static void convertObjs(Class<?> componentType, Field field, Object beInject, Object rawPairValue) {
         String[] rawPairArray = (String[]) rawPairValue;
         Object newArray = Array.newInstance(componentType, rawPairArray.length);

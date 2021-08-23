@@ -23,8 +23,8 @@ ES  -> E         :next entry
     -> BE        :block sequence close
 BE  -> BE        :to BE
     -> K         :next k-v
-    -> E
-    -> SE
+    -> E         :next entry
+    -> SE        :stream end
 V   -> S         :k-v complete
     -> C         :get sub class name
     -> BMS       :sub mapping start

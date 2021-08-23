@@ -32,10 +32,6 @@ public class PairContainer {
         return (T)rawPair.getValue();
     }
 
-    public RawPair<?> getRawPair(String name) {
-        return cacheMap.get(name);
-    }
-
     public RawPair<?> pollLast() {
         return queue.pollLast();
     }

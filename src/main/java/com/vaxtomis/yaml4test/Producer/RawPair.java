@@ -3,6 +3,7 @@ import java.util.Objects;
 
 /**
  * @description Unassigned key-value pair.
+ * 未分配的键值对
  * @author vaxtomis
  */
 public class RawPair<T> {
