@@ -1,12 +1,15 @@
-package Tokenizer;
+package com.vaxtomis.yaml4test.Tokenizer;
 
+import com.vaxtomis.yaml4test.Tokenizer.TokenScanner;
+import com.vaxtomis.yaml4test.YamlFactory;
 import org.junit.Test;
 
 /**
  * @author vaxtomis
  */
 public class TokenScannerTest {
-    TokenScanner tokenScanner = new TokenScanner("test/tokenScannerTest.yml");
+    TokenScanner tokenScanner = new TokenScanner(
+            YamlFactory.class.getClassLoader().getResource("").getPath() + "tokenScannerTest.yml");
     @Test
     public void scanNextToken() {
         tokenScanner.scanNextToken();
@@ -21,7 +24,7 @@ public class TokenScannerTest {
 
     @Test
     public void scanFlowScalar() {
-        tokenScanner.toNext(2);
+        //tokenScanner.toNext(2);
         tokenScanner.scanNextToken();
         System.out.println(tokenScanner.scanFlowScalar('\''));
         tokenScanner.isLineBreak();
