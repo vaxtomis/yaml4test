@@ -23,6 +23,9 @@ public class Converter {
     }
 
     public static boolean convertObj(HashMap<String, Method> methodMap, Class<?> fClazz, Field field, Object beInject, Object rawPairValue) {
+        if (rawPairValue == null) {
+            return false;
+        }
         String getV = rawPairValue.toString();
         String setMethodName = "set" + field.getName().substring(0,1).toUpperCase() + field.getName().substring(1);
         Method method  = methodMap.get(setMethodName);
