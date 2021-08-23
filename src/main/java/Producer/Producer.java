@@ -207,7 +207,7 @@ public class Producer {
             //try to assign the value directly.
             if (!setterSuccess) {
                 try {
-                    if (fClazz.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
+                    if (rawPairValue != null && fClazz.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
                         //Convert string array.
                         Class<?> componentType = fClazz.getComponentType();
                         convertObjs(componentType, field, obj, rawPairValue);
