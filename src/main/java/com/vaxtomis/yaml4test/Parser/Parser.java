@@ -1,6 +1,8 @@
 package com.vaxtomis.yaml4test.Parser;
 
 import com.vaxtomis.yaml4test.Tokenizer.*;
+import com.vaxtomis.yaml4test.YamlFactory;
+
 import java.util.LinkedList;
 import static com.vaxtomis.yaml4test.Tokenizer.TokenType.*;
 
@@ -185,7 +187,9 @@ public class Parser {
 
     public static void main(String[] args) {
         Parser parser = new Parser();
-        parser.setPath("test2.yml");
+        String path = YamlFactory.class.getClassLoader().getResource("").getPath()+"test2.yml";
+        System.out.println(path);
+        parser.setPath(path);
         for(Event e : parser.getEventList()) {
             System.out.println(e.toString());
         }

@@ -18,9 +18,11 @@ public class SequenceTest {
     private classC[] C;
     @YamlInject
     private classD[] E;
+    {
+        YamlFactory.refreshFactory(this);
+    }
     @Test
     public void SequenceTest() {
-        YamlFactory.refreshFactory(this);
         System.out.println(D);
         System.out.println(Arrays.toString(C));
         System.out.println(Arrays.toString(E));

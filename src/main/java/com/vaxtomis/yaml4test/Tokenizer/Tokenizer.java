@@ -1,5 +1,7 @@
 package com.vaxtomis.yaml4test.Tokenizer;
 
+import com.vaxtomis.yaml4test.YamlFactory;
+
 import java.io.FileNotFoundException;
 import java.util.*;
 
@@ -204,10 +206,11 @@ public class Tokenizer {
 
 
     public static void main(String[] args) throws FileNotFoundException {
-            Tokenizer tokenizer = new Tokenizer("test2.yml");
-            Iterator iterator = tokenizer.iterator();
-            while (iterator.hasNext()) {
-                System.out.println(iterator.next());
-            }
+        String path = YamlFactory.class.getClassLoader().getResource("").getPath()+"test.yml";
+        Tokenizer tokenizer = new Tokenizer(path);
+        Iterator iterator = tokenizer.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
     }
 }

@@ -69,6 +69,7 @@ public class YamlFactory {
         }
         producer.setClassPath(clazz.getPackage().getName() + ".");
         parser.setPath(Objects.requireNonNull(clazz.getClassLoader().getResource("")).getPath() + path);
+        System.out.println(clazz.getClassLoader().getResource("").getPath() + path);
     }
 
     private <T> void autowiring(T context) {

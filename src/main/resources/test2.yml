@@ -1,0 +1,69 @@
+D: !TestPojo.classD
+  cs:
+    - !TestPojo.classC
+      E: e1
+      F: f1
+      G:
+        - 11
+        - 22
+        - 33
+    - !TestPojo.classC
+      E: e2
+      F: f2
+      G:
+        - 44
+        - 55
+        - 66
+  d: 111
+  e:
+    - 1
+    - 2
+    - 3
+C:
+  - !TestPojo.classC
+    E: E1
+    F: F1
+    G:
+      - 77
+  - !TestPojo.classC
+    E: E2
+    F: F2
+E:
+  - !TestPojo.classD
+    cs:
+      - !TestPojo.classC
+        E: e1
+        F: f1
+        G:
+          - 111
+          - 222
+          - 333
+      - !TestPojo.classC
+        E: e2
+        F: f2
+        G:
+          - 444
+          - 555
+          - 666
+    d: 222
+    e:
+      - 4
+      - 5
+  - !TestPojo.classD
+    cs:
+      - !TestPojo.classC
+        E: e3
+        F: f3
+        G:
+          - 1111
+          - 2222
+          - 3333
+      - !TestPojo.classC
+        E: e4
+        F: f4
+        G:
+          - 4444
+          - 5555
+    d: 333
+    e:
+      - 1
