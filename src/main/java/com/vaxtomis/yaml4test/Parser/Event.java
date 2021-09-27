@@ -5,7 +5,6 @@ package com.vaxtomis.yaml4test.Parser;
  */
 public class Event {
     private EventType type;
-    final static Event GET_ENTRY = new Event(EventType.GET_ENTRY);
     final static Event SEQUENCE_START = new Event(EventType.SEQUENCE_START);
     final static Event SEQUENCE_END = new Event(EventType.SEQUENCE_END);
     final static Event MAPPING_START = new Event(EventType.MAPPING_START);

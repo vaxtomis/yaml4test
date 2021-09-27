@@ -175,7 +175,7 @@ public class Producer {
             RawPair rawPair = curContainer.getLast();
             rawPair.setValue(clazz.newInstance());
         } else {
-            throw new ProducerException("Need a RawPair to set value but the Container is empty.");
+            throw new ProducerException("Need a RawPair to set class but the Container is empty.");
         }
     }
 

@@ -205,7 +205,7 @@ public class Tokenizer {
     }
 
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         String path = YamlFactory.class.getClassLoader().getResource("").getPath()+"test.yml";
         Tokenizer tokenizer = new Tokenizer(path);
         Iterator iterator = tokenizer.iterator();

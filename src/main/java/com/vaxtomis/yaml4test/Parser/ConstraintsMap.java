@@ -53,8 +53,6 @@ public class ConstraintsMap {
             }
         });
 
-
-
         CONSTRAINTS.put("K", new HashSet<String>() {
             {
                 add("S");
