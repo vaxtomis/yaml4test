@@ -27,11 +27,11 @@ objectName: !qualified name of class
     - collection2
   property4:
     - !qualified name of class2
-      property1 of subObj: BigDecimal
-      property2 of subObj: long
+        property1 of subObj: BigDecimal
+        property2 of subObj: long
     - !qualified name of class2
-      property1 of subObj: BigDecimal
-      property2 of subObj: Long
+        property1 of subObj: BigDecimal
+        property2 of subObj: Long
 ```
 ### 0.0.1 基础功能
 根据 yaml 文件读取并创建类实例对象，自动注入至类中。  
