@@ -3,6 +3,8 @@ package com.vaxtomis.yaml4test.Parser;
 import com.vaxtomis.yaml4test.Tokenizer.*;
 import com.vaxtomis.yaml4test.YamlFactory;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.LinkedList;
 import static com.vaxtomis.yaml4test.Tokenizer.TokenType.*;
 
@@ -91,6 +93,11 @@ public class Parser {
     private void loopProcessing() {
         if (path == null) {
             throw new ParserException("The path of file cannot be null.");
+        }
+        try {
+            this.path = URLDecoder.decode(path, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         tokenizer = new Tokenizer(path);
         while (!flagTokensEnd) {

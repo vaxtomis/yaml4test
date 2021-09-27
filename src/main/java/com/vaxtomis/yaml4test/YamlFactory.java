@@ -67,9 +67,13 @@ public class YamlFactory {
         if (path.equals("")) {
             throw new YamlFactoryException("The file path is not set.");
         }
-        producer.setClassPath(clazz.getPackage().getName() + ".");
+        if (clazz.getPackage() != null) {
+            producer.setClassPath(clazz.getPackage().getName() + ".");
+        } else {
+            producer.setClassPath("");
+        }
         parser.setPath(Objects.requireNonNull(clazz.getClassLoader().getResource("")).getPath() + path);
-        System.out.println(clazz.getClassLoader().getResource("").getPath() + path);
+        //System.out.println(clazz.getClassLoader().getResource("").getPath() + path);
     }
 
     private <T> void autowiring(T context) {
