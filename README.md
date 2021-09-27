@@ -5,11 +5,34 @@
 - [使用说明](#使用说明)
 ## 背景
 在复杂业务流情况下，对数据结构繁杂的 POJO 对象使用 Mock 测试，需要大量进行赋值操作。  
-yaml4test 通过预先在 yaml 文件中定义属性值和类之间的包含关系，在测试中直接对所需对象进行注入。  
-基于 ASM 对方法进行插桩自定义修改（预开发中）  
+yaml4test 通过预先在 yaml 文件中定义属性值和类之间的包含关系，在测试中直接对所需对象进行注入（反序列化）。  
+基于 ASM 对方法进行插桩自定义修改。（预开发中）  
 通过注释和 Tag 对 POJO 对象值进行修改，用较少工作量帮助测试进行代码分支的覆盖。（预开发中）  
 
 ## 使用说明
+### Yaml格式
+以下基础类型和常用类型会由类中的属性类型自动转换：  
+char.class, Character.class, String.class, Byte.class,  
+short.class, Short.class, long.class, Long.class,   
+double.class, Double.class, float.class,Float.class,  
+int.class, Integer.class, BigInteger.class, BigDecimal.class  
+
+以下为目前支持的 yaml格式示例：  
+```yaml
+objectName: !qualified name of class
+  property1: String
+  property2: int
+  property3: 
+    - collection1
+    - collection2
+  property4:
+    - !qualified name of class2
+      property1 of subObj: BigDecimal
+      property2 of subObj: long
+    - !qualified name of class2
+      property1 of subObj: BigDecimal
+      property2 of subObj: Long
+```
 ### 0.0.1 基础功能
 根据 yaml 文件读取并创建类实例对象，自动注入至类中。  
 对测试类进行注解，添加 yaml 路径和文件名：  

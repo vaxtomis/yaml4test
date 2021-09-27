@@ -17,7 +17,7 @@ public class Converter {
     private static final HashSet<Class<?>> classSet = new HashSet<>();
     static {
         Class<?>[] classes = new Class[] {String.class, int.class, Integer.class, char.class,
-        Character.class, long.class, Long.class, double.class, Double.class, float.class,
+        Character.class, short.class, Short.class, long.class, Long.class, double.class, Double.class, float.class,
         Float.class, BigInteger.class, BigDecimal.class, Byte.class};
         classSet.addAll(Arrays.asList(classes));
     }
