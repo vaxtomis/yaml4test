@@ -6,7 +6,7 @@ import java.io.*;
  * @description Used to process the data stream.
  * Reference -> com.esotericsoftware.yamlbeans
  **/
-public class StreamBuffer {
+public class StreamBuffer implements BufferOperate {
     private static StreamBuffer streamBuffer = null;
     private final Reader reader;
     private final StringBuilder builder;
@@ -45,7 +45,7 @@ public class StreamBuffer {
      * @param length
      * @return null
      */
-    public void flushIn(int length) {
+    private void flushIn(int length) {
         builder.delete(0,cursor);
         cursor = 0;
         while (builder.length() < length) {
@@ -113,6 +113,9 @@ public class StreamBuffer {
         return builder.substring(cursor, cursor + length);
     }
 
+    /**
+     * preSub and forward.
+     */
     public String preForward(int length) {
         String buff = preSub(length);
         int start = cursor;

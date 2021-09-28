@@ -1,6 +1,5 @@
 package com.vaxtomis.yaml4test.Tokenizer;
 
-import com.vaxtomis.yaml4test.Tokenizer.TokenScanner;
 import com.vaxtomis.yaml4test.YamlFactory;
 import org.junit.Test;
 

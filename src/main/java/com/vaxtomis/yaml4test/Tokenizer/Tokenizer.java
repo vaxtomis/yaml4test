@@ -2,7 +2,6 @@ package com.vaxtomis.yaml4test.Tokenizer;
 
 import com.vaxtomis.yaml4test.YamlFactory;
 
-import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -114,6 +113,7 @@ public class Tokenizer {
         tokens.add(Token.STREAM_START);
         flagStreamStart = true;
     }
+
     private void fetchStreamEnd() {
         for (int i = ts.countCloseBlock(-1); i > 0; i--) {
             tokens.add(Token.BLOCK_END);

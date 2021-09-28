@@ -7,7 +7,7 @@ import java.util.HashSet;
 
 /**
  * @description Define the constraints for tokens parser.
- * 定义了分词语法限制的映射关系，用了最简单的办法，路径不通即为语法错误
+ * 定义了分词语法限制的映射关系，路径不通即为语法错误。
  * @author vaxtomis
  *
  * K   -> S         :k-v get key's scalar
@@ -123,10 +123,10 @@ public class ConstraintsMap {
             }
         });
     }
-    public static boolean isAllowed(Parser.SlidingWindow sw) {
-        String doublePre = TOKEN_MAPPING.get(sw.getTokenType("DPre"));
-        String pre = TOKEN_MAPPING.get(sw.getTokenType("Pre"));
-        String cur = TOKEN_MAPPING.get(sw.getTokenType("Cur"));
+    public static boolean isAllowed(Parser.SlidingWindow window) {
+        String doublePre = TOKEN_MAPPING.get(window.getTokenType("DPre"));
+        String pre = TOKEN_MAPPING.get(window.getTokenType("Pre"));
+        String cur = TOKEN_MAPPING.get(window.getTokenType("Cur"));
         if (pre == null || doublePre == null) return true;
         HashSet<String> single = CONSTRAINTS.get(pre);
         HashSet<String> combine = CONSTRAINTS.get(doublePre + "-" + pre);

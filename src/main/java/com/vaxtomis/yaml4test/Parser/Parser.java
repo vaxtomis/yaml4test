@@ -15,7 +15,7 @@ import static com.vaxtomis.yaml4test.Tokenizer.TokenType.*;
 public class Parser {
     private Tokenizer tokenizer;
     private String path;
-    private Parser.SlidingWindow sw = new SlidingWindow();
+    private Parser.SlidingWindow window = new SlidingWindow();
     private LinkedList<Event> events = new LinkedList<>();
     private LinkedList<Token> blockStack = new LinkedList<Token>();
     private boolean flagTokensEnd = false;
@@ -101,7 +101,7 @@ public class Parser {
         }
         tokenizer = new Tokenizer(path);
         while (!flagTokensEnd) {
-            sw.forward();
+            window.forward();
             fetchEvent();
         }
     }
@@ -111,11 +111,11 @@ public class Parser {
      * Generates corresponding Event arrangement according to the grammar rules.
      */
     private void fetchEvent() {
-        if (!ConstraintsMap.isAllowed(sw)) {
+        if (!ConstraintsMap.isAllowed(window)) {
             throw new ParserException("Found a Token where it is not allowed."
-                    + " Token: " + sw.getCur().toString());
+                    + " Token: " + window.getCur().toString());
         }
-        Token tk = sw.getCur();
+        Token tk = window.getCur();
         switch (tk.getType()) {
             case SCALAR:
                 handleScalar((ScalarToken) tk);
@@ -135,7 +135,7 @@ public class Parser {
         }
     }
     private void handleScalar(ScalarToken tk) {
-        Token pre = sw.getPre();
+        Token pre = window.getPre();
         if (pre.getType() == KEY) {
             events.add(new NameEvent(tk.getValue()));
         }
@@ -148,7 +148,7 @@ public class Parser {
     }
 
     private void handleClassName(ClassNameToken tk) {
-        Token pre = sw.getPre();
+        Token pre = window.getPre();
         if (pre.getType() == BLOCK_ENTRY) {
             events.add(new EntryEvent("class", tk.getName()));
         } else {
@@ -166,12 +166,12 @@ public class Parser {
 
     private void handleMappingStart() {
         events.add(Event.MAPPING_START);
-        blockStack.push(sw.getCur());
+        blockStack.push(window.getCur());
     }
 
     private void handleSequenceStart() {
         events.add(Event.SEQUENCE_START);
-        blockStack.push(sw.getCur());
+        blockStack.push(window.getCur());
     }
 
     public LinkedList<Event> getEventList() {

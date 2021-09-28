@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * @description Used to scan the stream and split out tokens.
  * Reference -> com.esotericsoftware.yamlbeans
  */
-public class TokenScanner {
+public class TokenScanner implements TokenScan {
     private StreamBuffer bf;
     private int indent = -1;
     private int depth = 0;

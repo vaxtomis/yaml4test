@@ -3,7 +3,8 @@ package com.vaxtomis.yaml4test.Annotation;
 import java.lang.annotation.*;
 
 /**
- * @description 
+ * @description Annotation Yaml4test.
+ * @author vaxtomis
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

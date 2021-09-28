@@ -17,7 +17,7 @@ short.class, Short.class, long.class, Long.class,
 double.class, Double.class, float.class,Float.class,  
 int.class, Integer.class, BigInteger.class, BigDecimal.class  
 
-以下为目前支持的 yaml格式示例：  
+以下为目前支持的 yaml 格式示例：  
 ```yaml
 objectName: !qualified name of class
   property1: String
