@@ -208,4 +208,8 @@ public class Converter {
         }
         return true;
     }
+
+    public static boolean isPrimitive(Class<?> clazz) {
+        return classSet.contains(clazz);
+    }
 }

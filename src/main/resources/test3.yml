@@ -1,0 +1,10 @@
+newInstance: !Parser.Person
+  name: wujunhao
+  age: 10
+  bags:
+    - !Parser.Bag
+      brand: nike
+      price: 100
+    - !Parser.Bag
+      brand: nike
+      price: 100

@@ -86,8 +86,17 @@ public class YamlFactory {
                 continue;
             }
             field.setAccessible(true);
-            String name = field.getAnnotation(YamlInject.class).Name();
-            name = name.equals("")?field.getName():name;
+            fieldAssignment(field, context);
+        }
+    }
+
+    private <T> void fieldAssignment(Field field, T context) {
+        String name = field.getAnnotation(YamlInject.class).Name();
+        YamlInject.Scope scope = field.getAnnotation(YamlInject.class).Scope();
+        name = name.equals("")?field.getName():name;
+        if (scope.equals(YamlInject.Scope.Prototype)) {
+
+        } else {
             try {
                 field.set(context, storageMap.get(name));
             } catch (IllegalAccessException e) {
