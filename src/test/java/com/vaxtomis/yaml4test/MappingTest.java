@@ -12,7 +12,7 @@ import org.junit.Test;
 public class MappingTest {
     @YamlInject
     private classA A1;
-    @YamlInject(Name = "A2")
+    @YamlInject(Name = "A2", Scope = YamlInject.Scope.Prototype)
     private classA aaa2;
 
     {

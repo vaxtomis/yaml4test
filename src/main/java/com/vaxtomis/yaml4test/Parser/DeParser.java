@@ -47,6 +47,7 @@ public class DeParser {
     }
     private void parsePrimitive(Object parent, Field sField) throws IllegalAccessException {
         Object son = sField.get(parent);
+        if(son == null) return;
         events.add(new NameEvent(sField.getName()));
         events.add(new ValueEvent((char)0, String.valueOf(son)));
     }
@@ -54,6 +55,7 @@ public class DeParser {
     private void parseMapping(Object parent, Field sField) throws IllegalAccessException {
         String name = sField.getName();
         Object son = sField.get(parent);
+        if (son == null) return;
         Class<?> sClazz = sField.getType();
         events.add(new NameEvent(name));
         events.add(new ClassNameEvent(path(sClazz)));
@@ -67,6 +69,7 @@ public class DeParser {
         String cName = sField.getName();
         Object son = sField.get(parent);
         events.add(new NameEvent(cName));
+        if (son == null) return;
         events.add(Event.SEQUENCE_START);
         if (!Object.class.isAssignableFrom(son.getClass().getComponentType())) {
             int length = Array.getLength(son);

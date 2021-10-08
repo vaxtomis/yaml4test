@@ -47,6 +47,13 @@ objectName: !qualified name of class
 ```java
 @YamlInject(Name = "")
 ```
+可以指定映射对象返回是单例还是原型：
+```java
+// Singleton
+@YamlInject(Scope = YamlInject.Scope.Singleton)
+// Prototype
+@YamlInject(Scope = YamlInject.Scope.Prototype)
+```
 在调用前调用静态方法进行加载：
 ```java
 {
