@@ -1,0 +1,21 @@
+CopyInstance: !TestPojo.classD
+  cs:
+    - !TestPojo.classC
+      e: "c1-e"
+      f: "c1-f"
+      g:
+        - 1
+        - 2
+        - 3
+    - !TestPojo.classC
+      e: "c2-e"
+      f: "c2-f"
+      g:
+        - 4
+        - 5
+        - 6
+  d: 11
+  e:
+    - 7
+    - 8
+    - 9

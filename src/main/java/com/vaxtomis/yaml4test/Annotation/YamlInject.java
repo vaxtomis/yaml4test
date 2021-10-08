@@ -11,4 +11,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface YamlInject {
     String Name() default "";
+    enum Scope {Singleton, Prototype};
+    Scope Scope() default Scope.Singleton;
 }

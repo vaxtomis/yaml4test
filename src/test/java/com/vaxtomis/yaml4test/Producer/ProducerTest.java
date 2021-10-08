@@ -25,7 +25,7 @@ public class ProducerTest {
         producer.setEvents(parser.getEventList());
         producer.build();
         long end=System.currentTimeMillis();
-        System.out.println("Running time: "+(end-start)+"ms");
+        System.out.println("Running time: " + (end - start) + "ms");
         classA A1 = (classA) map.get("A1");
         classA A2 = (classA) map.get("A2");
         classA A3 = (classA) map.get("A3");

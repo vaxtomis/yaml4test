@@ -263,6 +263,10 @@ public class Producer {
         this.classPath = path;
     }
 
+    public Object getCopyInstance() {
+        return innerMap.getOrDefault("CopyInstance", null);
+    }
+
     public class ProducerException extends RuntimeException {
         public ProducerException (String msg, Throwable cause) {
             super(msg, cause);

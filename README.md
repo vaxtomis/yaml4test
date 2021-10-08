@@ -12,10 +12,10 @@ yaml4test 通过预先在 yaml 文件中定义属性值和类之间的包含关�
 ## 使用说明
 ### Yaml格式
 以下基础类型和常用类型会由类中的属性类型自动转换：  
-char.class, Character.class, String.class, Byte.class,  
-short.class, Short.class, long.class, Long.class,   
-double.class, Double.class, float.class,Float.class,  
-int.class, Integer.class, BigInteger.class, BigDecimal.class  
+char, Character, String, Byte,  
+short, Short, long, Long,   
+double, Double, float, Float,  
+int, Integer, BigInteger, BigDecimal  
 
 以下为目前支持的 yaml 格式示例：  
 ```yaml
@@ -47,9 +47,19 @@ objectName: !qualified name of class
 ```java
 @YamlInject(Name = "")
 ```
+可以指定映射对象返回是单例还是原型：
+```java
+// Singleton
+@YamlInject(Scope = YamlInject.Scope.Singleton)
+// Prototype
+@YamlInject(Scope = YamlInject.Scope.Prototype)
+```
 在调用前调用静态方法进行加载：
 ```java
 {
     YamlFactory.refreshFactory(this);
 }
 ```
+Utils 中的 BeanCopy 类，deepCopy(T source) 方法可以实现类实例的深度拷贝。  
+原理是将类实例序列化为 EventList 后，再通过 Producer 进行生成。  
+因此最底层部分的属性同样受上面定义的基础类型和常用类型限制。  

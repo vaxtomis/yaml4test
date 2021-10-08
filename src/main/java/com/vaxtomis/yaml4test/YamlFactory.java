@@ -4,6 +4,7 @@ import com.vaxtomis.yaml4test.Annotation.Yaml4test;
 import com.vaxtomis.yaml4test.Annotation.YamlInject;
 import com.vaxtomis.yaml4test.Parser.Parser;
 import com.vaxtomis.yaml4test.Producer.Producer;
+import com.vaxtomis.yaml4test.Utils.BeanCopy;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -86,13 +87,22 @@ public class YamlFactory {
                 continue;
             }
             field.setAccessible(true);
-            String name = field.getAnnotation(YamlInject.class).Name();
-            name = name.equals("")?field.getName():name;
-            try {
+            fieldAssignment(field, context);
+        }
+    }
+
+    private <T> void fieldAssignment(Field field, T context) {
+        String name = field.getAnnotation(YamlInject.class).Name();
+        YamlInject.Scope scope = field.getAnnotation(YamlInject.class).Scope();
+        name = name.equals("")?field.getName():name;
+        try {
+            if (scope.equals(YamlInject.Scope.Prototype)) {
+                field.set(context, BeanCopy.deepCopy(storageMap.get(name)));
+            } else {
                 field.set(context, storageMap.get(name));
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
             }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
         }
     }
 
