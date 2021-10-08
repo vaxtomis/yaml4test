@@ -2,9 +2,9 @@ package com.vaxtomis.yaml4test.Utils;
 
 import com.sun.istack.internal.NotNull;
 import com.vaxtomis.yaml4test.Parser.DeParser;
-import com.vaxtomis.yaml4test.Parser.Event;
+import com.vaxtomis.yaml4test.Producer.Producer;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 
 /**
  * @description Util for deep copy a instance.
@@ -12,9 +12,19 @@ import java.util.LinkedList;
  * @author vaxtomis
  */
 public class BeanCopy {
-    public static <T> T deepCopy(@NotNull T source) {
-        return null;
+    public static <T> T deepCopy(@NotNull T source) throws IllegalAccessException {
+        DeParser deParser = new DeParser();
+        deParser.parseToEvents(source, source.getClass());
+        Class clazz = source.getClass();
+        Producer producer = new Producer();
+        if (clazz.getPackage() != null) {
+            producer.setClassPath(clazz.getPackage().getName() + ".");
+        } else {
+            producer.setClassPath("");
+        }
+        producer.setEvents(deParser.getEventList());
+        producer.setInnerMap(new HashMap());
+        producer.build();
+        return (T) producer.getCopyInstance();
     }
-
-
 }

@@ -15,6 +15,14 @@ public class classD {
         return cs;
     }
 
+    public void setCs(classC[] cs) {
+        this.cs = cs;
+    }
+
+    public void setE(int[] e) {
+        this.e = e;
+    }
+
     public int getD() {
         return d;
     }

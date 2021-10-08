@@ -8,14 +8,15 @@ import java.lang.reflect.Field;
 import java.util.LinkedList;
 
 /**
- * @description 
+ * @description
+ * @author vaxtomis
  */
 public class DeParser {
-    public LinkedList<Event> events = new LinkedList<>();
+    private LinkedList<Event> events = new LinkedList<>();
 
     public void parseToEvents(Object source, Class<?> clazz) throws IllegalAccessException {
         events.add(Event.MAPPING_START);
-        events.add(new NameEvent("newInstance"));
+        events.add(new NameEvent("CopyInstance"));
         events.add(new ClassNameEvent(path(clazz)));
         events.add(Event.MAPPING_START);
         parse(source, clazz);
@@ -23,9 +24,14 @@ public class DeParser {
         events.add(Event.MAPPING_END);
     }
 
+    public LinkedList<Event> getEventList() {
+        return events;
+    }
+
     private void parse(Object parent, Class<?> pClazz) throws IllegalAccessException {
         Field[] sFields = pClazz.getDeclaredFields();
         for (Field sField : sFields) {
+            sField.setAccessible(true);
             switch (fieldType(sField)) {
                 case "MAPPING":
                     parseMapping(parent, sField);
@@ -56,7 +62,7 @@ public class DeParser {
         events.add(Event.MAPPING_END);
     }
 
-    // 需要优化
+    // 需要细化
     private void parseSequence(Object parent, Field sField) throws IllegalAccessException {
         String cName = sField.getName();
         Object son = sField.get(parent);
@@ -95,10 +101,10 @@ public class DeParser {
     /**
      * 判断 Field 的类型，根据类型去筛选 parse 处理函数。
      * Collection 对应为 Sequence
-     * Primitive 对应为 键值对
+     * Primitive 对应为 Key-Value
      * 其余为 Class 实例，对应为 Mapping
      * @param field
-     * @return
+     * @return String
      */
     private String fieldType(Field field) {
         if (field.getType().isArray()) {
@@ -110,14 +116,8 @@ public class DeParser {
     }
 
     private String path(Class<?> clazz) {
-        String packagePath = YamlFactory.class.getPackage().getName() + ".";
-        return clazz.getName().substring(packagePath.length());
-    }
-
-    public static void main(String[] args) {
-        DeParser deParser = new DeParser();
-        for(Event e : deParser.events) {
-            System.out.println(e.toString());
-        }
+        /*String packagePath = YamlFactory.class.getPackage().getName() + ".";
+        return clazz.getName().substring(packagePath.length());*/
+        return clazz.getSimpleName();
     }
 }

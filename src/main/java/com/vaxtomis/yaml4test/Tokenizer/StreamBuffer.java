@@ -4,7 +4,8 @@ import java.io.*;
 
 /**
  * @description Used to process the data stream.
- * Reference -> com.esotericsoftware.yamlbeans
+ * @Reference -> com.esotericsoftware.yamlbeans
+ * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
  **/
 public class StreamBuffer implements BufferOperate {
     private static StreamBuffer streamBuffer = null;
