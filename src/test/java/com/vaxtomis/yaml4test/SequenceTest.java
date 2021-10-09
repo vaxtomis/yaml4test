@@ -14,9 +14,9 @@ import java.util.Arrays;
 public class SequenceTest {
     @YamlInject
     private classD D;
-    @YamlInject
+    @YamlInject(Scope = YamlInject.Scope.Prototype)
     private classC[] C;
-    @YamlInject
+    @YamlInject(Scope = YamlInject.Scope.Prototype)
     private classD[] E;
     {
         YamlFactory.refreshFactory(this);

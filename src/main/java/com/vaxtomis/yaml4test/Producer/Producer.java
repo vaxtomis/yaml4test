@@ -14,7 +14,8 @@ import static com.vaxtomis.yaml4test.Producer.Converter.convertObj;
 import static com.vaxtomis.yaml4test.Producer.Converter.convertObjs;
 
 /**
- * @description Perform the corresponding function execution according to Events,
+ * @description
+ * Perform the corresponding function execution according to Events,
  * and finally store the mapping in the innerMap.
  * @author vaxtomis
  */
@@ -109,7 +110,6 @@ public class Producer {
         }
     }
 
-
     private void injectMap() {
         curContainer = layerStack.pollLast();
         while (curContainer.size() > 0) {
@@ -118,6 +118,10 @@ public class Producer {
         }
     }
 
+    /**
+     * @description
+     * 创建类映射的准备工作
+     */
     private void prepareMapping() {
         if (0 == layerStack.size()) {
             layerStack.add(new PairContainer());
@@ -131,6 +135,10 @@ public class Producer {
         curContainer = layerStack.getLast();
     }
 
+    /**
+     * @description
+     * 创建队列的准备工作
+     */
     private void prepareSequence() {
         if (curContainer != null && curContainer.size() > 0) {
             objectStack.add(curContainer.getLast());
@@ -139,6 +147,11 @@ public class Producer {
         curContainer = layerStack.getLast();
     }
 
+    /**
+     * @description
+     * 创建生键值对（即表示键值对的数据结构）
+     * @param name
+     */
     private void createRawPair(String name) {
         RawPair<?> pair = new RawPair<>(name);
         curContainer.add(pair);
@@ -152,8 +165,11 @@ public class Producer {
     /**
      * <=== Mark, need to optimize. ===>
      *
+     * @description
      * Put the value(primitive type and their encapsulation class)
      * into RawPair
+     *
+     * 将 Value（基本类型和其衍生类型）放入生键值对。
      */
     private void putValue(String style, String value) {
         if (curContainer != null && curContainer.size() > 0) {
@@ -165,8 +181,11 @@ public class Producer {
     }
 
     /**
+     * @description
      * Obtain the {Class} through class name,
      * create new instance and put it into RawPair.
+     *
+     * 通过全限定名获取 Class，并且创建新实例放入生键值对中。
      */
     private void putClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         //System.out.println(classPath + className);
@@ -180,9 +199,12 @@ public class Producer {
     }
 
     /**
+     * @description
      * After a BLOCK is closed,
      * a set of cached RawPairs are used to inject
      * the created class instance in the stack.
+     *
+     * 在一组区块闭合后，将缓存在栈中的生键值对信息注入进创建好的类实例中。
      */
     public void injectProperty() {
         RawPair<?> rawPair = objectStack.pollLast();

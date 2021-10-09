@@ -1,7 +1,6 @@
 package com.vaxtomis.yaml4test.Parser;
 
 import com.vaxtomis.yaml4test.Producer.Converter;
-import com.vaxtomis.yaml4test.YamlFactory;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -17,10 +16,12 @@ public class DeParser {
     public void parseToEvents(Object source, Class<?> clazz) throws IllegalAccessException {
         events.add(Event.MAPPING_START);
         events.add(new NameEvent("CopyInstance"));
-        events.add(new ClassNameEvent(path(clazz)));
-        events.add(Event.MAPPING_START);
-        parse(source, clazz);
-        events.add(Event.MAPPING_END);
+        if (clazz.isArray()) {
+            sequenceStrategy(source);
+        } else {
+            events.add(new ClassNameEvent(path(clazz)));
+            parse(source, clazz);
+        }
         events.add(Event.MAPPING_END);
     }
 
@@ -29,6 +30,7 @@ public class DeParser {
     }
 
     private void parse(Object parent, Class<?> pClazz) throws IllegalAccessException {
+        events.add(Event.MAPPING_START);
         Field[] sFields = pClazz.getDeclaredFields();
         for (Field sField : sFields) {
             sField.setAccessible(true);
@@ -44,6 +46,7 @@ public class DeParser {
                     break;
             }
         }
+        events.add(Event.MAPPING_END);
     }
     private void parsePrimitive(Object parent, Field sField) throws IllegalAccessException {
         Object son = sField.get(parent);
@@ -52,6 +55,7 @@ public class DeParser {
         events.add(new ValueEvent((char)0, String.valueOf(son)));
     }
 
+    // 解析 Mapping
     private void parseMapping(Object parent, Field sField) throws IllegalAccessException {
         String name = sField.getName();
         Object son = sField.get(parent);
@@ -59,26 +63,29 @@ public class DeParser {
         Class<?> sClazz = sField.getType();
         events.add(new NameEvent(name));
         events.add(new ClassNameEvent(path(sClazz)));
-        events.add(Event.MAPPING_START);
         parse(son, sClazz);
-        events.add(Event.MAPPING_END);
     }
 
-    // 需要细化
+    // 解析 Sequence
     private void parseSequence(Object parent, Field sField) throws IllegalAccessException {
         String cName = sField.getName();
         Object son = sField.get(parent);
-        events.add(new NameEvent(cName));
         if (son == null) return;
+        events.add(new NameEvent(cName));
+        sequenceStrategy(son);
+    }
+
+    // 处理 array 中的每一个实例
+    private void sequenceStrategy(Object obj) throws IllegalAccessException {
         events.add(Event.SEQUENCE_START);
-        if (!Object.class.isAssignableFrom(son.getClass().getComponentType())) {
-            int length = Array.getLength(son);
+        if (!Object.class.isAssignableFrom(obj.getClass().getComponentType())) {
+            int length = Array.getLength(obj);
             for(int i = 0; i < length; i++) {
-                String str = String.valueOf(Array.get(son,i));
+                String str = String.valueOf(Array.get(obj,i));
                 parseEntry(str);
             }
         } else {
-            Object[] parameters = (Object[]) son;
+            Object[] parameters = (Object[]) obj;
             for(Object parameter : parameters) {
                 parseEntry(parameter);
             }
@@ -91,9 +98,7 @@ public class DeParser {
             events.add(new EntryEvent("value", String.valueOf(parameter)));
         } else {
             events.add(new EntryEvent("class", path(parameter.getClass())));
-            events.add(Event.MAPPING_START);
             parse(parameter, parameter.getClass());
-            events.add(Event.MAPPING_END);
         }
     }
 
@@ -102,6 +107,7 @@ public class DeParser {
     }
 
     /**
+     * @description
      * 判断 Field 的类型，根据类型去筛选 parse 处理函数。
      * Collection 对应为 Sequence
      * Primitive 对应为 Key-Value

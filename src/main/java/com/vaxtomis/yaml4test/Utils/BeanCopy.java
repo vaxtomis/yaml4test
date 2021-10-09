@@ -13,15 +13,20 @@ import java.util.HashMap;
  */
 public class BeanCopy {
     public static <T> T deepCopy(@NotNull T source) throws IllegalAccessException {
+        Class clazz = source.getClass();
         DeParser deParser = new DeParser();
         deParser.parseToEvents(source, source.getClass());
-        Class clazz = source.getClass();
         Producer producer = new Producer();
+        String classPath = "";
         if (clazz.getPackage() != null) {
-            producer.setClassPath(clazz.getPackage().getName() + ".");
-        } else {
-            producer.setClassPath("");
+            classPath = clazz.getPackage().getName() + ".";
         }
+        // 多层嵌套时也能找到路径
+        while (clazz.isArray()) {
+            clazz = clazz.getComponentType();
+            classPath = clazz.getPackage().getName() + ".";
+        }
+        producer.setClassPath(classPath);
         producer.setEvents(deParser.getEventList());
         producer.setInnerMap(new HashMap());
         producer.build();

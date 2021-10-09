@@ -86,6 +86,9 @@ public class YamlFactory {
             if (!field.isAnnotationPresent(YamlInject.class)) {
                 continue;
             }
+            if (field.getType().isArray() && field.getType().getComponentType().isPrimitive()) {
+                throw new YamlFactoryException("Can not create primitive array.");
+            }
             field.setAccessible(true);
             fieldAssignment(field, context);
         }
