@@ -28,4 +28,8 @@ public class ValueEvent extends Event {
     public String getStyle() {
         return style;
     }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

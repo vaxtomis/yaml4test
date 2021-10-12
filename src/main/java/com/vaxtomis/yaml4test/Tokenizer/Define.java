@@ -29,6 +29,7 @@ public class Define {
     public final static String SPACES_AND_STUFF = "'\"\\\0 \t\r\n\u0085";
     public final static String DOUBLE_ESC = "\"\\";
 
+    public final static Pattern BRACKETS = Pattern.compile("^(\\[)(.*?)(\\])$");
     public final static Pattern R_FLOW_ZERO = Pattern.compile("[\0 \t\r\n\u0085]|(:[\0 \t\r\n\u0085])");
     public final static Pattern R_FLOW_NOT_ZERO = Pattern.compile("[\0 \t\r\n\u0085\\[\\]{},:?]");
     public final static Pattern END_OR_START = Pattern.compile("^(---|\\.\\.\\.)[\0 \t\r\n\u0085]$");

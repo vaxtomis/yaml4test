@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * @author vaxtomis
  */
-public class BeanCopyTest {
+public class BeanOperatorTest {
     classC c1 = new classC();
     classC c2 = new classC();
     classD d1 = new classD();
@@ -31,7 +31,7 @@ public class BeanCopyTest {
 
     @Test
     public void DeepCopyTest01() throws IllegalAccessException {
-        classC c2 = BeanCopy.deepCopy(c1);
+        classC c2 = BeanOperator.deepCopy(c1);
         System.out.println("This is c1: " + c1);
         System.out.println("This is c2 copy by c1: " + c2);
         System.out.println("c1 == c2: " + (c1 == c2));
@@ -39,7 +39,7 @@ public class BeanCopyTest {
 
     @Test
     public void DeepCopyTest02() throws IllegalAccessException {
-        classD d2 = BeanCopy.deepCopy(d1);
+        classD d2 = BeanOperator.deepCopy(d1);
         System.out.println("This is d1: " + d1);
         System.out.println("This is d2 copy by d1: " + d2);
         System.out.println("d1 == d2: " + (d1 == d2));
