@@ -24,6 +24,10 @@ public class EventOperator {
     private String modifiedEventName = "";
     private String value;
 
+    public EventOperator(LinkedList<Event> events) {
+        this.events = events;
+    }
+
     public EventOperator(LinkedList<Event> events, HashMap modifyMap) {
         this.events = events;
         this.modifyMap = modifyMap;
@@ -52,6 +56,73 @@ public class EventOperator {
         }
     }
 
+    /**
+     * 切分 Events，只取参与修改的部分，降低运行时开销。
+     *
+     * @param modifiedEventNames
+     */
+    public LinkedList<Event> getCutEvents(ArrayList<String> modifiedEventNames) {
+        LinkedList<Event> cutEvents = new LinkedList<>();
+        cutEvents.add(Event.MAPPING_START);
+        boolean isTargetEvents = false;
+        int start = 0;
+        int end = 0;
+        int deep = 0;
+        for(Event event : events) {
+            String fullName;
+            switch (event.getType()) {
+                case GET_NAME:
+                    curEvent = event;
+                    fullName = getFullName();
+                    if (deep == 1) {
+                        start = end;
+                    }
+                    if (modifiedEventNames.contains(fullName)) {
+                        isTargetEvents = true;
+                    }
+                    break;
+                case MAPPING_START:
+                    mappingStart();
+                    deep++;
+                    break;
+                case MAPPING_END:
+                    mappingEnd();
+                    deep--;
+                    if (isTargetEvents && deep == 1) {
+                        cutEvents.addAll(events.subList(start, end));
+                        isTargetEvents = false;
+                    }
+                    break;
+                case SEQUENCE_END:
+                    sequenceEnd();
+                    deep--;
+                    if (isTargetEvents && deep == 1) {
+                        cutEvents.addAll(events.subList(start, end));
+                        isTargetEvents = false;
+                    }
+                    break;
+                case SEQUENCE_START:
+                    sequenceStart();
+                    if (deep == 1) {
+                        start = end;
+                    }
+                    deep++;
+                    break;
+                case GET_ENTRY:
+                    seqIndex++;
+                    curEvent = event;
+                    fullName = getFullName();
+                    if (modifiedEventNames.contains(fullName)) {
+                        isTargetEvents = true;
+                    }
+                    break;
+            }
+            end++;
+        }
+        cutEvents.add(Event.MAPPING_END);
+        return cutEvents;
+    }
+
     private void batchModify(Event event) {
         String fullName;
         switch (event.getType()) {
@@ -65,31 +136,16 @@ public class EventOperator {
                 }
                 break;
             case MAPPING_START:
-                if (curEvent != null) {
-                    handleNameAndEntry();
-                    pathNameIndex++;
-                }
+                mappingStart();
                 break;
             case MAPPING_END:
-                if (pathNameIndex > 0) {
-                    pathName.remove(--pathNameIndex);
-                }
+                mappingEnd();
                 break;
             case SEQUENCE_END:
-                if (pathNameIndex > 0) {
-                    pathName.remove(--pathNameIndex);
-                }
-                if (!seqIndexStack.isEmpty()) {
-                    seqIndex = seqIndexStack.pop();
-                }
+                sequenceEnd();
                 break;
             case SEQUENCE_START:
-                handleNameAndEntry();
-                pathNameIndex++;
-                if (seqIndex > -1) {
-                    seqIndexStack.push(seqIndex);
-                }
-                seqIndex = -1;
+                sequenceStart();
                 break;
             case GET_ENTRY:
                 seqIndex++;
@@ -121,31 +177,16 @@ public class EventOperator {
                 }
                 break;
             case MAPPING_START:
-                if (curEvent != null) {
-                    handleNameAndEntry();
-                    pathNameIndex++;
-                }
+                mappingStart();
                 break;
             case MAPPING_END:
-                if (pathNameIndex > 0) {
-                    pathName.remove(--pathNameIndex);
-                }
+                mappingEnd();
                 break;
             case SEQUENCE_END:
-                if (pathNameIndex > 0) {
-                    pathName.remove(--pathNameIndex);
-                }
-                if (!seqIndexStack.isEmpty()) {
-                    seqIndex = seqIndexStack.pop();
-                }
+                sequenceEnd();
                 break;
             case SEQUENCE_START:
-                handleNameAndEntry();
-                pathNameIndex++;
-                if (seqIndex > -1) {
-                    seqIndexStack.push(seqIndex);
-                }
-                seqIndex = -1;
+                sequenceStart();
                 break;
             case GET_ENTRY:
                 seqIndex++;
@@ -164,6 +205,38 @@ public class EventOperator {
         }
         return false;
     }
+
+    private void mappingStart() {
+        if (curEvent != null) {
+            handleNameAndEntry();
+            pathNameIndex++;
+        }
+    }
+
+    private void mappingEnd() {
+        if (pathNameIndex > 0) {
+            pathName.remove(--pathNameIndex);
+        }
+    }
+
+    private void sequenceStart() {
+        handleNameAndEntry();
+        pathNameIndex++;
+        if (seqIndex > -1) {
+            seqIndexStack.push(seqIndex);
+        }
+        seqIndex = -1;
+    }
+
+    private void sequenceEnd() {
+        if (pathNameIndex > 0) {
+            pathName.remove(--pathNameIndex);
+        }
+        if (!seqIndexStack.isEmpty()) {
+            seqIndex = seqIndexStack.pop();
+        }
+    }
+
 
     /**
      * 获取包含从最高级父类到当前属性的路径的属性名 如{a.b[0].c}。

@@ -3,29 +3,77 @@ package com.vaxtomis.yaml4test.Utils;
 import com.sun.istack.internal.NotNull;
 import com.vaxtomis.yaml4test.Parser.DeParser;
 import com.vaxtomis.yaml4test.Parser.Event;
+import com.vaxtomis.yaml4test.Parser.EventOperator;
 import com.vaxtomis.yaml4test.Producer.Producer;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * @description Util for deep copy a instance.
- * 构想 把类还原成 EventList 然后通过 Producer 再生成 Class
+ * @description Util for deep copy a instance, and change Event in EventList
+ * for create a new object that is similar but not identical.
+ *
+ * 构想 把类还原成 EventList 然后通过 Producer 再生成 Class。
+ *
+ * EventOperator 可以读取并修改 EventList，配合 deepCopy 方法，
+ * 用于创建一个相似但不完全相同且独立的类。
  * @author vaxtomis
  */
 public class BeanOperator {
-    // 对 EventList 进行修改操作
-    public static boolean changeEvents(@NotNull LinkedList<Event> events, @NotNull HashMap map) {
+    private static Class clazz;
+    private static DeParser deParser;
+    private static Producer producer;
+    private static String classPath;
 
-        return true;
+    /**
+     * 深拷贝方法，基于给定 T source 重新构建一个相同的类实例。
+     * @param source
+     * @param <T>
+     * @throws IllegalAccessException
+     */
+    public static <T> T deepCopy(@NotNull T source) throws IllegalAccessException {
+        createPrepare(source);
+        instanceBuild();
+        return (T) producer.getCopyInstance();
     }
 
-    public static <T> T deepCopy(@NotNull T source) throws IllegalAccessException {
-        Class clazz = source.getClass();
-        DeParser deParser = new DeParser();
+    public static <T> T modifyCopy(@NotNull T source, String key, String value) throws IllegalAccessException {
+        createPrepare(source);
+        modifyEvent(deParser.getEventList(), key, value);
+        instanceBuild();
+        return (T) producer.getCopyInstance();
+    }
+
+    public static <T> T modifyCopy(@NotNull T source, HashMap<String, String> modifyMap) throws IllegalAccessException {
+        createPrepare(source);
+        modifyEvents(deParser.getEventList(), modifyMap);
+        instanceBuild();
+        return (T) producer.getCopyInstance();
+    }
+
+    // 请先实现取 subEvents
+    public static <T> T[] createModifyGroup(@NotNull T source, HashMap<String,String> modifyMap) throws IllegalAccessException {
+        createPrepare(source);
+        return null;
+    }
+
+    // 传入 Map 对 EventList 进行修改操作
+    private static void modifyEvents(@NotNull LinkedList<Event> events, @NotNull HashMap modifyMap) {
+        EventOperator operator = new EventOperator(events, modifyMap);
+        operator.rebuild();
+    }
+
+    // 传入 K-V 修改 EventList 中的单个 Event
+    private static void modifyEvent(@NotNull LinkedList<Event> events, String key, String value) {
+        EventOperator operator = new EventOperator(events, key, value);
+        operator.rebuild();
+    }
+
+    private static <T> void createPrepare(@NotNull T source) throws IllegalAccessException {
+        clazz = source.getClass();
+        deParser = new DeParser();
         deParser.parseToEvents(source, source.getClass());
-        Producer producer = new Producer();
-        String classPath = "";
+        producer = new Producer();
+        classPath = "";
         if (clazz.getPackage() != null) {
             classPath = clazz.getPackage().getName() + ".";
         }
@@ -34,10 +82,12 @@ public class BeanOperator {
             clazz = clazz.getComponentType();
             classPath = clazz.getPackage().getName() + ".";
         }
+    }
+
+    private static void instanceBuild() {
         producer.setClassPath(classPath);
         producer.setEvents(deParser.getEventList());
         producer.setInnerMap(new HashMap());
         producer.build();
-        return (T) producer.getCopyInstance();
     }
 }

@@ -5,7 +5,9 @@ import com.vaxtomis.yaml4test.TestPojo.classD;
 import com.vaxtomis.yaml4test.YamlFactory;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -38,5 +40,22 @@ public class EventOperatorTest {
 
         classD D = (classD) map.get("D");
         System.out.println(D.getCs()[0].getE());
+    }
+
+    @Test
+    public void EventOperatorTest03() {
+        Parser parser = new Parser();
+        String path = YamlFactory.class.getClassLoader().getResource("").getPath() + "test2.yml";
+        parser.setPath(path);
+        EventOperator operator = new EventOperator(parser.getEventList());
+        ArrayList<String> array = new ArrayList<>();
+        array.add("D.cs[0].E");
+        for (Event event : operator.getCutEvents(array)) {
+            System.out.println(event.toString());
+        }
+        /*for (Event event : parser.getEventList()) {
+            System.out.println(event.toString());
+        }*/
+
     }
 }

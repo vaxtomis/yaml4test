@@ -8,6 +8,7 @@ import java.util.LinkedList;
 
 /**
  * @description
+ * 使用反射把类实例转换为 EventList。
  * @author vaxtomis
  */
 public class DeParser {
