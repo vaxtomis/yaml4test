@@ -5,8 +5,8 @@ import com.vaxtomis.yaml4test.Parser.DeParser;
 import com.vaxtomis.yaml4test.Parser.Event;
 import com.vaxtomis.yaml4test.Parser.EventOperator;
 import com.vaxtomis.yaml4test.Producer.Producer;
-import java.util.HashMap;
-import java.util.LinkedList;
+
+import java.util.*;
 
 /**
  * @description Util for deep copy a instance, and change Event in EventList
@@ -50,9 +50,14 @@ public class BeanOperator {
         return (T) producer.getCopyInstance();
     }
 
-    // 请先实现取 subEvents
+    // 创建满足树形分支批量修改的实例组
     public static <T> T[] createModifyGroup(@NotNull T source, HashMap<String,String> modifyMap) throws IllegalAccessException {
+        LinkedList<T> modifyGroup = new LinkedList<>();
+        LinkedList<LinkedList<Event>> eventsQueue = new LinkedList<>();
         createPrepare(source);
+        EventOperator operator = new EventOperator(deParser.getEventList(), modifyMap);
+        operator.cutEvents();
+
         return null;
     }
 

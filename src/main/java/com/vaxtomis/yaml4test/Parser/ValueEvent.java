@@ -7,6 +7,7 @@ package com.vaxtomis.yaml4test.Parser;
 public class ValueEvent extends Event {
     private String style;
     private String value;
+
     public ValueEvent(char style, String value) {
         super(EventType.GET_VALUE);
         if (style == '"') {

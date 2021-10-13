@@ -2,14 +2,13 @@ package com.vaxtomis.yaml4test.Parser;
 
 import com.vaxtomis.yaml4test.Tokenizer.Define;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 /**
  * @description
  * 遍历 EventList，并对符合条件的 Event 进行修改。
  * 需要传入需要修改的属性名和值 (HashMap)。
+ * 添加了 EventList 切分，用于降低修改 EventList 的开销。
  * @author vaxtomis
  */
 public class EventOperator {
@@ -47,21 +46,37 @@ public class EventOperator {
             for(Event event : events) {
                 batchModify(event);
             }
-        } else {
-            for(Event event : events) {
-                if (singleModify(event)) {
-                    return;
-                }
-            }
+            return;
         }
+        for(Event event : events) {
+            singleModify(event);
+        }
+    }
+
+    public LinkedList<Event> cutEvents() {
+        if (modifyMap != null) {
+            events = getCutEvents(modifyMap.keySet());
+            return events;
+        } else if (!modifiedEventName.equals("")) {
+            Set<String> set = new HashSet<>();
+            set.add(modifiedEventName);
+            events = getCutEvents(set);
+            return events;
+        }
+        throw new EventOperatorException("Both modifyMap and kay-value pair is not defined.");
     }
 
     /**
      * 切分 Events，只取参与修改的部分，降低运行时开销。
+     * 切分完成的 EventList 依然通过 Producer 创建对应的 Map，
+     * 但是会缺失未修改的类。
      *
+     * start end 用来标记 BLOCK，deep 保证 BLOCK 粒度最大。
+     * 检测到当前 BLOCK 中存在需要修改的 Event 名，将整个 BLOCK 的 Events
+     * 放到 cutEvents 中。
      * @param modifiedEventNames
      */
-    public LinkedList<Event> getCutEvents(ArrayList<String> modifiedEventNames) {
+    private LinkedList<Event> getCutEvents(Set<String> modifiedEventNames) {
         LinkedList<Event> cutEvents = new LinkedList<>();
         cutEvents.add(Event.MAPPING_START);
         boolean isTargetEvents = false;
@@ -89,7 +104,7 @@ public class EventOperator {
                     mappingEnd();
                     deep--;
                     if (isTargetEvents && deep == 1) {
-                        cutEvents.addAll(events.subList(start, end));
+                        cutEvents.addAll(events.subList(start, end + 1));
                         isTargetEvents = false;
                     }
                     break;
@@ -97,15 +112,12 @@ public class EventOperator {
                     sequenceEnd();
                     deep--;
                     if (isTargetEvents && deep == 1) {
-                        cutEvents.addAll(events.subList(start, end));
+                        cutEvents.addAll(events.subList(start, end + 1));
                         isTargetEvents = false;
                     }
                     break;
                 case SEQUENCE_START:
                     sequenceStart();
-                    if (deep == 1) {
-                        start = end;
-                    }
                     deep++;
                     break;
                 case GET_ENTRY:
@@ -123,48 +135,68 @@ public class EventOperator {
         return cutEvents;
     }
 
+    /**
+     * 根据 HashMap 对对应的 Event 进行修改。
+     * @param event
+     */
     private void batchModify(Event event) {
         String fullName;
         switch (event.getType()) {
             case GET_NAME:
                 curEvent = event;
                 fullName = getFullName();
-                System.out.println(fullName);
+                //System.out.println(fullName);
                 if (modifyMap.containsKey(fullName)) {
                     needToModify = true;
                     modifiedEventName = fullName;
                 }
+                //modifiedEvents.add(event);
                 break;
             case MAPPING_START:
                 mappingStart();
+                //modifiedEvents.add(event);
                 break;
             case MAPPING_END:
                 mappingEnd();
+                //modifiedEvents.add(event);
                 break;
             case SEQUENCE_END:
                 sequenceEnd();
+                //modifiedEvents.add(event);
                 break;
             case SEQUENCE_START:
                 sequenceStart();
+                //modifiedEvents.add(event);
                 break;
             case GET_ENTRY:
                 seqIndex++;
                 curEvent = event;
                 fullName = getFullName();
-                System.out.println(fullName);
+                //System.out.println(fullName);
                 if (modifyMap.containsKey(fullName)) {
                     needToModify = true;
                     modifiedEventName = fullName;
                 }
+                //modifiedEvents.add(event);
                 break;
             case GET_VALUE:
                 if (needToModify) {
                     ((ValueEvent)event).setValue(modifyMap.get(modifiedEventName));
+                    //ValueEvent modifiedEvent = new ValueEvent('"', modifyMap.get(modifiedEventName));
+                    //modifiedEvents.add(modifiedEvent);
                     needToModify = false;
                 }
+                /*else {
+                    modifiedEvents.add(event);
+                }*/
         }
     }
 
+    /**
+     * 根据 Key-Value 对对应 Event 进行修改。
+     * @param event
+     * @return
+     */
     private boolean singleModify(Event event) {
         String fullName;
         switch (event.getType()) {
@@ -175,18 +207,23 @@ public class EventOperator {
                 if (modifiedEventName.equals(fullName)) {
                     needToModify = true;
                 }
+                //modifiedEvents.add(event);
                 break;
             case MAPPING_START:
                 mappingStart();
+                //modifiedEvents.add(event);
                 break;
             case MAPPING_END:
                 mappingEnd();
+                //modifiedEvents.add(event);
                 break;
             case SEQUENCE_END:
                 sequenceEnd();
+                //modifiedEvents.add(event);
                 break;
             case SEQUENCE_START:
                 sequenceStart();
+                //modifiedEvents.add(event);
                 break;
             case GET_ENTRY:
                 seqIndex++;
@@ -196,16 +233,25 @@ public class EventOperator {
                 if (modifiedEventName.equals(fullName)) {
                     needToModify = true;
                 }
+                //modifiedEvents.add(event);
                 break;
             case GET_VALUE:
                 if (needToModify) {
                     ((ValueEvent)event).setValue(value);
+                    //ValueEvent modifiedEvent = new ValueEvent('"', value);
+                    //modifiedEvents.add(modifiedEvent);
                     return true;
                 }
+                /*else {
+                    modifiedEvents.add(event);
+                }*/
         }
         return false;
     }
 
+    /**
+     * MAPPING_START 公用处理方法。
+     */
     private void mappingStart() {
         if (curEvent != null) {
             handleNameAndEntry();
@@ -213,12 +259,18 @@ public class EventOperator {
         }
     }
 
+    /**
+     * MAPPING_END 公用处理方法。
+     */
     private void mappingEnd() {
         if (pathNameIndex > 0) {
             pathName.remove(--pathNameIndex);
         }
     }
 
+    /**
+     * SEQUENCE_START 公用处理方法。
+     */
     private void sequenceStart() {
         handleNameAndEntry();
         pathNameIndex++;
@@ -228,6 +280,9 @@ public class EventOperator {
         seqIndex = -1;
     }
 
+    /**
+     * SEQUENCE_END 公用处理方法。
+     */
     private void sequenceEnd() {
         if (pathNameIndex > 0) {
             pathName.remove(--pathNameIndex);
@@ -236,7 +291,6 @@ public class EventOperator {
             seqIndex = seqIndexStack.pop();
         }
     }
-
 
     /**
      * 获取包含从最高级父类到当前属性的路径的属性名 如{a.b[0].c}。
@@ -250,14 +304,14 @@ public class EventOperator {
         StringBuilder fullName = new StringBuilder();
         for (String str : pathName) {
             if (Define.BRACKETS.matcher(str).matches()) {
-                fullName.deleteCharAt(fullName.length()-1);
+                fullName.deleteCharAt(fullName.length() - 1);
             }
             fullName.append(str).append(".");
         }
         if (type == EventType.GET_NAME) {
             fullName.append(((NameEvent)curEvent).getName());
         } else {
-            fullName.deleteCharAt(fullName.length()-1);
+            fullName.deleteCharAt(fullName.length() - 1);
             fullName.append("[").append(seqIndex).append("]");
         }
         return fullName.toString();
@@ -269,8 +323,49 @@ public class EventOperator {
     private void handleNameAndEntry() {
         if (curEvent.getType() == EventType.GET_NAME) {
             pathName.add(((NameEvent)curEvent).getName());
-        } else if (curEvent.getType() == EventType.GET_ENTRY) {
+        }
+        if (curEvent.getType() == EventType.GET_ENTRY) {
             pathName.add("[" + seqIndex + "]");
         }
     }
+
+    public LinkedList<Event> getEvents() {
+        return events;
+    }
+
+    public void resetModify(HashMap modifyMap) {
+        this.modifyMap = modifyMap;
+        this.modifiedEventName = "";
+        this.value = null;
+    }
+
+    public void resetModify(String modifiedEventName, String value) {
+        this.modifyMap = null;
+        this.modifiedEventName = modifiedEventName;
+        this.value = value;
+    }
+
+    public void resetEvents(LinkedList<Event> events) {
+        this.events = events;
+        init();
+    }
+
+    private void init() {
+        seqIndex = -1;
+        pathNameIndex = 0;
+        pathName.clear();
+        seqIndexStack.clear();
+        curEvent = null;
+        needToModify = false;
+    }
+
+    public class EventOperatorException extends RuntimeException {
+        public EventOperatorException (String msg, Throwable cause) {
+            super(msg, cause);
+        }
+        public EventOperatorException (String msg) {
+            super(msg, null);
+        }
+    }
 }
+
