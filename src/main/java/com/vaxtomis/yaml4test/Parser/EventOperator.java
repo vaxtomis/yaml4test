@@ -40,19 +40,30 @@ public class EventOperator {
 
     /**
      * 根据 HashMap 创建修改 EventList。
+     * 返回一个新的 EventList。
      */
-    public void rebuild() {
+    public LinkedList<Event> rebuild() {
+        init();
+        LinkedList<Event> modifiedEvents = new LinkedList<>();
         if (modifyMap != null) {
             for(Event event : events) {
-                batchModify(event);
+                batchModify(modifiedEvents, event);
             }
-            return;
+        } else {
+            for (int i = 0; i < events.size(); i++) {
+                Event event = events.get(i);
+                if (singleModify(modifiedEvents, event)) {
+                    modifiedEvents.addAll(events.subList(i + 1, events.size()));
+                    break;
+                }
+            }
         }
-        for(Event event : events) {
-            singleModify(event);
-        }
+        return modifiedEvents;
     }
 
+    /**
+     * @return LinkedList events
+     */
     public LinkedList<Event> cutEvents() {
         if (modifyMap != null) {
             events = getCutEvents(modifyMap.keySet());
@@ -139,8 +150,9 @@ public class EventOperator {
      * 根据 HashMap 对对应的 Event 进行修改。
      * @param event
      */
-    private void batchModify(Event event) {
+    private void batchModify(LinkedList<Event> modifiedEvents, Event event) {
         String fullName;
+        modifiedEvents.add(event);
         switch (event.getType()) {
             case GET_NAME:
                 curEvent = event;
@@ -150,23 +162,18 @@ public class EventOperator {
                     needToModify = true;
                     modifiedEventName = fullName;
                 }
-                //modifiedEvents.add(event);
                 break;
             case MAPPING_START:
                 mappingStart();
-                //modifiedEvents.add(event);
                 break;
             case MAPPING_END:
                 mappingEnd();
-                //modifiedEvents.add(event);
                 break;
             case SEQUENCE_END:
                 sequenceEnd();
-                //modifiedEvents.add(event);
                 break;
             case SEQUENCE_START:
                 sequenceStart();
-                //modifiedEvents.add(event);
                 break;
             case GET_ENTRY:
                 seqIndex++;
@@ -177,18 +184,16 @@ public class EventOperator {
                     needToModify = true;
                     modifiedEventName = fullName;
                 }
-                //modifiedEvents.add(event);
                 break;
             case GET_VALUE:
                 if (needToModify) {
-                    ((ValueEvent)event).setValue(modifyMap.get(modifiedEventName));
-                    //ValueEvent modifiedEvent = new ValueEvent('"', modifyMap.get(modifiedEventName));
-                    //modifiedEvents.add(modifiedEvent);
+                    //((ValueEvent)event).setValue(modifyMap.get(modifiedEventName));
+                    ValueEvent modifiedEvent = new ValueEvent('\'', modifyMap.get(modifiedEventName));
+                    modifiedEvents.removeLast();
+                    modifiedEvents.add(modifiedEvent);
                     needToModify = false;
                 }
-                /*else {
-                    modifiedEvents.add(event);
-                }*/
+                break;
         }
     }
 
@@ -197,8 +202,9 @@ public class EventOperator {
      * @param event
      * @return
      */
-    private boolean singleModify(Event event) {
+    private boolean singleModify(LinkedList<Event> modifiedEvents, Event event) {
         String fullName;
+        modifiedEvents.add(event);
         switch (event.getType()) {
             case GET_NAME:
                 curEvent = event;
@@ -207,23 +213,18 @@ public class EventOperator {
                 if (modifiedEventName.equals(fullName)) {
                     needToModify = true;
                 }
-                //modifiedEvents.add(event);
                 break;
             case MAPPING_START:
                 mappingStart();
-                //modifiedEvents.add(event);
                 break;
             case MAPPING_END:
                 mappingEnd();
-                //modifiedEvents.add(event);
                 break;
             case SEQUENCE_END:
                 sequenceEnd();
-                //modifiedEvents.add(event);
                 break;
             case SEQUENCE_START:
                 sequenceStart();
-                //modifiedEvents.add(event);
                 break;
             case GET_ENTRY:
                 seqIndex++;
@@ -233,18 +234,16 @@ public class EventOperator {
                 if (modifiedEventName.equals(fullName)) {
                     needToModify = true;
                 }
-                //modifiedEvents.add(event);
                 break;
             case GET_VALUE:
                 if (needToModify) {
-                    ((ValueEvent)event).setValue(value);
-                    //ValueEvent modifiedEvent = new ValueEvent('"', value);
-                    //modifiedEvents.add(modifiedEvent);
+                    //((ValueEvent)event).setValue(value);
+                    ValueEvent modifiedEvent = new ValueEvent('\'', value);
+                    modifiedEvents.removeLast();
+                    modifiedEvents.add(modifiedEvent);
                     return true;
                 }
-                /*else {
-                    modifiedEvents.add(event);
-                }*/
+                break;
         }
         return false;
     }
@@ -303,7 +302,7 @@ public class EventOperator {
         }
         StringBuilder fullName = new StringBuilder();
         for (String str : pathName) {
-            if (Define.BRACKETS.matcher(str).matches()) {
+            if (Define.BRACKETS_NUMBER.matcher(str).matches()) {
                 fullName.deleteCharAt(fullName.length() - 1);
             }
             fullName.append(str).append(".");
@@ -329,25 +328,16 @@ public class EventOperator {
         }
     }
 
-    public LinkedList<Event> getEvents() {
-        return events;
-    }
-
-    public void resetModify(HashMap modifyMap) {
+    public void setModify(HashMap modifyMap) {
         this.modifyMap = modifyMap;
         this.modifiedEventName = "";
         this.value = null;
     }
 
-    public void resetModify(String modifiedEventName, String value) {
+    public void setModify(String modifiedEventName, String value) {
         this.modifyMap = null;
         this.modifiedEventName = modifiedEventName;
         this.value = value;
-    }
-
-    public void resetEvents(LinkedList<Event> events) {
-        this.events = events;
-        init();
     }
 
     private void init() {

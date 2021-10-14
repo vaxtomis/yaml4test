@@ -34,11 +34,10 @@ public class EventOperatorTest {
         String path = YamlFactory.class.getClassLoader().getResource("").getPath() + "test2.yml";
         parser.setPath(path);
         EventOperator operator = new EventOperator(parser.getEventList(), "D.cs[0].E", "modified-E1");
-        operator.rebuild();
 
         Map<String, ?> map = new HashMap<>();
         Producer producer = new Producer();
-        producer.setEvents(parser.getEventList());
+        producer.setEvents(operator.rebuild());
         producer.setClassPath(YamlFactory.class.getPackage().getName() + ".");
         producer.setInnerMap(map);
         producer.build();

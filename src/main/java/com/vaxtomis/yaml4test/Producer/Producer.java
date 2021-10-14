@@ -47,7 +47,7 @@ public class Producer {
             processEvent(event);
             events.removeFirst();
         }
-        System.gc();
+        //System.gc();
     }
 
     private void processEvent(Event event) {
@@ -163,7 +163,7 @@ public class Producer {
     }
 
     /**
-     * <=== Mark, need to optimize. ===>
+     * @attention Need to optimize.
      *
      * @description
      * Put the value(primitive type and their encapsulation class)

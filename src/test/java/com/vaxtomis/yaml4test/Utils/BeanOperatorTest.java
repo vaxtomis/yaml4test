@@ -4,6 +4,8 @@ import com.vaxtomis.yaml4test.TestPojo.classC;
 import com.vaxtomis.yaml4test.TestPojo.classD;
 import org.junit.Test;
 
+import java.util.*;
+
 /**
  * @author vaxtomis
  */
@@ -44,5 +46,20 @@ public class BeanOperatorTest {
         System.out.println("This is d2 copy by d1: " + d2);
         System.out.println("d1 == d2: " + (d1 == d2));
         System.out.println("d1.cs[0] == d2.cs[0]: " + (d1.getCs()[0] == d2.getCs()[0]));
+    }
+
+    @Test
+    public void modifyCopy01Test() throws IllegalAccessException {
+        classC mc1 = BeanOperator.modifyCopy(c1, "E", "modified-E");
+        classC[] mcs = BeanOperator.modifyCopy(cs, "[0].F", "modified-F");
+        System.out.println(c1);
+        System.out.println(mc1);
+        System.out.println(Arrays.asList(cs));
+        System.out.println(Arrays.asList(mcs));
+    }
+
+    @Test
+    public void createModifyGroupTest() throws IllegalAccessException {
+
     }
 }
