@@ -17,6 +17,7 @@ import static com.vaxtomis.yaml4test.Producer.Converter.convertObjs;
  * @description
  * Perform the corresponding function execution according to Events,
  * and finally store the mapping in the innerMap.
+ * 根据 Events 执行相应的方法，最后生成的对象存储到 InnerMap 中。
  * @author vaxtomis
  */
 public class Producer {

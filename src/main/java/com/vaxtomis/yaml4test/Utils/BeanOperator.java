@@ -4,6 +4,7 @@ import com.sun.istack.internal.NotNull;
 import com.vaxtomis.yaml4test.Parser.DeParser;
 import com.vaxtomis.yaml4test.Parser.Event;
 import com.vaxtomis.yaml4test.Parser.EventOperator;
+import com.vaxtomis.yaml4test.Parser.ModifyCollector;
 import com.vaxtomis.yaml4test.Producer.Producer;
 import com.vaxtomis.yaml4test.Tokenizer.Define;
 
@@ -37,9 +38,9 @@ public class BeanOperator {
         return (T) producer.getCopyInstance();
     }
 
-    public static <T> T modifyCopy(@NotNull T source, @NotNull String propertyName, @NotNull String value) throws IllegalAccessException {
+    public static <T> T modifyCopy(@NotNull T source, @NotNull String propName, @NotNull String value) throws IllegalAccessException {
         createPrepare(source);
-        EventOperator operator = new EventOperator(deParser.getEventList(), formatName(propertyName), value);
+        EventOperator operator = new EventOperator(deParser.getEventList(), formatName(propName), value);
         instanceBuild(operator.rebuild());
         return (T) producer.getCopyInstance();
     }
@@ -54,17 +55,21 @@ public class BeanOperator {
 
     /**
      * 创建满足树形分支批量修改的实例组。
-     * 首先用 Map 来存储是不行的， 因为 Map 的 Key 不重复
-     * 先对改动组进行排列，然后再根据改动组排列去修改模板
+     * 首先用 Map 来存储是不行的， 因为 Map 的 Key 不重复。
+     * 先对改动组进行排列，然后再根据改动组排列去修改模板，避免相互引用出错的可能。
+     *
+     * 是否可以用 IdentityHashMap (是否适用于)
      * @param source
      * @param <T>
      * @return List
      * @throws IllegalAccessException
      */
-    public static <T> List<T> createModifyGroup(@NotNull T source, @NotNull HashMap<String,String> modifyMap) throws IllegalAccessException {
+    public static <T> List<T> createModifiedGroup(@NotNull T source, @NotNull ModifyCollector collector) throws IllegalAccessException {
         LinkedList<T> modifyGroup = new LinkedList<>();
         createPrepare(source);
         EventOperator operator = new EventOperator(deParser.getEventList());
+        HashMap<String, String> modifyMap = new HashMap<>();
+
 
         return modifyGroup;
     }
