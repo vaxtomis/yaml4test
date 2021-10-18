@@ -1,5 +1,6 @@
 package com.vaxtomis.yaml4test.Utils;
 
+import com.vaxtomis.yaml4test.Parser.ModifyCollector;
 import com.vaxtomis.yaml4test.TestPojo.classC;
 import com.vaxtomis.yaml4test.TestPojo.classD;
 import org.junit.Test;
@@ -51,15 +52,24 @@ public class BeanOperatorTest {
     @Test
     public void modifyCopy01Test() throws IllegalAccessException {
         classC mc1 = BeanOperator.modifyCopy(c1, "E", "modified-E");
+        classC mc2 = BeanOperator.modifyCopy(c1, "G[0]", "4");
         classC[] mcs = BeanOperator.modifyCopy(cs, "[0].F", "modified-F");
         System.out.println(c1);
         System.out.println(mc1);
-        System.out.println(Arrays.asList(cs));
+        System.out.println(mc2);
+        System.out.println(Arrays.asList(cs));;
         System.out.println(Arrays.asList(mcs));
     }
 
     @Test
     public void createModifyGroupTest() throws IllegalAccessException {
-
+        ModifyCollector collector = new ModifyCollector();
+        collector.add("E", "M-E");
+        collector.add("F", "M-F");
+        collector.add("G[0]", "4");
+        List list = BeanOperator.createModifiedGroup(c1, collector);
+        for (Object obj : list) {
+            System.out.println(obj);
+        }
     }
 }

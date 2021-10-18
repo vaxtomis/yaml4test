@@ -69,8 +69,18 @@ public class BeanOperator {
         createPrepare(source);
         EventOperator operator = new EventOperator(deParser.getEventList());
         HashMap<String, String> modifyMap = new HashMap<>();
-
-
+        String[] names = collector.getNames();
+        String[][] matrix = collector.generateModifyMatrix();
+        List<List<ModifyCollector.Position>> group = collector.generateGroup();
+        for (List<ModifyCollector.Position> set : group) {
+            modifyMap.clear();
+            for (ModifyCollector.Position pos : set) {
+                modifyMap.put(names[pos.getX()], matrix[pos.getX()][pos.getY()]);
+            }
+            operator.setModify(formatName(modifyMap));
+            instanceBuild(operator.rebuild());
+            modifyGroup.add((T) producer.getCopyInstance());
+        }
         return modifyGroup;
     }
 
@@ -112,11 +122,13 @@ public class BeanOperator {
         for (Map.Entry entry : modifyMap.entrySet()) {
             switch (modifiedNameCheck(entry.getKey().toString())) {
                 case 0:
-                    throw new BeanOperatorException("Invalid property name format.");
+                    throw new InvalidFormatException("Invalid property name format.");
                 case 1:
                     newModifyMap.put("CopyInstance." + entry.getKey(), entry.getValue().toString());
+                    break;
                 case 2:
                     newModifyMap.put("CopyInstance" + entry.getKey(), entry.getValue().toString());
+                    break;
             }
         }
         return newModifyMap;
@@ -125,7 +137,7 @@ public class BeanOperator {
     private static String formatName(String propertyName) {
         switch (modifiedNameCheck(propertyName)) {
             case 0:
-                throw new BeanOperatorException("Invalid property name format.");
+                throw new InvalidFormatException("Invalid property name format.");
             case 1:
                 return "CopyInstance." + propertyName;
             case 2:
@@ -139,7 +151,7 @@ public class BeanOperator {
      */
     private static int modifiedNameCheck(String name) {
         String[] subNames = name.split("\\.");
-        if (Define.JAVA_VARIABLE.matcher(subNames[0]).matches()) {
+        if (Define.PROPERTY_NAME_VARIABLE.matcher(subNames[0]).matches()) {
             return 1;
         }
         if (Define.BRACKETS_NUMBER.matcher(subNames[0]).matches()) {
@@ -148,11 +160,9 @@ public class BeanOperator {
         return 0;
     }
 
-    public static class BeanOperatorException extends RuntimeException {
-        public BeanOperatorException (String msg, Throwable cause) {
-            super(msg, cause);
-        }
-        public BeanOperatorException (String msg) {
+
+    public static class InvalidFormatException extends RuntimeException {
+        public InvalidFormatException(String msg) {
             super(msg, null);
         }
     }

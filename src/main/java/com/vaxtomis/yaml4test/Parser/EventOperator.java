@@ -181,8 +181,9 @@ public class EventOperator {
                 fullName = getFullName();
                 //System.out.println(fullName);
                 if (modifyMap.containsKey(fullName)) {
-                    needToModify = true;
-                    modifiedEventName = fullName;
+                    EntryEvent modifiedEvent = new EntryEvent("value", modifyMap.get(fullName));
+                    modifiedEvents.removeLast();
+                    modifiedEvents.add(modifiedEvent);
                 }
                 break;
             case GET_VALUE:
@@ -232,7 +233,10 @@ public class EventOperator {
                 fullName = getFullName();
                 //System.out.println(fullName);
                 if (modifiedEventName.equals(fullName)) {
-                    needToModify = true;
+                    EntryEvent modifiedEvent = new EntryEvent("value", value);
+                    modifiedEvents.removeLast();
+                    modifiedEvents.add(modifiedEvent);
+                    return true;
                 }
                 break;
             case GET_VALUE:

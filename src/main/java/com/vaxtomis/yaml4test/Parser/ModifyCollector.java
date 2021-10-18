@@ -1,8 +1,5 @@
 package com.vaxtomis.yaml4test.Parser;
 
-import com.sun.xml.internal.fastinfoset.tools.XML_SAX_StAX_FI;
-
-import java.nio.file.attribute.PosixFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,6 +56,10 @@ public class ModifyCollector {
         return name;
     }
 
+    /**
+     * 记录更变部分，生成矩阵。
+     * @return
+     */
     public String[][] generateModifyMatrix() {
         String[][] matrix = new String[size()][biggestAccount()];
         String[] propNames = getNames();
@@ -71,13 +72,12 @@ public class ModifyCollector {
 
     public List<List<Position>> generateGroup() {
         List<List<Position>> group = new ArrayList<>();
-        List<Position> curList = new ArrayList<>();
-        group.add(curList);
+        group.add(new ArrayList<>());
         for (int i = 0; i < matrix.length; i++) {
             for (int j = 0; j < matrix[i].length; j++) {
                 int size = group.size();
                 for (int k = 0; k < size; k++) {
-                    List<Position> newList = new ArrayList<>(curList);
+                    List<Position> newList = new ArrayList<>(group.get(k));
                     newList.add(new Position(i, j));
                     group.add(newList);
                 }
@@ -86,9 +86,10 @@ public class ModifyCollector {
         return group;
     }
 
-    class Position{
+    public class Position {
         private int x;
         private int y;
+
         Position(int x, int y) {
             this.x = x;
             this.y = y;
@@ -100,6 +101,10 @@ public class ModifyCollector {
 
         public int getY() {
             return y;
+        }
+
+        public String toString() {
+            return "[" + x + "," + y + "]";
         }
     }
 
