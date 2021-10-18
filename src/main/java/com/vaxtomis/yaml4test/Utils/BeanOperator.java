@@ -11,13 +11,14 @@ import com.vaxtomis.yaml4test.Tokenizer.Define;
 import java.util.*;
 
 /**
- * @description Util for deep copy a instance, and change Event in EventList
+ * @description
+ * Util for deep copy a instance, and change Event in EventList
  * for create a new object that is similar but not identical.
  *
- * 构想 把类还原成 EventList 然后通过 Producer 再生成 Class。
- *
- * EventOperator 可以读取并修改 EventList，配合 deepCopy 方法，
+ * 把类还原成 EventList 然后通过 {@link Producer} 再生成 Class。
+ * {@link EventOperator} 可以读取并修改 EventList，配合 deepCopy 方法，
  * 用于创建一个相似但不完全相同且独立的类。
+ *
  * @author vaxtomis
  */
 public class BeanOperator {
@@ -27,46 +28,50 @@ public class BeanOperator {
     private static String classPath;
 
     /**
-     * 深拷贝方法，基于给定 T source 重新构建一个相同的类实例。
+     * 深拷贝方法，基于给定 source 重新构建一个相同的类实例。
      * @param source
      * @param <T>
      * @throws IllegalAccessException
      */
     public static <T> T deepCopy(@NotNull T source) throws IllegalAccessException {
-        createPrepare(source);
-        instanceBuild(deParser.getEventList());
+        init(source);
+        buildInstance(deParser.getEventList());
         return (T) producer.getCopyInstance();
     }
 
     public static <T> T modifyCopy(@NotNull T source, @NotNull String propName, @NotNull String value) throws IllegalAccessException {
-        createPrepare(source);
+        init(source);
         EventOperator operator = new EventOperator(deParser.getEventList(), formatName(propName), value);
-        instanceBuild(operator.rebuild());
+        buildInstance(operator.rebuild());
         return (T) producer.getCopyInstance();
     }
 
-    public static <T> T modifyCopy(@NotNull T source, @NotNull HashMap<String, String> modifyMap) throws IllegalAccessException {
-        createPrepare(source);
-        EventOperator operator = new EventOperator(deParser.getEventList(), formatName(modifyMap));
-        instanceBuild(operator.rebuild());
+    public static <T> T modifyCopy(@NotNull T source, @NotNull ModifyCollector collector) throws IllegalAccessException {
+        init(source);
+        HashMap<String, String> modifyMap = new HashMap<>();
+        String[] names = collector.getNames();
+        for (String name : names) {
+            modifyMap.put(formatName(name), collector.getValue(name));
+        }
+        EventOperator operator = new EventOperator(deParser.getEventList(), modifyMap);
+        buildInstance(operator.rebuild());
         return (T) producer.getCopyInstance();
     }
 
 
     /**
-     * 创建满足树形分支批量修改的实例组。
+     * 创建满足全排列批量修改的实例组。
      * 首先用 Map 来存储是不行的， 因为 Map 的 Key 不重复。
      * 先对改动组进行排列，然后再根据改动组排列去修改模板，避免相互引用出错的可能。
      *
-     * 是否可以用 IdentityHashMap (是否适用于)
-     * @param source
+     * @param source, {@link ModifyCollector}
      * @param <T>
      * @return List
      * @throws IllegalAccessException
      */
     public static <T> List<T> createModifiedGroup(@NotNull T source, @NotNull ModifyCollector collector) throws IllegalAccessException {
         LinkedList<T> modifyGroup = new LinkedList<>();
-        createPrepare(source);
+        init(source);
         EventOperator operator = new EventOperator(deParser.getEventList());
         HashMap<String, String> modifyMap = new HashMap<>();
         String[] names = collector.getNames();
@@ -78,13 +83,14 @@ public class BeanOperator {
                 modifyMap.put(names[pos.getX()], matrix[pos.getX()][pos.getY()]);
             }
             operator.setModify(formatName(modifyMap));
-            instanceBuild(operator.rebuild());
+            buildInstance(operator.rebuild());
             modifyGroup.add((T) producer.getCopyInstance());
         }
         return modifyGroup;
     }
 
-    private static <T> void createPrepare(@NotNull T source) throws IllegalAccessException {
+    // 初始化工作
+    private static <T> void init(@NotNull T source) throws IllegalAccessException {
         clazz = source.getClass();
         deParser = new DeParser();
         deParser.parseToEvents(source, source.getClass());
@@ -101,7 +107,7 @@ public class BeanOperator {
     }
 
     // 传入 EventList 到 producer 中并进行赋值。
-    private static void instanceBuild(LinkedList<Event> events) {
+    private static void buildInstance(LinkedList<Event> events) {
         producer.setClassPath(classPath);
         producer.setEvents(events);
         producer.setInnerMap(new HashMap());
@@ -120,7 +126,7 @@ public class BeanOperator {
     private static HashMap<String, String> formatName(HashMap<String, String> modifyMap) {
         HashMap<String, String> newModifyMap = new HashMap<>();
         for (Map.Entry entry : modifyMap.entrySet()) {
-            switch (modifiedNameCheck(entry.getKey().toString())) {
+            switch (checkModifiedName(entry.getKey().toString())) {
                 case 0:
                     throw new InvalidFormatException("Invalid property name format.");
                 case 1:
@@ -135,7 +141,7 @@ public class BeanOperator {
     }
 
     private static String formatName(String propertyName) {
-        switch (modifiedNameCheck(propertyName)) {
+        switch (checkModifiedName(propertyName)) {
             case 0:
                 throw new InvalidFormatException("Invalid property name format.");
             case 1:
@@ -149,7 +155,7 @@ public class BeanOperator {
     /**
      * @attention Need to optimize.
      */
-    private static int modifiedNameCheck(String name) {
+    private static int checkModifiedName(String name) {
         String[] subNames = name.split("\\.");
         if (Define.PROPERTY_NAME_VARIABLE.matcher(subNames[0]).matches()) {
             return 1;

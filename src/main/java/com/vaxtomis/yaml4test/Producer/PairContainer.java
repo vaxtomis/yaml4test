@@ -6,7 +6,8 @@ import java.util.WeakHashMap;
 /**
  * @description
  * Used to store key-value pairs for later injection.
- * 存储 RawPair 的容器类。
+ * 存储 {@link RawPair} 的容器类。
+ *
  * @author vaxtomis
  */
 public class PairContainer {

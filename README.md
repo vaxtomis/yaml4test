@@ -34,7 +34,7 @@ objectName: !qualified name of class
         property2 of subObj: Long
 ```
 ### 0.0.1 基础功能
-根据 yaml 文件读取并创建类实例对象，自动注入至类中。  
+#### 1.根据 yaml 文件读取并创建类实例对象，自动注入至类中  
 对测试类进行注解，添加 yaml 路径和文件名：  
 ```java
 @Yaml4test(Path = "xxx.yml")
@@ -60,6 +60,65 @@ objectName: !qualified name of class
     YamlFactory.refreshFactory(this);
 }
 ```
-Utils 中的 BeanCopy 类，deepCopy(T source) 方法可以实现类实例的深度拷贝。  
+
+#### 2.使用 BeanOperator 对实例进行操作  
+Utils 中的 BeanOperator 类中的 deepCopy() 方法可以实现类实例的深度拷贝。  
 原理是将类实例序列化为 EventList 后，再通过 Producer 进行生成。  
-因此最底层部分的属性同样受上面定义的基础类型和常用类型限制。  
+因此最底层部分的属性同样受上面定义的基础类型和常用类型限制。
+```java
+/**
+ * 用作示例的实例类 Person
+ */
+Person {
+  public String name;
+  public int age;
+  public String gender;
+  
+  Person(String name, int age, String gender) {
+    this.name = name;
+    this.age = age;
+    this.gender = gender;
+  }
+}
+```
+```java
+Person jack = new Person("Jack", 23, "Male");
+// 拷贝出一个与 a 实例值相同的独立的实例。
+Person copy = BeanOperator.deepCopy(jack);
+```
+   
+深拷贝的同时可以按需求修改新实例的值，通过 modifyCopy() 方法实现:  
+```java
+Person jack = new Person("Jack", 23, "Male");
+//修改单条属性
+Person copy = BeanOperator.modifyCopy(jack, "age", "24");
+```
+也可以对一个实例的多个属性值进行修改，需要创建 ModifyCollector:  
+```java
+Person jack = new Person("Jack", 23, "Male");
+ModifyCollector collector = new ModifyCollector();
+collector.add("name", "Rose");
+collector.add("age", "24");
+collector.add("gender", "Female");
+// 同时修改多条属性
+Person copy = BeanOperator.modifyCopy(jack, collector);
+```
+可以通过 ModifyCollector 中的修改值创建一组示例:  
+```java
+Person jack = new Person("Jack", 23, "Male");
+ModifyCollector collector = new ModifyCollector();
+collector.add("name", "Rose");
+collector.add("age", "24");
+collector.add("gender", "Female");
+// 创建修改组合
+Person[] groups = BeanOperator.createModifiedGroup(jack, collector);
+```
+对于较为复杂的类，填入的属性名示例：
+```java
+// 当根部的属性为集合时，以下标 [index]. 开头
+// 修改 Person 集合的第 1 个人的 name。
+collector.add("[0].name", "Jack");
+
+// 当根部的属性非集合，子属性为集合时，直接在属性后添加 [index] 即可
+collector.add("Group.Person[0].name", "Jack");
+```
