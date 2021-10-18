@@ -50,9 +50,31 @@ public class DeParserTest {
     }
 
     @Test
+    public void DeParserTest03() throws IllegalAccessException {
+        DeParser deParser = new DeParser();
+        deParser.parseToEvents(cs, cs.getClass());
+        for(Event e : deParser.getEventList()) {
+            System.out.println(e.toString());
+        }
+    }
+
+    @Test
     public void parserComparision() {
         Parser parser = new Parser();
         String path = YamlFactory.class.getClassLoader().getResource("").getPath() + "deParserTest.yml";
+        parser.setPath(path);
+        for(Event e : parser.getEventList()) {
+            System.out.println(e.toString());
+        }
+    }
+
+    @Test
+    public void sequenceComparision() {
+        Parser parser = new Parser();
+        String path = YamlFactory.class
+                .getClassLoader()
+                .getResource("")
+                .getPath() + "deParserTestSequence.yml";
         parser.setPath(path);
         for(Event e : parser.getEventList()) {
             System.out.println(e.toString());

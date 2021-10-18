@@ -14,6 +14,7 @@ public class RawPair<T> {
         this.name = name;
         this.value = null;
     }
+
     public void setValue(Object value) {
         this.value = (T) value;
     }

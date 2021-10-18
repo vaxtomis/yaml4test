@@ -4,7 +4,9 @@ import java.util.LinkedList;
 import java.util.WeakHashMap;
 
 /**
- * @description Used to store key-value pairs for later injection.
+ * @description
+ * Used to store key-value pairs for later injection.
+ * 存储 RawPair 的容器类。
  * @author vaxtomis
  */
 public class PairContainer {

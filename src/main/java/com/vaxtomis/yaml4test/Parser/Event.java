@@ -3,7 +3,7 @@ package com.vaxtomis.yaml4test.Parser;
 /**
  * @description Event.
  */
-public class Event {
+public class Event implements Cloneable {
     private EventType type;
     final static Event SEQUENCE_START = new Event(EventType.SEQUENCE_START);
     final static Event SEQUENCE_END = new Event(EventType.SEQUENCE_END);
@@ -21,5 +21,10 @@ public class Event {
     @Override
     public String toString() {
         return "<" + type.toString() + ">";
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

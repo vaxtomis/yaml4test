@@ -26,7 +26,9 @@ public class Parser {
     }
 
     /**
-     * @description Sliding Window. Used to store recently used tokens.
+     * @description
+     * Sliding Window. Used to store recently used tokens.
+     * 滑动窗口，用来缓存最近经过的 Token。
      */
     class SlidingWindow {
         private int cursor = -1;
@@ -64,6 +66,7 @@ public class Parser {
 
         /**
          * Get the [cur, pre, pre-pre] type of Token in sliding window.
+         * 从滑动窗口中获取当前，上一个，上上个 Token。
          */
         public TokenType getTokenType(String type) {
             Token tk = null;
@@ -89,6 +92,7 @@ public class Parser {
     /**
      * Traverse the Token to determine the correctness of the syntax,
      * and obtain a set of Events.
+     * 遍历 Token 判断语法的正确性，得到一组 Events。
      */
     private void loopProcessing() {
         if (path == null) {
@@ -109,6 +113,7 @@ public class Parser {
     /**
      * ConstraintMap defines Token grammar rules
      * Generates corresponding Event arrangement according to the grammar rules.
+     * 限制路径图定义了 Token 的语法规则，根据语法规则生成对应的 Event 序列。
      */
     private void fetchEvent() {
         if (!ConstraintsMap.isAllowed(window)) {

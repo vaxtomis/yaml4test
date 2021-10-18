@@ -4,7 +4,7 @@ import com.vaxtomis.yaml4test.Annotation.Yaml4test;
 import com.vaxtomis.yaml4test.Annotation.YamlInject;
 import com.vaxtomis.yaml4test.Parser.Parser;
 import com.vaxtomis.yaml4test.Producer.Producer;
-import com.vaxtomis.yaml4test.Utils.BeanCopy;
+import com.vaxtomis.yaml4test.Utils.BeanOperator;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -86,6 +86,9 @@ public class YamlFactory {
             if (!field.isAnnotationPresent(YamlInject.class)) {
                 continue;
             }
+            if (field.getType().isArray() && field.getType().getComponentType().isPrimitive()) {
+                throw new YamlFactoryException("Can not create primitive array.");
+            }
             field.setAccessible(true);
             fieldAssignment(field, context);
         }
@@ -97,7 +100,7 @@ public class YamlFactory {
         name = name.equals("")?field.getName():name;
         try {
             if (scope.equals(YamlInject.Scope.Prototype)) {
-                field.set(context, BeanCopy.deepCopy(storageMap.get(name)));
+                field.set(context, BeanOperator.deepCopy(storageMap.get(name)));
             } else {
                 field.set(context, storageMap.get(name));
             }
