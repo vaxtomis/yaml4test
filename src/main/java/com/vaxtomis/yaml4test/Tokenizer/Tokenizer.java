@@ -6,7 +6,7 @@ import java.util.*;
 
 /**
  * @description Tokenizer.
- * @Reference -> com.esotericsoftware.yamlbeans
+ * @note -> Reference Project: com.esotericsoftware.yamlbeans
  * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
  */
 public class Tokenizer {

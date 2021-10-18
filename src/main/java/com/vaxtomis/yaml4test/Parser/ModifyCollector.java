@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * @description
+ * 用于添加属性名和对应属性需要修改的值。
  *
  * @author vaxotmis
  */
@@ -34,6 +35,10 @@ public class ModifyCollector {
         }
     }
 
+    public String getValue(String propName) {
+        return innerMap.get(propName + "$0");
+    }
+
     public String[] getValues(String propName) {
         int number = keyAccountMap.getOrDefault(propName, 0);
         if (number == 0) {
@@ -50,6 +55,10 @@ public class ModifyCollector {
         return keyAccountMap.size();
     }
 
+    /**
+     * 获取已存储的属性名
+     * @return String propNames
+     */
     public String[] getNames() {
         String[] name = new String[keyAccountMap.size()];
         keyAccountMap.keySet().toArray(name);
@@ -58,7 +67,8 @@ public class ModifyCollector {
 
     /**
      * 记录更变部分，生成矩阵。
-     * @return
+     * 使用矩阵来存储的目的是减少内存占用。
+     * @return String[][] matrix
      */
     public String[][] generateModifyMatrix() {
         String[][] matrix = new String[size()][biggestAccount()];
@@ -70,6 +80,10 @@ public class ModifyCollector {
         return this.matrix;
     }
 
+    /**
+     * 生成全排列组,存储的是 {@link Position} 也就是矩阵中的坐标。
+     * @return List
+     */
     public List<List<Position>> generateGroup() {
         List<List<Position>> group = new ArrayList<>();
         group.add(new ArrayList<>());

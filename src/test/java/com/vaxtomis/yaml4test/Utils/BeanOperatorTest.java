@@ -50,7 +50,7 @@ public class BeanOperatorTest {
     }
 
     @Test
-    public void modifyCopy01Test() throws IllegalAccessException {
+    public void modifyCopyTest01() throws IllegalAccessException {
         classC mc1 = BeanOperator.modifyCopy(c1, "E", "modified-E");
         classC mc2 = BeanOperator.modifyCopy(c1, "G[0]", "4");
         classC[] mcs = BeanOperator.modifyCopy(cs, "[0].F", "modified-F");
@@ -59,6 +59,16 @@ public class BeanOperatorTest {
         System.out.println(mc2);
         System.out.println(Arrays.asList(cs));;
         System.out.println(Arrays.asList(mcs));
+    }
+
+    @Test
+    public void modifyCopyTest02() throws IllegalAccessException {
+        ModifyCollector collector = new ModifyCollector();
+        collector.add("E", "modified-E");
+        collector.add("G[0]", "4");
+        classC mc1 = BeanOperator.modifyCopy(c1, collector);
+        System.out.println(c1);
+        System.out.println(mc1);
     }
 
     @Test
