@@ -68,7 +68,7 @@ public class EventOperator {
         if (modifyMap != null) {
             events = getCutEvents(modifyMap.keySet());
             return events;
-        } else if (!modifiedEventName.equals("")) {
+        } else if (!"".equals(modifiedEventName)) {
             Set<String> set = new HashSet<>();
             set.add(modifiedEventName);
             events = getCutEvents(set);
@@ -139,6 +139,8 @@ public class EventOperator {
                         isTargetEvents = true;
                     }
                     break;
+                default:
+
             }
             end++;
         }
@@ -195,6 +197,8 @@ public class EventOperator {
                     needToModify = false;
                 }
                 break;
+            default:
+
         }
     }
 
@@ -211,7 +215,7 @@ public class EventOperator {
                 curEvent = event;
                 fullName = getFullName();
                 //System.out.println(fullName);
-                if (modifiedEventName.equals(fullName)) {
+                if (fullName.equals(modifiedEventName)) {
                     needToModify = true;
                 }
                 break;
@@ -232,7 +236,7 @@ public class EventOperator {
                 curEvent = event;
                 fullName = getFullName();
                 //System.out.println(fullName);
-                if (modifiedEventName.equals(fullName)) {
+                if (fullName.equals(modifiedEventName)) {
                     EntryEvent modifiedEvent = new EntryEvent("value", value);
                     modifiedEvents.removeLast();
                     modifiedEvents.add(modifiedEvent);
@@ -248,6 +252,8 @@ public class EventOperator {
                     return true;
                 }
                 break;
+            default:
+
         }
         return false;
     }

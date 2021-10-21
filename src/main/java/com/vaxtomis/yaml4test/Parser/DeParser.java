@@ -49,6 +49,7 @@ public class DeParser {
         }
         events.add(Event.MAPPING_END);
     }
+
     private void parsePrimitive(Object parent, Field sField) throws IllegalAccessException {
         Object son = sField.get(parent);
         if(son == null) return;

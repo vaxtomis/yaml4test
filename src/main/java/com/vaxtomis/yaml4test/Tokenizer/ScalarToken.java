@@ -29,6 +29,7 @@ public class ScalarToken extends Token {
                 + "} {style= " + style
                 + "} {plain= " + plain + "}";
     }
+
     public char getStyle() {
         return style;
     }

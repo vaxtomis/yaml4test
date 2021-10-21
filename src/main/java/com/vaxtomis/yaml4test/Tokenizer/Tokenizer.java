@@ -105,6 +105,8 @@ public class Tokenizer {
             case '!' :
                 fetchClassName();
                 return;
+            default:
+
         }
         if (Define.BEG.matcher(ts.peekString(2)).find())
             fetchPlain();

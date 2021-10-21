@@ -193,6 +193,8 @@ public class Converter {
                 return  i >= -128 && i <= 127;
             case "boolean":
                 return true;
+            default:
+
         }
         return false;
     }

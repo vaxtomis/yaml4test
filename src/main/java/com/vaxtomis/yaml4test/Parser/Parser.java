@@ -80,6 +80,8 @@ public class Parser {
                 case "Cur":
                     tk = getCur();
                     break;
+                default:
+
             }
             if (tk == null) {
                 return null;
@@ -137,6 +139,8 @@ public class Parser {
             case BLOCK_SEQUENCE_START:
                 handleSequenceStart();
                 break;
+            default:
+
         }
     }
     private void handleScalar(ScalarToken tk) {
