@@ -135,6 +135,8 @@ public class BeanOperator {
                 case 2:
                     newModifyMap.put("CopyInstance" + entry.getKey(), entry.getValue().toString());
                     break;
+                default:
+
             }
         }
         return newModifyMap;
@@ -148,8 +150,10 @@ public class BeanOperator {
                 return "CopyInstance." + propertyName;
             case 2:
                 return "CopyInstance" + propertyName;
+            default:
+                return null;
+
         }
-        return null;
     }
 
     /**

@@ -83,7 +83,7 @@ Person {
 ```
 ```java
 Person jack = new Person("Jack", 23, "Male");
-// 拷贝出一个与 a 实例值相同的独立的实例。
+// 拷贝出一个与 jack 实例值相同的独立的实例。
 Person copy = BeanOperator.deepCopy(jack);
 ```
    

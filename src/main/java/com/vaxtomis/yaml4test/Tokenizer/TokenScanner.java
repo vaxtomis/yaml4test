@@ -5,7 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @description Used to scan the stream and split out tokens.
+ * @description
+ * Used to scan the stream and split out tokens.
  * @note -> Reference Project: com.esotericsoftware.yamlbeans
  * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
  */
@@ -226,7 +227,7 @@ public class TokenScanner implements TokenScan {
         String pre = null;
         for (;;) {
             pre = peekString(3);
-            if ((pre.equals("---") || pre.equals("...")) &&
+            if (("---".equals(pre) || "...".equals(pre)) &&
                     Define.NULL_BLANK_T_LINEBREAK.indexOf(peekChar(3)) != -1) {
                 throw new TokenScanningException("Scanning a quoted scalar," +
                         " found unexpected document separator.");
@@ -289,7 +290,12 @@ public class TokenScanner implements TokenScan {
      * Increase the indentation.
      * If the indentation is less than the current position
      * it means that the new block is opened, record the indentation position indents header
-     * then set curMaxIndent to the current line number as the current maximum indentation
+     * then set curMaxIndent to the current line number as the current maximum indentation.
+     *
+     * 增加缩进。如果缩进小于当前位置表示新区块开启，
+     * 记录缩进位置 indents header，
+     * 然后设置 curMaxIndent 为当前行号作为当前最大缩进。
+     *
      * @param col
      * @return boolean
      */
@@ -308,7 +314,9 @@ public class TokenScanner implements TokenScan {
 
     /**
      * Pass in {col} to count BLOCKs
-     * whose indentation is greater than or equal to {col}
+     * whose indentation is greater than or equal to {col}.
+     *
+     * 传入 {col} 以计算缩进大于或等于 {col} 的区块。
      * @param col
      * @return int
      */

@@ -13,6 +13,8 @@ import java.util.Objects;
 
 /**
  * @description
+ * 调用服务的主要入口，包含多个静态方法。
+ *
  * @author vaxtomis
  */
 public class YamlFactory {
@@ -34,6 +36,9 @@ public class YamlFactory {
      * Get the address of the yaml file in the annotation,
      * create instances and store them in the storageMap,
      * inject the corresponding instances into the annotated field.
+     *
+     * 获取注解中的 yaml 文件地址，创建实例并存储在 storageMap 中，将对应的实例注入注解字段。
+     *
      * @param context
      * @param <T>
      */
@@ -52,6 +57,8 @@ public class YamlFactory {
 
     /**
      * Get object in storageMap by name.
+     *
+     * 通过名称获取 storageMap 中的实例。
      * @param name
      * @return Object
      */
