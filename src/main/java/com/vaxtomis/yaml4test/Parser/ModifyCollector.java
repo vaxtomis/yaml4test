@@ -88,9 +88,9 @@ public class ModifyCollector {
         List<List<Position>> group = new ArrayList<>();
         group.add(new ArrayList<>());
         for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                int size = group.size();
-                for (int k = 0; k < size; k++) {
+            int size = group.size();
+            for (int k = 0; k < size; k++) {
+                for (int j = 0; j < matrix[i].length; j++) {
                     List<Position> newList = new ArrayList<>(group.get(k));
                     newList.add(new Position(i, j));
                     group.add(newList);
