@@ -74,12 +74,34 @@ public class BeanOperatorTest {
     @Test
     public void createModifyGroupTest() throws IllegalAccessException {
         ModifyCollector collector = new ModifyCollector();
-        collector.add("E", "M-E");
-        collector.add("F", "M-F");
-        collector.add("G[0]", "4");
+        collector.add("E", "M-E-1");
+        collector.add("E", "M-E-2");
+        collector.add("E", "M-E-3");
+        collector.add("E", "M-E-4");
+        collector.add("E", "M-E-5");
+        collector.add("E", "M-E-6");
+
+        collector.add("F", "M-F-1");
+        collector.add("F", "M-F-2");
+        collector.add("F", "M-F-3");
+        collector.add("F", "M-F-4");
+        collector.add("F", "M-F-5");
+        collector.add("F", "M-F-6");
+
+        collector.add("G[0]", "44");
+        collector.add("G[0]", "444");
+        collector.add("G[0]", "4444");
+        collector.add("G[0]", "44444");
+
+        collector.add("G[1]", "55");
+        collector.add("G[1]", "555");
+
+        collector.add("G[2]", "66");
+        collector.add("G[2]", "666");
         List list = BeanOperator.createModifiedGroup(c1, collector);
         for (Object obj : list) {
             System.out.println(obj);
         }
+        System.out.println(list.size());
     }
 }
