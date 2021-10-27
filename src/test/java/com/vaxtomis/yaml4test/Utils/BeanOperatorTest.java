@@ -80,6 +80,9 @@ public class BeanOperatorTest {
         collector.add("E", "M-E-4");
         collector.add("E", "M-E-5");
         collector.add("E", "M-E-6");
+        collector.add("E", "M-E-7");
+        collector.add("E", "M-E-8");
+        collector.add("E", "M-E-9");
 
         collector.add("F", "M-F-1");
         collector.add("F", "M-F-2");
@@ -87,17 +90,36 @@ public class BeanOperatorTest {
         collector.add("F", "M-F-4");
         collector.add("F", "M-F-5");
         collector.add("F", "M-F-6");
+        collector.add("F", "M-F-7");
+        collector.add("F", "M-F-8");
+        collector.add("F", "M-F-9");
+        collector.add("F", "M-F-10");
 
         collector.add("G[0]", "44");
         collector.add("G[0]", "444");
         collector.add("G[0]", "4444");
         collector.add("G[0]", "44444");
+        collector.add("G[0]", "444444");
+        collector.add("G[0]", "4444444");
 
         collector.add("G[1]", "55");
         collector.add("G[1]", "555");
+        collector.add("G[1]", "5555");
+        collector.add("G[1]", "55555");
+        collector.add("G[1]", "555555");
+        collector.add("G[1]", "5555555");
+        collector.add("G[1]", "55555555");
+        collector.add("G[1]", "555555555");
 
         collector.add("G[2]", "66");
         collector.add("G[2]", "666");
+        collector.add("G[2]", "6666");
+        collector.add("G[2]", "66666");
+        collector.add("G[2]", "666666");
+        collector.add("G[2]", "6666666");
+        collector.add("G[2]", "66666666");
+        collector.add("G[2]", "666666666");
+
         List list = BeanOperator.createModifiedGroup(c1, collector);
         for (Object obj : list) {
             System.out.println(obj);

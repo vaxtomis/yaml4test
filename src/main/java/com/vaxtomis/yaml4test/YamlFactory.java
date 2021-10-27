@@ -45,13 +45,13 @@ public class YamlFactory {
     public static <T> void refreshFactory(T context) {
         if (yamlFactory == null) {
             yamlFactory = new YamlFactory();
+            yamlFactory.storageMap.clear();
+            yamlFactory.parser = new Parser();
+            yamlFactory.setClazz(context.getClass());
+            yamlFactory.setPathByAnnotation();
+            yamlFactory.producer.setEvents(yamlFactory.parser.getEventList());
+            yamlFactory.producer.build();
         }
-        yamlFactory.storageMap.clear();
-        yamlFactory.parser = new Parser();
-        yamlFactory.setClazz(context.getClass());
-        yamlFactory.setPathByAnnotation();
-        yamlFactory.producer.setEvents(yamlFactory.parser.getEventList());
-        yamlFactory.producer.build();
         yamlFactory.autowiring(context);
     }
 
@@ -63,7 +63,12 @@ public class YamlFactory {
      * @return Object
      */
     public static Object getBean(String name) {
-        return yamlFactory.storageMap.get(name);
+        try {
+            return BeanOperator.deepCopy(yamlFactory.storageMap.get(name));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        throw new YamlFactoryException("The return of getBean is null.");
     }
 
     private void setPathByAnnotation() {
@@ -124,7 +129,7 @@ public class YamlFactory {
         this.clazz = clazz;
     }
 
-    public class YamlFactoryException extends RuntimeException {
+    public static class YamlFactoryException extends RuntimeException {
         public YamlFactoryException (String msg, Throwable cause) {
             super(msg, cause);
         }
