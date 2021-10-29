@@ -1,7 +1,7 @@
 package com.vaxtomis.yaml4test.Utils;
 
 import com.sun.istack.internal.NotNull;
-import com.vaxtomis.yaml4test.Parser.DeParser;
+import com.vaxtomis.yaml4test.Parser.DeProducer;
 import com.vaxtomis.yaml4test.Parser.Event;
 import com.vaxtomis.yaml4test.Parser.EventOperator;
 import com.vaxtomis.yaml4test.Parser.ModifyCollector;
@@ -23,7 +23,7 @@ import java.util.*;
  */
 public class BeanOperator {
     private static Class clazz;
-    private static DeParser deParser;
+    private static DeProducer deProducer;
     private static Producer producer;
     private static String classPath;
 
@@ -35,13 +35,13 @@ public class BeanOperator {
      */
     public static <T> T deepCopy(@NotNull T source) throws IllegalAccessException {
         init(source);
-        buildInstance(deParser.getEventList());
+        buildInstance(deProducer.getEventList());
         return (T) producer.getCopyInstance();
     }
 
     public static <T> T modifyCopy(@NotNull T source, @NotNull String propName, @NotNull String value) throws IllegalAccessException {
         init(source);
-        EventOperator operator = new EventOperator(deParser.getEventList(), formatName(propName), value);
+        EventOperator operator = new EventOperator(deProducer.getEventList(), formatName(propName), value);
         buildInstance(operator.rebuild());
         return (T) producer.getCopyInstance();
     }
@@ -53,7 +53,7 @@ public class BeanOperator {
         for (String name : names) {
             modifyMap.put(formatName(name), collector.getValue(name));
         }
-        EventOperator operator = new EventOperator(deParser.getEventList(), modifyMap);
+        EventOperator operator = new EventOperator(deProducer.getEventList(), modifyMap);
         buildInstance(operator.rebuild());
         return (T) producer.getCopyInstance();
     }
@@ -72,7 +72,7 @@ public class BeanOperator {
     public static <T> List<T> createModifiedGroup(@NotNull T source, @NotNull ModifyCollector collector) throws IllegalAccessException {
         LinkedList<T> modifyGroup = new LinkedList<>();
         init(source);
-        EventOperator operator = new EventOperator(deParser.getEventList());
+        EventOperator operator = new EventOperator(deProducer.getEventList());
         HashMap<String, String> modifyMap = new HashMap<>();
         String[] names = collector.getNames();
         String[][] matrix = collector.generateModifyMatrix();
@@ -92,8 +92,8 @@ public class BeanOperator {
     // 初始化工作
     private static <T> void init(@NotNull T source) throws IllegalAccessException {
         clazz = source.getClass();
-        deParser = new DeParser();
-        deParser.parseToEvents(source, source.getClass());
+        deProducer = new DeProducer();
+        deProducer.parseToEvents(source, source.getClass());
         producer = new Producer();
         classPath = "";
         if (clazz.getPackage() != null) {

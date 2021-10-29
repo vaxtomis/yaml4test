@@ -9,7 +9,7 @@ import org.junit.Test;
  * @author vaxtomis
  */
 
-public class DeParserTest {
+public class DeProducerTest {
     classC c1 = new classC();
     classC c2 = new classC();
     classD d1 = new classD();
@@ -33,27 +33,27 @@ public class DeParserTest {
 
     @Test
     public void DeParserTest01() throws IllegalAccessException {
-        DeParser deParser = new DeParser();
-        deParser.parseToEvents(c1, c1.getClass());
-        for(Event e : deParser.getEventList()) {
+        DeProducer deProducer = new DeProducer();
+        deProducer.parseToEvents(c1, c1.getClass());
+        for(Event e : deProducer.getEventList()) {
             System.out.println(e.toString());
         }
     }
 
     @Test
     public void DeParserTest02() throws IllegalAccessException {
-        DeParser deParser = new DeParser();
-        deParser.parseToEvents(d1, d1.getClass());
-        for(Event e : deParser.getEventList()) {
+        DeProducer deProducer = new DeProducer();
+        deProducer.parseToEvents(d1, d1.getClass());
+        for(Event e : deProducer.getEventList()) {
             System.out.println(e.toString());
         }
     }
 
     @Test
     public void DeParserTest03() throws IllegalAccessException {
-        DeParser deParser = new DeParser();
-        deParser.parseToEvents(cs, cs.getClass());
-        for(Event e : deParser.getEventList()) {
+        DeProducer deProducer = new DeProducer();
+        deProducer.parseToEvents(cs, cs.getClass());
+        for(Event e : deProducer.getEventList()) {
             System.out.println(e.toString());
         }
     }
