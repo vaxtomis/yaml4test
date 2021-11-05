@@ -32,7 +32,7 @@ public class DeProducerTest {
     }
 
     @Test
-    public void DeParserTest01() throws IllegalAccessException {
+    public void DeProducerTest01() throws IllegalAccessException {
         DeProducer deProducer = new DeProducer();
         deProducer.parseToEvents(c1, c1.getClass());
         for(Event e : deProducer.getEventList()) {
@@ -41,7 +41,7 @@ public class DeProducerTest {
     }
 
     @Test
-    public void DeParserTest02() throws IllegalAccessException {
+    public void DeProducerTest02() throws IllegalAccessException {
         DeProducer deProducer = new DeProducer();
         deProducer.parseToEvents(d1, d1.getClass());
         for(Event e : deProducer.getEventList()) {
@@ -50,7 +50,7 @@ public class DeProducerTest {
     }
 
     @Test
-    public void DeParserTest03() throws IllegalAccessException {
+    public void DeProducerTest03() throws IllegalAccessException {
         DeProducer deProducer = new DeProducer();
         deProducer.parseToEvents(cs, cs.getClass());
         for(Event e : deProducer.getEventList()) {

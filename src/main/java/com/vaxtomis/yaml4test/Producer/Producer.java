@@ -88,6 +88,7 @@ public class Producer {
             //try to assign the value directly.
             if (!setterSuccess) {
                 try {
+                    // 判断是 Array 的情况下
                     if (rawPairValue != null && fClazz.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
                         //Convert string array.
                         Class<?> componentType = fClazz.getComponentType();
