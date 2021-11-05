@@ -10,8 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import static com.vaxtomis.yaml4test.Producer.Converter.convertObj;
-import static com.vaxtomis.yaml4test.Producer.Converter.convertObjs;
+import static com.vaxtomis.yaml4test.Converter.Converter.injectObj;
+import static com.vaxtomis.yaml4test.Converter.Converter.injectObjs;
 
 /**
  * @description
@@ -83,7 +83,7 @@ public class Producer {
             Class<?> fClazz = field.getType();
             String fName = field.getName();
             Object rawPairValue = curContainer.getRawPairValue(fName);
-            setterSuccess = convertObj(methodMap, fClazz, field, obj, rawPairValue);
+            setterSuccess = injectObj(methodMap, fClazz, field, obj, rawPairValue);
             //If the injection fails (using the setter method),
             //try to assign the value directly.
             if (!setterSuccess) {
@@ -92,7 +92,7 @@ public class Producer {
                     if (rawPairValue != null && fClazz.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
                         //Convert string array.
                         Class<?> componentType = fClazz.getComponentType();
-                        convertObjs(componentType, field, obj, rawPairValue);
+                        injectObjs(componentType, field, obj, rawPairValue);
                     } else {
                         field.set(obj, rawPairValue);
                     }

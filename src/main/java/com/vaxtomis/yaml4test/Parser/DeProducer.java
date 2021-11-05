@@ -1,6 +1,6 @@
 package com.vaxtomis.yaml4test.Parser;
 
-import com.vaxtomis.yaml4test.Producer.Converter;
+import com.vaxtomis.yaml4test.Converter.Converter;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
