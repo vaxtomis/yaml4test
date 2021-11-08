@@ -4,22 +4,22 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
 /**
+ * long & Long Converter.
  * @author vaxtomis
  */
-public class StringConvert extends AbstractConverter {
+public class LongConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
-        if (getV == null) getV = "";
-        return setterInject(method, beInject, getV);
+        long temp = (canParse(getV, "long"))?Long.parseLong(getV):0L;
+        return setterInject(method, beInject, temp);
     }
 
     @Override
     public void convertObjs(Object newArray, String[] pairValueArray) {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
-            if (getV == null) getV = "";
-            Array.set(newArray, i, getV);
+            long temp = (canParse(getV, "long"))?Long.parseLong(getV):0L;
+            Array.setLong(newArray, i, temp);
         }
-
     }
 }

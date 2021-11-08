@@ -4,7 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * @date 2021/11/5
+ * Abstract Converter, achieved some common functions.
+ * @author vaxtomis
  */
 public abstract class AbstractConverter implements Convert {
     public boolean setterInject(Method method, Object obj, Object getV) {
