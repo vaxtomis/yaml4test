@@ -17,27 +17,34 @@ short, Short, long, Long,
 double, Double, float, Float,  
 int, Integer, BigInteger, BigDecimal  
 
+计划下次会添加入自动转换的类：  
+Date, LocalDate, LocalTime  
+
 以下为目前支持的 yaml 格式示例：  
 ```yaml
 objectName: !qualified name of class
-  property1: String
-  property2: int
+  property1: this is first property (String example)
+  property2: 1 (int example)
   property3: 
-    - collection1
+    - collection1 (String example)
     - collection2
   property4:
     - !qualified name of class2
-        property1 of subObj: BigDecimal
-        property2 of subObj: long
+        property1 of subObj: 1000.00 (BigDecimal example)
+        property2 of subObj: 100.0L (long example)
     - !qualified name of class2
-        property1 of subObj: BigDecimal
-        property2 of subObj: Long
+        property1 of subObj: 2000.00
+        property2 of subObj: 200.0L (Long example)
 ```
 ### 0.0.1 基础功能
-#### 1.根据 yaml 文件读取并创建类实例对象，自动注入至类中  
+#### 1.根据 yaml 文件读取并创建类实例对象，手动获取或自动注入至类中  
 对测试类进行注解，添加 yaml 路径和文件名：  
 ```java
 @Yaml4test(Path = "xxx.yml")
+```
+选择是否跨包，CrossPack 表示在默认路径不为当前包，通过 Yaml 中的全路径名来寻找 Class：
+```java
+@Yaml4test(Path = "xxx.yml", Pack = Yaml4test.Pack.CrossPack)
 ```
 对需要自动注入的对象添加注解，默认映射相同的对象名：
 ```java
@@ -54,7 +61,14 @@ objectName: !qualified name of class
 // Prototype
 @YamlInject(Scope = YamlInject.Scope.Prototype)
 ```
-在调用前调用静态方法进行加载：
+全局获取实例：
+```java
+YamlFactory.getBean("");
+
+//Example
+Person jack = (Person) YamlFactory.getBean("jack");
+```
+在调用前调用代码块进行加载：
 ```java
 {
     YamlFactory.refreshFactory(this);

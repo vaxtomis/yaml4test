@@ -3,6 +3,7 @@ package com.vaxtomis.yaml4test;
 import com.vaxtomis.yaml4test.Annotation.Yaml4test;
 import com.vaxtomis.yaml4test.Annotation.YamlInject;
 import com.vaxtomis.yaml4test.TestPojo.classA;
+import com.vaxtomis.yaml4test.TestPojo.classB;
 import org.junit.Test;
 
 /**
@@ -26,5 +27,13 @@ public class MappingTest {
         System.out.println(A3);
         classA A4 = (classA) YamlFactory.getBean("A1");
         System.out.println(A1 == A4);
+    }
+
+    @Test
+    public void MappingTest2() {
+        classB B = (classB) YamlFactory.getBean("B");
+        classA A4 = (classA) YamlFactory.getBean("A1");
+        System.out.println(B);
+        System.out.println(A4);
     }
 }

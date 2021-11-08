@@ -11,4 +11,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface Yaml4test {
     String Path() default "";
+    enum Pack {CrossPack, InPack}
+    Pack Pack() default Pack.InPack;
 }

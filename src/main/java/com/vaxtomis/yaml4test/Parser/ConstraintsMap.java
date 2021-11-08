@@ -126,8 +126,9 @@ public class ConstraintsMap {
     public static boolean isAllowed(Parser.SlidingWindow window) {
         String doublePre = TOKEN_MAPPING.get(window.getTokenType("DPre"));
         String pre = TOKEN_MAPPING.get(window.getTokenType("Pre"));
-        String cur = TOKEN_MAPPING.get(window.getTokenType("Cur"));
         if (pre == null || doublePre == null) return true;
+
+        String cur = TOKEN_MAPPING.get(window.getTokenType("Cur"));
         HashSet<String> single = CONSTRAINTS.get(pre);
         HashSet<String> combine = CONSTRAINTS.get(doublePre + "-" + pre);
         if (combine != null) {

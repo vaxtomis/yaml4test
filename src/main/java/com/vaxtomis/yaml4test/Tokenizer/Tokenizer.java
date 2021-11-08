@@ -35,7 +35,6 @@ public class Tokenizer {
         this(new TokenScanner(yaml));
     }
 
-
     public Iterator iterator () {
         return new Iterator() {
             public boolean hasNext() {

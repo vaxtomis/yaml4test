@@ -1,21 +1,4 @@
-```
-            BE
-        ↙   ↑
-      ↙     |
-   ↙        |
-K← - - - - →S
-↑          ↑ | ↖↘
-|          | |    ↖↘
-|          | ↓       ↖↘
-|           V- ->BSS- ->E
-|         ↙ |        ↙  |
-|       ↙   |     ↙     |
-|     ↙     ↓  ↙        |
-|   ↙       C           |
-| ↙     ↙               |
-|    ↙                  |
-BMS←- - - - -  - - - - -    
-```
+![Image text](pic/parsing-state-shift.jpg)
 CONSTRAINTS:
 KS  -> V         :k-v need value  
 VS  -> BE        :block end  

@@ -1,6 +1,6 @@
 package com.vaxtomis.yaml4test.Parser;
 
-import com.vaxtomis.yaml4test.Producer.Converter;
+import com.vaxtomis.yaml4test.Converter.Converter;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -11,7 +11,7 @@ import java.util.LinkedList;
  * 使用反射把类实例转换为 EventList。
  * @author vaxtomis
  */
-public class DeParser {
+public class DeProducer {
     private LinkedList<Event> events = new LinkedList<>();
 
     public void parseToEvents(Object source, Class<?> clazz) throws IllegalAccessException {

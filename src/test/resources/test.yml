@@ -52,3 +52,9 @@ A6: !TestPojo.classA
       F: A6-B-subc-F
   C: 6
   D: 6.6666666
+B: !TestPojo.classB
+  suba: 1
+  subb: B-subb
+  subc: !TestPojo.classC
+    E: B-subc-E
+    F: B-subc-F
