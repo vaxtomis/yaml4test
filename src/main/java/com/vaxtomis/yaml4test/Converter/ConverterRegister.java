@@ -1,5 +1,9 @@
 package com.vaxtomis.yaml4test.Converter;
 
+import com.sun.javaws.jnl.PropertyDesc;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+
+import java.beans.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -18,7 +22,7 @@ import java.util.HashSet;
  * 策略模式
  * @author vaxtomis
  */
-public class Converter {
+public class ConverterRegister {
     private static final HashSet<Class<?>> classSet = new HashSet<>();
     private static final HashMap<Class<?>, Convert> convertMap = new HashMap<>();
     private static final StringConverter stringCvt = new StringConverter();
@@ -59,7 +63,6 @@ public class Converter {
         convertMap.put(BigInteger.class, bigIntCvt);
         convertMap.put(BigDecimal.class, bigDecCvt);
         convertMap.put(Byte.class, byteCvt);
-
     }
 
     /**
@@ -69,13 +72,11 @@ public class Converter {
      * beInject: 被注入的类实例对象
      * rawPairValue: 要注入的信息
      */
-    public static boolean injectObj(HashMap<String, Method> methodMap, Class<?> fClazz, Field field, Object beInject, Object rawPairValue) {
+    public static boolean injectObj(Method method, Class<?> fClazz, Object beInject, Object rawPairValue) {
         if (rawPairValue == null) {
             return false;
         }
         String getV = rawPairValue.toString();
-        String setMethodName = "set" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
-        Method method  = methodMap.get(setMethodName);
         Convert convert = convertMap.get(fClazz);
         if (convert == null) {
             return false;
@@ -104,4 +105,14 @@ public class Converter {
     public static boolean isPrimitive(Class<?> clazz) {
         return classSet.contains(clazz);
     }
+
+    public static boolean register(Class<?> clazz, Convert converter) {
+        if (classSet.contains(clazz) || convertMap.containsKey(clazz)) {
+            return false;
+        }
+        classSet.add(clazz);
+        convertMap.put(clazz, converter);
+        return true;
+    }
+
 }
