@@ -1,9 +1,5 @@
 package com.vaxtomis.yaml4test.Converter;
 
-import com.sun.javaws.jnl.PropertyDesc;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-
-import java.beans.*;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -67,8 +63,7 @@ public class ConverterRegister {
 
     /**
      * 单个实例的注入，优先尝试使用 Setter 方式去注入
-     * methodMap: 需要被注入的类的方法集合，通过 Map 存储
-     * field: 被注入类的对应被注入属性的 Field
+     * Method: setter 方法
      * beInject: 被注入的类实例对象
      * rawPairValue: 要注入的信息
      */
@@ -86,6 +81,7 @@ public class ConverterRegister {
 
     /**
      * 对 Array 进行注入
+     * componentType: 被注入的对象类型
      * field: 被注入类的对应被注入属性的 Field
      * beInject: 被注入的类实例对象
      * rawPairValue: 要注入的信息

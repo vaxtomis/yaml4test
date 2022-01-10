@@ -69,12 +69,7 @@ public class Producer {
         //System.out.println(rawPair.getName() + " - " + rawPair.getValue());
         Object obj = rawPair.getValue();
         Class<?> clazz = obj.getClass();
-        HashMap<String, Method> methodMap = new HashMap<>();
         Field[] fields = clazz.getDeclaredFields();
-        Method[] methods = clazz.getDeclaredMethods();
-        for (Method method : methods) {
-            methodMap.put(method.getName(), method);
-        }
         for (Field field : fields) {
             // Skip the serialVersionUID
             if (field.getModifiers() == (Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL)) {
@@ -96,8 +91,8 @@ public class Producer {
             assert descriptor != null;
             Method method = descriptor.getWriteMethod();
             setterSuccess = injectObj(method, fClazz, obj, rawPairValue);
-            //If the injection fails (using the setter method),
-            //try to assign the value directly.
+            // If the injection fails (using the setter method),
+            // try to assign the value directly.
             if (!setterSuccess) {
                 try {
                     // 判断是 Array 的情况下
