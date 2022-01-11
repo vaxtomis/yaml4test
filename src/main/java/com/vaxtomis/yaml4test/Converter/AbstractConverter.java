@@ -21,6 +21,8 @@ public abstract class AbstractConverter implements Convert {
     }
 
     /**
+     * TODO
+     *
      * <=== Mark, Need to optimize. ===>
      *
      * Determine whether this type can be parsed.
@@ -42,7 +44,7 @@ public abstract class AbstractConverter implements Convert {
                     return false;
                 }
                 int i = Integer.parseInt(getV, 16);
-                return  i >= -128 && i <= 127;
+                return  -128 <= i && i <= 127;
             case "boolean":
                 return true;
             default:
