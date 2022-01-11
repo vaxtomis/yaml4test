@@ -3,7 +3,7 @@ package com.vaxtomis.yaml4test.Converter;
 /**
  * @author vaxtomis
  */
-public class PositionConverter extends CustomConverter {
+public class PositionConverter extends AbstractCustomConverter {
     @Override
     public CustomPosition customConvert(String getV) {
         CustomPosition position = new CustomPosition();

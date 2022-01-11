@@ -171,7 +171,7 @@ address: !Address
 ```
 这时我们创建 PositionConverter:
 ```java
-class PositionConverter extends CustomConverter {
+class PositionConverter extends AbstractCustomConverter {
   @Override
   public CustomPosition customConvert(String getV) {
       CustomPosition position = new CustomPosition();

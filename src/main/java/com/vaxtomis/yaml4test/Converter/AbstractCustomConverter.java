@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 /**
  * @author vaxtomis
  */
-public abstract class CustomConverter extends AbstractConverter implements CustomConvert {
+public abstract class AbstractCustomConverter extends AbstractConverter implements CustomConvert {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         return setterInject(method, beInject, customConvert(getV));

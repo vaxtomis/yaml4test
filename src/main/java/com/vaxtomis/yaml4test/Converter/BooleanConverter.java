@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 class BooleanConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
-        boolean temp = (canParse(getV, "boolean")) && Boolean.parseBoolean(getV);
+        boolean temp = (isCorrectFormat(getV, "boolean")) && Boolean.parseBoolean(getV);
         return setterInject(method, beInject, temp);
     }
 
@@ -18,7 +18,7 @@ class BooleanConverter extends AbstractConverter {
     public void convertObjs(Object newArray, String[] pairValueArray) {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
-            boolean temp = (canParse(getV, "boolean")) && Boolean.parseBoolean(getV);
+            boolean temp = (isCorrectFormat(getV, "boolean")) && Boolean.parseBoolean(getV);
             Array.setBoolean(newArray, i, temp);
         }
     }

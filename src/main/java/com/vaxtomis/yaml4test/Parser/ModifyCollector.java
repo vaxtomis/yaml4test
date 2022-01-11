@@ -81,6 +81,8 @@ public class ModifyCollector {
     }
 
     /**
+     * TODO
+     *
      * 生成全排列组,存储的是 {@link Position} 也就是矩阵中的坐标。
      * @return List
      */

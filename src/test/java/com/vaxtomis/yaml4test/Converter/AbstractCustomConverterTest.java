@@ -9,7 +9,7 @@ import org.junit.Test;
  * @author vaxtomis
  */
 @Yaml4test(Path = "customizeConverterTest.yml")
-public class CustomConverterTest {
+public class AbstractCustomConverterTest {
     @YamlInject
     private Address address;
     {

@@ -1,10 +1,11 @@
 package com.vaxtomis.yaml4test.TestPojo;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class classA {
     private classB B;
-    private int C;
+    private BigInteger C;
     private BigDecimal D;
 
     public classB getB() {
@@ -15,11 +16,11 @@ public class classA {
         B = b;
     }
 
-    public int getC() {
+    public BigInteger getC() {
         return C;
     }
 
-    public void setC(int c) {
+    public void setC(BigInteger c) {
         C = c;
     }
 
