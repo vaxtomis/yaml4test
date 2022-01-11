@@ -192,8 +192,7 @@ address: !Address
 记得在调用前进行注册：
 ```java
 {
-    PositionConverter converter = new PositionConverter();
-    ConverterRegister.register(CustomPosition.class, converter);
+    ConverterRegister.register(CustomPosition.class, new PositionConverter());
     YamlFactory.refreshFactory(this);
 }
 ```

@@ -14,8 +14,7 @@ public class CustomConverterTest {
     private Address address;
     {
         // 注册自定义的转换器，将字符串转换为对应类型的对象
-        PositionConverter converter = new PositionConverter();
-        ConverterRegister.register(CustomPosition.class, converter);
+        ConverterRegister.register(CustomPosition.class, new PositionConverter());
         YamlFactory.refreshFactory(this);
     }
     @Test
