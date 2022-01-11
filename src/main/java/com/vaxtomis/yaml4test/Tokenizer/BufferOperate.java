@@ -5,7 +5,7 @@ package com.vaxtomis.yaml4test.Tokenizer;
  * from the buffer stream.
  * 从缓冲流中获取所需值的操作接口。
  */
-public interface BufferOperate {
+interface BufferOperate {
     char peek(int offset);
 
     void forward(int length);

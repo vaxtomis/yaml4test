@@ -8,7 +8,7 @@ import java.math.BigInteger;
  * BigInteger Converter.
  * @author vaxtomis
  */
-public class BigIntegerConverter extends AbstractConverter {
+class BigIntegerConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         BigInteger temp = (canParse(getV, "bigInteger"))?new BigInteger(getV):new BigInteger("0");

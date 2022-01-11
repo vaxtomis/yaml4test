@@ -8,7 +8,7 @@ import java.math.BigDecimal;
  * BigDecimal Converter.
  * @author vaxtomis
  */
-public class BigDecimalConverter extends AbstractConverter {
+class BigDecimalConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         BigDecimal temp = (canParse(getV, "bigDecimal"))?new BigDecimal(getV):new BigDecimal("0.00");

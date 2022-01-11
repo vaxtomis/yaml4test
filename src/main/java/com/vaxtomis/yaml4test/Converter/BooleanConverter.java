@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * boolean & Boolean Converter.
  * @author vaxtomis
  */
-public class BooleanConverter extends AbstractConverter {
+class BooleanConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         boolean temp = (canParse(getV, "boolean")) && Boolean.parseBoolean(getV);

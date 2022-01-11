@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * short & Short Converter.
  * @author vaxtomis
  */
-public class ShortConverter extends AbstractConverter {
+class ShortConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         short temp = (canParse(getV, "short"))?Short.parseShort(getV):0;

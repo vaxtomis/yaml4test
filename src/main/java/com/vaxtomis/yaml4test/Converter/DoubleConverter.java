@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * double & Double Converter.
  * @author vaxtomis
  */
-public class DoubleConverter extends AbstractConverter {
+class DoubleConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         double temp = (canParse(getV, "double"))?Double.parseDouble(getV):0.0d;

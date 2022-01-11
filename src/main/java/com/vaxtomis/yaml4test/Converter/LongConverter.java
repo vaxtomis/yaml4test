@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * long & Long Converter.
  * @author vaxtomis
  */
-public class LongConverter extends AbstractConverter {
+class LongConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         long temp = (canParse(getV, "long"))?Long.parseLong(getV):0L;

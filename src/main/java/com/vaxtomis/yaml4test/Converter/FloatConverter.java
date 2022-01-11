@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * float & Float Converter.
  * @author vaxtomis
  */
-public class FloatConverter extends AbstractConverter {
+class FloatConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         float temp = (canParse(getV, "float"))?Float.parseFloat(getV):0.0f;

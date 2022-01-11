@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * Byte Converter.
  * @author vaxtomis
  */
-public class ByteConverter extends AbstractConverter {
+class ByteConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         Byte temp = (canParse(getV, "byte"))?Byte.parseByte(getV, 16):0;

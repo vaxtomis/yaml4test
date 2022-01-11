@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * int & Integer Converter.
  * @author vaxtomis
  */
-public class IntConverter extends AbstractConverter {
+class IntConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         int temp = (canParse(getV, "int"))?Integer.parseInt(getV):0;
