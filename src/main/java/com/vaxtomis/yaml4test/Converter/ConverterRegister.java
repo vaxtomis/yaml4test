@@ -18,7 +18,7 @@ import java.util.HashSet;
  * 策略模式
  * @author vaxtomis
  */
-public class Converter {
+public class ConverterRegister {
     private static final HashSet<Class<?>> classSet = new HashSet<>();
     private static final HashMap<Class<?>, Convert> convertMap = new HashMap<>();
     private static final StringConverter stringCvt = new StringConverter();
@@ -59,23 +59,19 @@ public class Converter {
         convertMap.put(BigInteger.class, bigIntCvt);
         convertMap.put(BigDecimal.class, bigDecCvt);
         convertMap.put(Byte.class, byteCvt);
-
     }
 
     /**
      * 单个实例的注入，优先尝试使用 Setter 方式去注入
-     * methodMap: 需要被注入的类的方法集合，通过 Map 存储
-     * field: 被注入类的对应被注入属性的 Field
+     * Method: setter 方法
      * beInject: 被注入的类实例对象
      * rawPairValue: 要注入的信息
      */
-    public static boolean injectObj(HashMap<String, Method> methodMap, Class<?> fClazz, Field field, Object beInject, Object rawPairValue) {
+    public static boolean injectObj(Method method, Class<?> fClazz, Object beInject, Object rawPairValue) {
         if (rawPairValue == null) {
             return false;
         }
         String getV = rawPairValue.toString();
-        String setMethodName = "set" + field.getName().substring(0, 1).toUpperCase() + field.getName().substring(1);
-        Method method  = methodMap.get(setMethodName);
         Convert convert = convertMap.get(fClazz);
         if (convert == null) {
             return false;
@@ -85,6 +81,7 @@ public class Converter {
 
     /**
      * 对 Array 进行注入
+     * componentType: 被注入的对象类型
      * field: 被注入类的对应被注入属性的 Field
      * beInject: 被注入的类实例对象
      * rawPairValue: 要注入的信息
@@ -104,4 +101,14 @@ public class Converter {
     public static boolean isPrimitive(Class<?> clazz) {
         return classSet.contains(clazz);
     }
+
+    public static boolean register(Class<?> clazz, Convert converter) {
+        if (classSet.contains(clazz) || convertMap.containsKey(clazz)) {
+            return false;
+        }
+        classSet.add(clazz);
+        convertMap.put(clazz, converter);
+        return true;
+    }
+
 }

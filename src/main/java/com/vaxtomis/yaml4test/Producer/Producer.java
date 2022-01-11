@@ -2,6 +2,8 @@ package com.vaxtomis.yaml4test.Producer;
 
 import com.vaxtomis.yaml4test.Parser.*;
 
+import java.beans.IntrospectionException;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -10,8 +12,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import static com.vaxtomis.yaml4test.Converter.Converter.injectObj;
-import static com.vaxtomis.yaml4test.Converter.Converter.injectObjs;
+import static com.vaxtomis.yaml4test.Converter.ConverterRegister.injectObj;
+import static com.vaxtomis.yaml4test.Converter.ConverterRegister.injectObjs;
 
 /**
  * @description
@@ -32,7 +34,7 @@ public class Producer {
 
     public Producer() {
         objectStack = new LinkedList<>();
-        layerStack = new LinkedList<PairContainer>();
+        layerStack = new LinkedList<>();
         events = null;
         curContainer = null;
         innerMap = null;
@@ -67,14 +69,9 @@ public class Producer {
         //System.out.println(rawPair.getName() + " - " + rawPair.getValue());
         Object obj = rawPair.getValue();
         Class<?> clazz = obj.getClass();
-        HashMap<String, Method> methodMap = new HashMap<>();
         Field[] fields = clazz.getDeclaredFields();
-        Method[] methods = clazz.getDeclaredMethods();
-        for (Method method : methods) {
-            methodMap.put(method.getName(), method);
-        }
         for (Field field : fields) {
-            //Skip the serialVersionUID
+            // Skip the serialVersionUID
             if (field.getModifiers() == (Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL)) {
                 continue;
             }
@@ -83,9 +80,19 @@ public class Producer {
             Class<?> fClazz = field.getType();
             String fName = field.getName();
             Object rawPairValue = curContainer.getRawPairValue(fName);
-            setterSuccess = injectObj(methodMap, fClazz, field, obj, rawPairValue);
-            //If the injection fails (using the setter method),
-            //try to assign the value directly.
+
+            PropertyDescriptor descriptor = null;
+            try {
+                descriptor = new PropertyDescriptor(fName, clazz);
+            } catch (IntrospectionException e) {
+                e.printStackTrace();
+            }
+
+            assert descriptor != null;
+            Method method = descriptor.getWriteMethod();
+            setterSuccess = injectObj(method, fClazz, obj, rawPairValue);
+            // If the injection fails (using the setter method),
+            // try to assign the value directly.
             if (!setterSuccess) {
                 try {
                     // 判断是 Array 的情况下
@@ -105,6 +112,10 @@ public class Producer {
         curContainer = layerStack.peekLast();
     }
 
+    /**
+     * @attention Need to optimize.
+     * TODO
+     */
     private void processEvent(Event event) {
         switch (event.getType()) {
             case MAPPING_START:
@@ -218,6 +229,7 @@ public class Producer {
 
     /**
      * @attention Need to optimize.
+     * TODO
      *
      * Put the value(primitive type and their encapsulation class)
      * into RawPair

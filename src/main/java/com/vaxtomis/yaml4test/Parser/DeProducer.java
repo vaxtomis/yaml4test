@@ -1,6 +1,6 @@
 package com.vaxtomis.yaml4test.Parser;
 
-import com.vaxtomis.yaml4test.Converter.Converter;
+import com.vaxtomis.yaml4test.Converter.ConverterRegister;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -96,7 +96,7 @@ public class DeProducer {
     }
 
     private void parseEntry(Object parameter) throws IllegalAccessException {
-        if (Converter.isPrimitive(parameter.getClass())) {
+        if (ConverterRegister.isPrimitive(parameter.getClass())) {
             events.add(new EntryEvent("value", String.valueOf(parameter)));
         } else {
             events.add(new EntryEvent("class", path(parameter.getClass())));
@@ -120,7 +120,7 @@ public class DeProducer {
     private String fieldType(Field field) {
         if (field.getType().isArray()) {
             return "SEQUENCE";
-        } else if (Converter.isPrimitive(field.getType())) {
+        } else if (ConverterRegister.isPrimitive(field.getType())) {
             return "PRIMITIVE";
         }
         return "MAPPING";

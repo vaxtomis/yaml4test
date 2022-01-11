@@ -136,3 +136,64 @@ collector.add("[0].name", "Jack");
 // 当根部的属性非集合，子属性为集合时，直接在属性后添加 [index] 即可
 collector.add("Group.Person[0].name", "Jack");
 ```
+### 0.0.2 基础功能添加
+#### 1.创建自定义转换器并注册
+由于 yaml 格式文件存储的是 String 类型数值，虽然提供了基础数据类型的转换，  
+但对于一些自定义创建的基础数据类型，我们还是希望能通过 String 进行快速转换。  
+例如，通过 "yyyy-MM-dd HH:mm:ss" 将字符串快速转换为对应的 Date 类型。  
+因此只要继承 CustomConverter 类，实现里面的 customConvert() 方法，  
+并使用 ConverterRegister.register() 将需要处理的 Class 和 对应自定义转换器注册。  
+在自动实例化时，检测到类的属性为对应 Class 类型，就会调用自定义转换器来创建属性实例。  
+  
+举例，我们定义了一个地址类 Address:
+```java
+class Address {
+  String name;
+  String owner;
+  CustomPosition position;
+}
+```  
+CustomPosition:
+```java
+class CustomPosition {
+  Double x;
+  Double y;
+}
+```
+不注册自定义转换器时，yaml 文件应该为：
+```yaml
+address: !Address
+  name: zjut
+  owner: zjuter
+  position: !CustomPosition
+    x: 120.1689
+    y: 30.2553
+```
+这时我们创建 PositionConverter:
+```java
+class PositionConverter extends AbstractCustomConverter {
+  @Override
+  public CustomPosition customConvert(String getV) {
+      CustomPosition position = new CustomPosition();
+      String[] strs = getV.split("-");
+      position.setX(Double.parseDouble(strs[0]));
+      position.setY(Double.parseDouble(strs[1]));
+      return position;
+  }
+}
+```
+这时 yaml 文件就可以定义为这样：
+```yaml
+address: !Address
+  name: zjut
+  owner: zjuter
+  position: 120.1689-30.2553
+```
+记得在调用前进行注册：
+```java
+{
+    ConverterRegister.register(CustomPosition.class, new PositionConverter());
+    YamlFactory.refreshFactory(this);
+}
+```
+例子可以在 test.Converter 文件夹中找到。

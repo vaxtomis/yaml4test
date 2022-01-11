@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * String Converter.
  * @author vaxtomis
  */
-public class StringConverter extends AbstractConverter {
+class StringConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         if (getV == null) getV = "";

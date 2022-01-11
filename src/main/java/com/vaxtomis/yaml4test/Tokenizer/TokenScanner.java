@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * @note -> Reference Project: com.esotericsoftware.yamlbeans
  * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
  */
-public class TokenScanner implements TokenScan {
+class TokenScanner implements TokenScan {
     private StreamBuffer bf;
     private int indent = -1;
     private int depth = 0;

@@ -7,7 +7,7 @@ import java.lang.reflect.Method;
  * Char & Character Converter.
  * @author vaxtomis
  */
-public class CharConverter extends AbstractConverter {
+class CharConverter extends AbstractConverter {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
         char temp = (getV != null)?getV.charAt(0):'\u0000';

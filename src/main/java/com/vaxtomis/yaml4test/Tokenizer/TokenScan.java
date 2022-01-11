@@ -1,6 +1,6 @@
 package com.vaxtomis.yaml4test.Tokenizer;
 
-public interface TokenScan {
+interface TokenScan {
     Token scanPlain();
 
     Token scanFlowScalar(char style);

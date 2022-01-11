@@ -4,22 +4,19 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
 /**
- * short & Short Converter.
  * @author vaxtomis
  */
-class ShortConverter extends AbstractConverter {
+public abstract class AbstractCustomConverter extends AbstractConverter implements CustomConvert {
     @Override
     public boolean convertObj(Method method, Object beInject, String getV) {
-        short temp = (isCorrectFormat(getV, "short"))?Short.parseShort(getV):0;
-        return setterInject(method, beInject, temp);
+        return setterInject(method, beInject, customConvert(getV));
     }
 
     @Override
     public void convertObjs(Object newArray, String[] pairValueArray) {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
-            short temp = (isCorrectFormat(getV, "short"))?Short.parseShort(getV):0;
-            Array.setShort(newArray, i, temp);
+            Array.set(newArray, i, customConvert(getV));
         }
     }
 }
