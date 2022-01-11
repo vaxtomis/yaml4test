@@ -5,8 +5,8 @@ package com.vaxtomis.yaml4test.Converter;
  */
 public class PositionConverter extends CustomConverter {
     @Override
-    public CustomizePosition customConvert(String getV) {
-        CustomizePosition position = new CustomizePosition();
+    public CustomPosition customConvert(String getV) {
+        CustomPosition position = new CustomPosition();
         String[] strs = getV.split("-");
         position.setX(Double.parseDouble(strs[0]));
         position.setY(Double.parseDouble(strs[1]));

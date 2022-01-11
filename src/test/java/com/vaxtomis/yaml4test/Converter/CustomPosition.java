@@ -3,7 +3,7 @@ package com.vaxtomis.yaml4test.Converter;
 /**
  * @author vaxtomis
  */
-public class CustomizePosition {
+public class CustomPosition {
     Double x;
     Double y;
 

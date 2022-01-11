@@ -6,7 +6,7 @@ package com.vaxtomis.yaml4test.Converter;
 public class Address {
     String name;
     String owner;
-    CustomizePosition position;
+    CustomPosition position;
 
     public String getName() {
         return name;
@@ -24,11 +24,11 @@ public class Address {
         this.owner = owner;
     }
 
-    public CustomizePosition getPosition() {
+    public CustomPosition getPosition() {
         return position;
     }
 
-    public void setPosition(CustomizePosition position) {
+    public void setPosition(CustomPosition position) {
         this.position = position;
     }
 }
