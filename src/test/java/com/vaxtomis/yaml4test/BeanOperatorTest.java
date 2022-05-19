@@ -1,11 +1,12 @@
-package com.vaxtomis.yaml4test.Utils;
+package com.vaxtomis.yaml4test;
 
 import com.vaxtomis.yaml4test.Parser.ModifyCollector;
 import com.vaxtomis.yaml4test.TestPojo.classC;
 import com.vaxtomis.yaml4test.TestPojo.classD;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author vaxtomis

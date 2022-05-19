@@ -4,7 +4,6 @@ import com.vaxtomis.yaml4test.Annotation.Yaml4test;
 import com.vaxtomis.yaml4test.Annotation.YamlInject;
 import com.vaxtomis.yaml4test.Parser.Parser;
 import com.vaxtomis.yaml4test.Producer.Producer;
-import com.vaxtomis.yaml4test.Utils.BeanOperator;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
