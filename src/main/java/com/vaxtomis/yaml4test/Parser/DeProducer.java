@@ -127,8 +127,7 @@ public class DeProducer {
     }
 
     private String path(Class<?> clazz) {
-        /*String packagePath = YamlFactory.class.getPackage().getName() + ".";
-        return clazz.getName().substring(packagePath.length());*/
-        return clazz.getSimpleName();
+        return clazz.getCanonicalName();
+        //return clazz.getSimpleName();
     }
 }

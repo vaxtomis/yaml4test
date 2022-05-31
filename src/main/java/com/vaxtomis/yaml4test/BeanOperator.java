@@ -35,6 +35,8 @@ public class BeanOperator {
      */
     public static <T> T deepCopy(@NotNull T source) throws IllegalAccessException {
         init(source);
+        //System.out.println("<=== deProducer.getEventList ===>");
+        //System.out.println(deProducer.getEventList());
         buildInstance(deProducer.getEventList());
         return (T) producer.getCopyInstance();
     }
@@ -96,14 +98,14 @@ public class BeanOperator {
         deProducer.parseToEvents(source, source.getClass());
         producer = new Producer();
         classPath = "";
-        if (clazz.getPackage() != null) {
+        /*if (clazz.getPackage() != null) {
             classPath = clazz.getPackage().getName() + ".";
         }
         // 多层嵌套时也能找到路径
         while (clazz.isArray()) {
             clazz = clazz.getComponentType();
             classPath = clazz.getPackage().getName() + ".";
-        }
+        }*/
     }
 
     // 传入 EventList 到 producer 中并进行赋值。
