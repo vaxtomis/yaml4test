@@ -1,0 +1,4 @@
+e: !TestPojo2.classE
+  c: !TestPojo.classC
+    E: e-c-E
+    F: e-c-F

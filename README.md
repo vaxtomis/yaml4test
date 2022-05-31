@@ -97,14 +97,14 @@ Person {
 ```
 ```java
 Person jack = new Person("Jack", 23, "Male");
-// 拷贝出一个与 jack 实例值相同的独立的实例。
+// 拷贝出一个与 jack 实例值相同的独立的实例
 Person copy = BeanOperator.deepCopy(jack);
 ```
    
 深拷贝的同时可以按需求修改新实例的值，通过 modifyCopy() 方法实现:  
 ```java
 Person jack = new Person("Jack", 23, "Male");
-//修改单条属性
+// 修改单条属性
 Person copy = BeanOperator.modifyCopy(jack, "age", "24");
 ```
 也可以对一个实例的多个属性值进行修改，需要创建 ModifyCollector:  
