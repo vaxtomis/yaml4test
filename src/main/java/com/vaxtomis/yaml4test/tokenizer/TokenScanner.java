@@ -13,14 +13,36 @@ import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
  * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
  */
 class TokenScanner implements TokenScan {
+    private static TokenScanner tokenScanner = null;
     private StreamBuffer bf;
-    private int indent = -1;
-    private int depth = 0;
-    private boolean tkGetAble = true;
-    private final Stack<Integer> indents = new Stack();
+    private int indent;
+    private int depth;
+    private boolean tkGetAble;
+    private final Stack<Integer> indents;
 
 
     public TokenScanner(String yaml) {
+        indent = -1;
+        depth = 0;
+        tkGetAble = true;
+        indents = new Stack<>();
+        bf = StreamBuffer.getInstance(yaml);
+    }
+
+    public static TokenScanner getInstance(String yaml) {
+        if (tokenScanner == null) {
+            tokenScanner = new TokenScanner(yaml);
+            return tokenScanner;
+        }
+        tokenScanner.reset(yaml);
+        return tokenScanner;
+    }
+
+    private void reset(String yaml) {
+        indent = -1;
+        depth = 0;
+        tkGetAble = true;
+        indents.clear();
         bf = StreamBuffer.getInstance(yaml);
     }
 

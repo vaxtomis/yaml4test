@@ -21,7 +21,9 @@ public class EventOperatorTest {
         Parser parser = new Parser();
         String path = YamlFactory.class.getClassLoader().getResource("").getPath() + "test2.yml";
         parser.setPath(path);
-        EventOperator operator = new EventOperator(parser.getEventList(), new HashMap());
+        LinkedList<Event> events = parser.getEventList();
+        System.out.println(events);
+        EventOperator operator = new EventOperator(events, new HashMap());
         operator.rebuild();
     }
 
@@ -33,11 +35,14 @@ public class EventOperatorTest {
         Parser parser = new Parser();
         String path = YamlFactory.class.getClassLoader().getResource("").getPath() + "test2.yml";
         parser.setPath(path);
-        EventOperator operator = new EventOperator(parser.getEventList(), "D.cs[0].E", "modified-E1");
+        LinkedList<Event> events = parser.getEventList();
+        System.out.println(events);
+        EventOperator operator = new EventOperator(events, "D.cs[0].E", "modified-E1");
+        events = operator.rebuild();
 
         Map<String, ?> map = new HashMap<>();
         Producer producer = new Producer();
-        producer.setEvents(operator.rebuild());
+        producer.setEvents(events);
         producer.setClassPath(YamlFactory.class.getPackage().getName() + ".");
         producer.setInnerMap(map);
         producer.build();
@@ -49,7 +54,7 @@ public class EventOperatorTest {
     /**
      * 测试 EventList 切分方法。
      */
-    @Test
+    //@Test
     public void getCutEventsTest() {
         Parser parser = new Parser();
         String path = YamlFactory.class.getClassLoader().getResource("").getPath() + "test2.yml";

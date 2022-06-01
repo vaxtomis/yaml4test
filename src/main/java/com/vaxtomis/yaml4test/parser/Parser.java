@@ -15,14 +15,17 @@ import static com.vaxtomis.yaml4test.tokenizer.TokenType.*;
 public class Parser {
     private Tokenizer tokenizer;
     private String path;
-    private Parser.SlidingWindow window = new SlidingWindow();
-    private LinkedList<Event> events = new LinkedList<>();
-    private LinkedList<Token> blockStack = new LinkedList<Token>();
+    private final Parser.SlidingWindow window;
+    private final LinkedList<Event> events;
+    private final LinkedList<Token> blockStack;
     private boolean flagTokensEnd = false;
 
     public Parser() {
         tokenizer = null;
         path = null;
+        window = new SlidingWindow();
+        events = new LinkedList<>();
+        blockStack = new LinkedList<Token>();
     }
 
     /**

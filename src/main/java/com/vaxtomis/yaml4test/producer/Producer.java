@@ -44,6 +44,9 @@ public class Producer {
         if (events == null) {
             throw new ProducerException("Events are not set.");
         }
+        if (events.isEmpty()) {
+            throw new ProducerException("Events is empty.");
+        }
         if (innerMap == null) {
             throw new ProducerException("InnerMap are not set.");
         }

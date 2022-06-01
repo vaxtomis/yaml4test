@@ -8,7 +8,6 @@ import java.io.*;
  * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
  **/
 class StreamBuffer implements BufferOperate {
-    private static StreamBuffer streamBuffer = null;
     private final Reader reader;
     private final StringBuilder builder;
     private boolean flagEndOfFile;
@@ -17,8 +16,12 @@ class StreamBuffer implements BufferOperate {
     private int lno = 0;
 
     public StreamBuffer(Reader reader) {
-        if (reader == null) throw new IllegalArgumentException("<!--- Reader is null. !--->");
-        if (!(reader instanceof BufferedReader)) reader = new BufferedReader(reader);
+        if (reader == null) {
+            throw new IllegalArgumentException("<!--- Reader is null. !--->");
+        }
+        if (!(reader instanceof BufferedReader)) {
+            reader = new BufferedReader(reader);
+        }
         this.flagEndOfFile = false;
         this.reader = reader;
         this.builder = new StringBuilder();
@@ -31,14 +34,11 @@ class StreamBuffer implements BufferOperate {
 
 
     public static StreamBuffer getInstance(String yaml) {
-        if (streamBuffer == null) {
-            try {
-                streamBuffer = new StreamBuffer(yaml);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        try {
+            return new StreamBuffer(yaml);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
         }
-        return streamBuffer;
     }
 
     /**

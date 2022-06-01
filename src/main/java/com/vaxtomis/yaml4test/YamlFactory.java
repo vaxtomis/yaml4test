@@ -98,7 +98,7 @@ public class YamlFactory {
         if (EMPTY.equals(path)) {
             throw new YamlFactoryException("The file path is not set.");
         }
-        if (annotation.Pack().equals(Yaml4test.Pack.CrossPack)) {
+        if (Yaml4test.Pack.CrossPack.equals(annotation.Pack())) {
             producer.setClassPath(EMPTY);
         } else {
             if (clazz.getPackage() != null) {
@@ -133,7 +133,7 @@ public class YamlFactory {
         YamlInject.Scope scope = field.getAnnotation(YamlInject.class).Scope();
         name = EMPTY.equals(name)?field.getName():name;
         try {
-            if (scope.equals(YamlInject.Scope.Prototype)) {
+            if (YamlInject.Scope.Prototype.equals(scope)) {
                 field.set(context, BeanOperator.deepCopy(storageMap.get(name)));
             } else {
                 field.set(context, storageMap.get(name));

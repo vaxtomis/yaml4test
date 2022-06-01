@@ -7,7 +7,7 @@ import org.junit.Test;
  * @author vaxtomis
  */
 public class TokenScannerTest {
-    TokenScanner tokenScanner = new TokenScanner(
+    TokenScanner tokenScanner = TokenScanner.getInstance(
             YamlFactory.class.getClassLoader().getResource("").getPath() + "tokenScannerTest.yml");
     @Test
     public void scanNextToken() {
@@ -23,7 +23,7 @@ public class TokenScannerTest {
 
     @Test
     public void scanFlowScalar() {
-        //tokenScanner.toNext(2);
+        tokenScanner.toNext(2);
         tokenScanner.scanNextToken();
         System.out.println(tokenScanner.scanFlowScalar('\''));
         tokenScanner.isLineBreak();

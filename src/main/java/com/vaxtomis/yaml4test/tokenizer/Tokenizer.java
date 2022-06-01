@@ -32,7 +32,7 @@ public class Tokenizer {
     }
 
     public Tokenizer(String yaml) {
-        this(new TokenScanner(yaml));
+        this(TokenScanner.getInstance(yaml));
     }
 
     public Iterator iterator () {
