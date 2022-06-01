@@ -1,8 +1,10 @@
-package com.vaxtomis.yaml4test.Tokenizer;
+package com.vaxtomis.yaml4test.tokenizer;
 
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
 /**
  * @description
@@ -28,15 +30,22 @@ class TokenScanner implements TokenScan {
      */
     public void scanNextToken() {
         for (;;) {
-            while (peekChar() == ' ')
+            while (peekChar() == ' ') {
                 toNext();
+            }
             //Skip the annotation.
-            if (peekChar() == '#')
-                while (Define.NULL_OR_LINEBREAK.indexOf(peekChar()) == -1)
+            if (peekChar() == '#') {
+                while (Define.NULL_OR_LINEBREAK.indexOf(peekChar()) == -1) {
                     toNext();
+                }
+            }
             if (isLineBreak()) {
-                if (depth == 0) tkGetAble = true;
-            } else break;
+                if (depth == 0) {
+                    tkGetAble = true;
+                }
+            } else {
+                break;
+            }
         }
     }
 
@@ -46,7 +55,7 @@ class TokenScanner implements TokenScan {
      */
     public Token scanPlain() {
         StringBuilder chunks = new StringBuilder();
-        String spaces = "";
+        String spaces = EMPTY;
         boolean isDepthZero = false;
         //[\0 \t\r\n\u0085\\[\\]{},:?]
         Pattern rule = Define.R_FLOW_NOT_ZERO;
@@ -73,12 +82,16 @@ class TokenScanner implements TokenScan {
                 throw new TokenScanningException("Scanning a plain scalar," +
                         " found unexpected ':'");
             }
-            if (length == 0) break;
+            if (length == 0) {
+                break;
+            }
             tkGetAble = false;
             chunks.append(spaces);
             chunks.append(getString(length));
             spaces = scanPlainSpaces();
-            if (spaces.length() == 0 || depth == 0 && getCno() < indent + 1) break;
+            if (spaces.length() == 0 || depth == 0 && getCno() < indent + 1) {
+                break;
+            }
         }
         return new ScalarToken(chunks.toString(),true);
     }
@@ -101,21 +114,29 @@ class TokenScanner implements TokenScan {
         if (Define.FULL_LINEBREAK.indexOf(ch) != -1) {
             tkGetAble = true;
             //Determine if it is start/end or not.
-            if (Define.END_OR_START.matcher(peekString(4)).matches()) return "";
+            if (Define.END_OR_START.matcher(peekString(4)).matches()) {
+                return EMPTY;
+            }
             StringBuilder breaks = new StringBuilder();
             //Count the number of linebreaks.
             while (Define.BLANK_OR_LINEBREAK.indexOf(peekChar()) != -1)
-                if (' ' == peekChar())
+                if (' ' == peekChar()) {
                     toNext();
-                else {
-                    if (isLineBreak())  breaks.append("\n");
-                    if (Define.END_OR_START.matcher(peekString(4)).matches())
-                        return "";
+                } else {
+                    if (isLineBreak()) {
+                        breaks.append("\n");
+                    }
+                    if (Define.END_OR_START.matcher(peekString(4)).matches()) {
+                        return EMPTY;
+                    }
                 }
-            if (breaks.length() == 0) chunks.append(" ");
+            if (breaks.length() == 0) {
+                chunks.append(" ");
+            }
             chunks.append(breaks);
-        } else
+        } else {
             chunks.append(spaces);
+        }
         return chunks.toString();
     }
 
@@ -209,10 +230,13 @@ class TokenScanner implements TokenScan {
         else if (Define.FULL_LINEBREAK.indexOf(ch) != -1) {
             String breaks = scanFlowScalarBreaks();
             isLineBreak();
-            if (breaks.length() == 0) chunks.append(" ");
+            if (breaks.length() == 0) {
+                chunks.append(" ");
+            }
             chunks.append(breaks);
-        } else
+        } else {
             chunks.append(spaces);
+        }
         return chunks.toString();
     }
 
@@ -232,12 +256,16 @@ class TokenScanner implements TokenScan {
                 throw new TokenScanningException("Scanning a quoted scalar," +
                         " found unexpected document separator.");
             }
-            while (Define.BLANK_T.indexOf(peekChar()) != -1)
+            while (Define.BLANK_T.indexOf(peekChar()) != -1) {
                 toNext();
-            if (Define.FULL_LINEBREAK.indexOf(peekChar()) != -1)
-                if (isLineBreak()) chunks.append("\n");
-            else
+            }
+            if (Define.FULL_LINEBREAK.indexOf(peekChar()) != -1) {
+                if (isLineBreak()) {
+                    chunks.append("\n");
+                }
+            } else {
                 return chunks.toString();
+            }
         }
     }
 
@@ -272,10 +300,11 @@ class TokenScanner implements TokenScan {
     public boolean isLineBreak() {
         char ch = peekChar();
         if (Define.FULL_LINEBREAK.indexOf(ch) != -1) {
-            if (Define.RN.equals(peekString(2)))
+            if (Define.RN.equals(peekString(2))) {
                 toNext(2);
-            else
+            } else {
                 toNext();
+            }
             return true;
         }
         return false;

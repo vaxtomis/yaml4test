@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Producer;
+package com.vaxtomis.yaml4test.producer;
 import java.util.Objects;
 
 /**
@@ -30,8 +30,12 @@ public class RawPair<T> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         RawPair<?> rawPair = (RawPair<?>) o;
         return name.equals(rawPair.name);
     }

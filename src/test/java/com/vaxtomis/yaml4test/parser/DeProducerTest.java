@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Parser;
+package com.vaxtomis.yaml4test.parser;
 
 import com.vaxtomis.yaml4test.TestPojo.classC;
 import com.vaxtomis.yaml4test.TestPojo.classD;

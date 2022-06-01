@@ -1,6 +1,6 @@
 package com.vaxtomis.yaml4test;
 
-import com.vaxtomis.yaml4test.Parser.ModifyCollector;
+import com.vaxtomis.yaml4test.parser.ModifyCollector;
 import com.vaxtomis.yaml4test.TestPojo.classC;
 import com.vaxtomis.yaml4test.TestPojo.classD;
 import org.junit.Test;

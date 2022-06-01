@@ -1,12 +1,12 @@
-package com.vaxtomis.yaml4test.Parser;
+package com.vaxtomis.yaml4test.parser;
 
-import com.vaxtomis.yaml4test.Tokenizer.*;
+import com.vaxtomis.yaml4test.tokenizer.*;
 import com.vaxtomis.yaml4test.YamlFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.LinkedList;
-import static com.vaxtomis.yaml4test.Tokenizer.TokenType.*;
+import static com.vaxtomis.yaml4test.tokenizer.TokenType.*;
 
 /**
  * @description Parser.
@@ -34,7 +34,9 @@ public class Parser {
         private int cursor = -1;
         private Token[] tks = new Token[3];
         public void forward() {
-            if (flagTokensEnd) return;
+            if (flagTokensEnd) {
+                return;
+            }
             Token tk = tokenizer.getNextToken();
             if (tk != null) {
                 if (cursor < 2) {
@@ -50,17 +52,23 @@ public class Parser {
         }
 
         public Token getCur() {
-            if (cursor == -1) return null;
+            if (cursor == -1) {
+                return null;
+            }
             return tks[cursor];
         }
 
         public Token getPre() {
-            if (cursor-1 < 0) return null;
+            if (cursor-1 < 0) {
+                return null;
+            }
             return tks[cursor-1];
         }
 
         public Token getDoublePre() {
-            if (cursor-2 < 0) return null;
+            if (cursor-2 < 0) {
+                return null;
+            }
             return tks[cursor-2];
         }
 

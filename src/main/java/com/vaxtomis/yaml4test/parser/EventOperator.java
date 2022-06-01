@@ -1,8 +1,10 @@
-package com.vaxtomis.yaml4test.Parser;
+package com.vaxtomis.yaml4test.parser;
 
-import com.vaxtomis.yaml4test.Tokenizer.Define;
+import com.vaxtomis.yaml4test.tokenizer.Define;
 
 import java.util.*;
+
+import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
 /**
  * @description
@@ -20,7 +22,7 @@ public class EventOperator {
     private int seqIndex = -1;
     private int pathNameIndex = 0;
     private boolean needToModify = false;
-    private String modifiedEventName = "";
+    private String modifiedEventName = EMPTY;
     private String value;
 
     public EventOperator(LinkedList<Event> events) {
@@ -68,7 +70,7 @@ public class EventOperator {
         if (modifyMap != null) {
             events = getCutEvents(modifyMap.keySet());
             return events;
-        } else if (!"".equals(modifiedEventName)) {
+        } else if (!EMPTY.equals(modifiedEventName)) {
             Set<String> set = new HashSet<>();
             set.add(modifiedEventName);
             events = getCutEvents(set);
@@ -340,7 +342,7 @@ public class EventOperator {
 
     public void setModify(HashMap modifyMap) {
         this.modifyMap = modifyMap;
-        this.modifiedEventName = "";
+        this.modifiedEventName = EMPTY;
         this.value = null;
     }
 

@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Parser;
+package com.vaxtomis.yaml4test.parser;
 
 import org.junit.Test;
 

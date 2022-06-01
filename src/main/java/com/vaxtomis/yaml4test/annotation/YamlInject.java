@@ -1,6 +1,8 @@
-package com.vaxtomis.yaml4test.Annotation;
+package com.vaxtomis.yaml4test.annotation;
 
 import java.lang.annotation.*;
+
+import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
 /**
  * @description Annotation YamlInject.
@@ -10,7 +12,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface YamlInject {
-    String Name() default "";
+    String Name() default EMPTY;
     enum Scope {Singleton, Prototype};
     Scope Scope() default Scope.Singleton;
 }

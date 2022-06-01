@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Converter;
+package com.vaxtomis.yaml4test.converter;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -19,46 +19,46 @@ import java.util.HashSet;
  * @author vaxtomis
  */
 public class ConverterRegister {
-    private static final HashSet<Class<?>> classSet = new HashSet<>();
-    private static final HashMap<Class<?>, Convert> convertMap = new HashMap<>();
-    private static final StringConverter stringCvt = new StringConverter();
-    private static final CharConverter charCvt = new CharConverter();
-    private static final IntConverter intCvt = new IntConverter();
-    private static final LongConverter longCvt = new LongConverter();
-    private static final DoubleConverter doubleCvt = new DoubleConverter();
-    private static final FloatConverter floatCvt = new FloatConverter();
-    private static final ShortConverter shortCvt = new ShortConverter();
-    private static final BooleanConverter booleanCvt = new BooleanConverter();
-    private static final BigIntegerConverter bigIntCvt = new BigIntegerConverter();
-    private static final BigDecimalConverter bigDecCvt = new BigDecimalConverter();
-    private static final ByteConverter byteCvt = new ByteConverter();
+    private static final HashSet<Class<?>> CLASS_SET = new HashSet<>();
+    private static final HashMap<Class<?>, Convert> CONVERT_MAP = new HashMap<>();
+    private static final StringConverter STRING_CVT = new StringConverter();
+    private static final CharConverter CHAR_CVT = new CharConverter();
+    private static final IntConverter INT_CVT = new IntConverter();
+    private static final LongConverter LONG_CVT = new LongConverter();
+    private static final DoubleConverter DOUBLE_CVT = new DoubleConverter();
+    private static final FloatConverter FLOAT_CVT = new FloatConverter();
+    private static final ShortConverter SHORT_CVT = new ShortConverter();
+    private static final BooleanConverter BOOLEAN_CVT = new BooleanConverter();
+    private static final BigIntegerConverter BIG_INT_CVT = new BigIntegerConverter();
+    private static final BigDecimalConverter BIG_DEC_CVT = new BigDecimalConverter();
+    private static final ByteConverter BYTE_CVT = new ByteConverter();
 
     static {
         Class<?>[] primitiveClass = new Class[] {String.class, int.class, Integer.class, char.class,
                 Character.class, short.class, Short.class, long.class, Long.class, double.class, Double.class, float.class,
                 Float.class, BigInteger.class, BigDecimal.class, Byte.class};
         Class<?>[] dateClass = new Class[] {Date.class, LocalDate.class, LocalTime.class, LocalDateTime.class};
-        classSet.addAll(Arrays.asList(primitiveClass));
-        classSet.addAll(Arrays.asList(dateClass));
+        CLASS_SET.addAll(Arrays.asList(primitiveClass));
+        CLASS_SET.addAll(Arrays.asList(dateClass));
 
-        convertMap.put(String.class, stringCvt);
-        convertMap.put(char.class, charCvt);
-        convertMap.put(Character.class, charCvt);
-        convertMap.put(int.class, intCvt);
-        convertMap.put(Integer.class, intCvt);
-        convertMap.put(long.class, longCvt);
-        convertMap.put(Long.class, longCvt);
-        convertMap.put(double.class, doubleCvt);
-        convertMap.put(Double.class, doubleCvt);
-        convertMap.put(float.class, floatCvt);
-        convertMap.put(Float.class, floatCvt);
-        convertMap.put(short.class, shortCvt);
-        convertMap.put(Short.class, shortCvt);
-        convertMap.put(boolean.class, booleanCvt);
-        convertMap.put(Boolean.class, booleanCvt);
-        convertMap.put(BigInteger.class, bigIntCvt);
-        convertMap.put(BigDecimal.class, bigDecCvt);
-        convertMap.put(Byte.class, byteCvt);
+        CONVERT_MAP.put(String.class, STRING_CVT);
+        CONVERT_MAP.put(char.class, CHAR_CVT);
+        CONVERT_MAP.put(Character.class, CHAR_CVT);
+        CONVERT_MAP.put(int.class, INT_CVT);
+        CONVERT_MAP.put(Integer.class, INT_CVT);
+        CONVERT_MAP.put(long.class, LONG_CVT);
+        CONVERT_MAP.put(Long.class, LONG_CVT);
+        CONVERT_MAP.put(double.class, DOUBLE_CVT);
+        CONVERT_MAP.put(Double.class, DOUBLE_CVT);
+        CONVERT_MAP.put(float.class, FLOAT_CVT);
+        CONVERT_MAP.put(Float.class, FLOAT_CVT);
+        CONVERT_MAP.put(short.class, SHORT_CVT);
+        CONVERT_MAP.put(Short.class, SHORT_CVT);
+        CONVERT_MAP.put(boolean.class, BOOLEAN_CVT);
+        CONVERT_MAP.put(Boolean.class, BOOLEAN_CVT);
+        CONVERT_MAP.put(BigInteger.class, BIG_INT_CVT);
+        CONVERT_MAP.put(BigDecimal.class, BIG_DEC_CVT);
+        CONVERT_MAP.put(Byte.class, BYTE_CVT);
     }
 
     /**
@@ -72,7 +72,7 @@ public class ConverterRegister {
             return false;
         }
         String getV = rawPairValue.toString();
-        Convert convert = convertMap.get(fClazz);
+        Convert convert = CONVERT_MAP.get(fClazz);
         if (convert == null) {
             return false;
         }
@@ -90,7 +90,7 @@ public class ConverterRegister {
         String[] pairValueArray = (String[]) rawPairValue;
         // 创建空的 Array 对象
         Object newArray = Array.newInstance(componentType, pairValueArray.length);
-        convertMap.get(componentType).convertObjs(newArray, pairValueArray);
+        CONVERT_MAP.get(componentType).convertObjs(newArray, pairValueArray);
         try {
             field.set(beInject, newArray);
         } catch (IllegalAccessException e) {
@@ -99,15 +99,15 @@ public class ConverterRegister {
     }
 
     public static boolean isPrimitive(Class<?> clazz) {
-        return classSet.contains(clazz);
+        return CLASS_SET.contains(clazz);
     }
 
     public static boolean register(Class<?> clazz, Convert converter) {
-        if (classSet.contains(clazz) || convertMap.containsKey(clazz)) {
+        if (CLASS_SET.contains(clazz) || CONVERT_MAP.containsKey(clazz)) {
             return false;
         }
-        classSet.add(clazz);
-        convertMap.put(clazz, converter);
+        CLASS_SET.add(clazz);
+        CONVERT_MAP.put(clazz, converter);
         return true;
     }
 

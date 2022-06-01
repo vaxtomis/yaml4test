@@ -1,6 +1,6 @@
-package com.vaxtomis.yaml4test.Parser;
+package com.vaxtomis.yaml4test.parser;
 
-import com.vaxtomis.yaml4test.Tokenizer.TokenType;
+import com.vaxtomis.yaml4test.tokenizer.TokenType;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -126,7 +126,9 @@ public class ConstraintsMap {
     public static boolean isAllowed(Parser.SlidingWindow window) {
         String doublePre = TOKEN_MAPPING.get(window.getTokenType("DPre"));
         String pre = TOKEN_MAPPING.get(window.getTokenType("Pre"));
-        if (pre == null || doublePre == null) return true;
+        if (pre == null || doublePre == null) {
+            return true;
+        }
 
         String cur = TOKEN_MAPPING.get(window.getTokenType("Cur"));
         HashSet<String> single = CONSTRAINTS.get(pre);

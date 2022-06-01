@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Tokenizer;
+package com.vaxtomis.yaml4test.tokenizer;
 
 interface TokenScan {
     Token scanPlain();

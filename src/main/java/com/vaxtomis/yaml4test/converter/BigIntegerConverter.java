@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Converter;
+package com.vaxtomis.yaml4test.converter;
 
 import java.math.BigInteger;
 

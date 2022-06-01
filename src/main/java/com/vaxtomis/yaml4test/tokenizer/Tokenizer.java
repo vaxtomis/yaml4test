@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Tokenizer;
+package com.vaxtomis.yaml4test.tokenizer;
 
 import com.vaxtomis.yaml4test.YamlFactory;
 
@@ -52,8 +52,9 @@ public class Tokenizer {
     }
 
     public Token getNextToken() {
-        while (isNeedMoreTokens())
+        while (isNeedMoreTokens()) {
             fetchToken();
+        }
         if (!tokens.isEmpty()) {
                 taken++;
                 return tokens.remove(0);
@@ -69,7 +70,9 @@ public class Tokenizer {
     }
 
     private boolean isNeedMoreTokens() {
-        if (flagStreamEnd) return false;
+        if (flagStreamEnd) {
+            return false;
+        }
         return tokens.isEmpty() || nextPossibleTokenNo() == taken;
     }
 
@@ -134,8 +137,12 @@ public class Tokenizer {
 
     private void fetchKey() {
         if (ts.isDepthZero()) {
-            if (!ts.isTkGetAble()) throw new TokenizerException("Found a mapping key where it is not allowed.");
-            if (ts.addIndent(ts.getCno())) tokens.add(Token.BLOCK_MAPPING_START);
+            if (!ts.isTkGetAble()) {
+                throw new TokenizerException("Found a mapping key where it is not allowed.");
+            }
+            if (ts.addIndent(ts.getCno())) {
+                tokens.add(Token.BLOCK_MAPPING_START);
+            }
         }
         ts.setTkGetAble(ts.isDepthZero());
         ts.toNext();
@@ -175,8 +182,12 @@ public class Tokenizer {
 
     private void fetchBlockEntry() {
         if (ts.getDepth() == 0) {
-            if (!ts.isTkGetAble()) throw new TokenizerException("Found a sequence entry where it is not allowed.");
-            if (ts.addIndent(ts.getCno())) tokens.add(Token.BLOCK_SEQUENCE_START);
+            if (!ts.isTkGetAble()) {
+                throw new TokenizerException("Found a sequence entry where it is not allowed.");
+            }
+            if (ts.addIndent(ts.getCno())) {
+                tokens.add(Token.BLOCK_SEQUENCE_START);
+            }
         }
         ts.setTkGetAble(true);
         ts.toNext();
@@ -192,7 +203,9 @@ public class Tokenizer {
 
     private int nextPossibleTokenNo() {
         for (TokenKey tk : tokenKeyMap.values()) {
-            if (tk.tkn > 0) return tk.tkn;
+            if (tk.tkn > 0) {
+                return tk.tkn;
+            }
         }
         return -1;
     }

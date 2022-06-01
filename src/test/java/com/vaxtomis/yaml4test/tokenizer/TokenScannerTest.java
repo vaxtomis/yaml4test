@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Tokenizer;
+package com.vaxtomis.yaml4test.tokenizer;
 
 import com.vaxtomis.yaml4test.YamlFactory;
 import org.junit.Test;

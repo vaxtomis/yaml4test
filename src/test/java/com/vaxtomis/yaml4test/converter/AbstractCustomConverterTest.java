@@ -1,7 +1,7 @@
-package com.vaxtomis.yaml4test.Converter;
+package com.vaxtomis.yaml4test.converter;
 
-import com.vaxtomis.yaml4test.Annotation.Yaml4test;
-import com.vaxtomis.yaml4test.Annotation.YamlInject;
+import com.vaxtomis.yaml4test.annotation.Yaml4test;
+import com.vaxtomis.yaml4test.annotation.YamlInject;
 import com.vaxtomis.yaml4test.YamlFactory;
 import org.junit.Test;
 

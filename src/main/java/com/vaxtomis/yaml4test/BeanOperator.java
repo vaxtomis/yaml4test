@@ -1,14 +1,16 @@
 package com.vaxtomis.yaml4test;
 
 import com.sun.istack.internal.NotNull;
-import com.vaxtomis.yaml4test.Parser.DeProducer;
-import com.vaxtomis.yaml4test.Parser.Event;
-import com.vaxtomis.yaml4test.Parser.EventOperator;
-import com.vaxtomis.yaml4test.Parser.ModifyCollector;
-import com.vaxtomis.yaml4test.Producer.Producer;
-import com.vaxtomis.yaml4test.Tokenizer.Define;
+import com.vaxtomis.yaml4test.parser.DeProducer;
+import com.vaxtomis.yaml4test.parser.Event;
+import com.vaxtomis.yaml4test.parser.EventOperator;
+import com.vaxtomis.yaml4test.parser.ModifyCollector;
+import com.vaxtomis.yaml4test.producer.Producer;
+import com.vaxtomis.yaml4test.tokenizer.Define;
 
 import java.util.*;
+
+import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
 /**
  * @description
@@ -25,7 +27,6 @@ public class BeanOperator {
     private static Class clazz;
     private static DeProducer deProducer;
     private static Producer producer;
-    private static String classPath;
 
     /**
      * 深拷贝方法，基于给定 source 重新构建一个相同的类实例。
@@ -50,7 +51,7 @@ public class BeanOperator {
 
     public static <T> T modifyCopy(@NotNull T source, @NotNull ModifyCollector collector) throws IllegalAccessException {
         init(source);
-        HashMap<String, String> modifyMap = new HashMap<>();
+        HashMap<String, String> modifyMap = new HashMap<>(16);
         String[] names = collector.getNames();
         for (String name : names) {
             modifyMap.put(formatName(name), collector.getValue(name));
@@ -75,7 +76,7 @@ public class BeanOperator {
         LinkedList<T> modifyGroup = new LinkedList<>();
         init(source);
         EventOperator operator = new EventOperator(deProducer.getEventList());
-        HashMap<String, String> modifyMap = new HashMap<>();
+        HashMap<String, String> modifyMap = new HashMap<>(16);
         String[] names = collector.getNames();
         String[][] matrix = collector.generateModifyMatrix();
         List<List<ModifyCollector.Position>> group = collector.generateGroup();
@@ -91,13 +92,14 @@ public class BeanOperator {
         return modifyGroup;
     }
 
-    // 初始化工作
+    /**
+     * 初始化工作
+     */
     private static <T> void init(@NotNull T source) throws IllegalAccessException {
         clazz = source.getClass();
         deProducer = new DeProducer();
         deProducer.parseToEvents(source, source.getClass());
         producer = new Producer();
-        classPath = "";
         /*if (clazz.getPackage() != null) {
             classPath = clazz.getPackage().getName() + ".";
         }
@@ -108,11 +110,13 @@ public class BeanOperator {
         }*/
     }
 
-    // 传入 EventList 到 producer 中并进行赋值。
+    /**
+     * 传入 EventList 到 producer 中并进行赋值。
+     */
     private static void buildInstance(LinkedList<Event> events) {
-        producer.setClassPath(classPath);
+        producer.setClassPath(EMPTY);
         producer.setEvents(events);
-        producer.setInnerMap(new HashMap());
+        producer.setInnerMap(new HashMap(16));
         producer.build();
     }
 
@@ -126,7 +130,7 @@ public class BeanOperator {
      * @return
      */
     private static HashMap<String, String> formatName(HashMap<String, String> modifyMap) {
-        HashMap<String, String> newModifyMap = new HashMap<>();
+        HashMap<String, String> newModifyMap = new HashMap<>(16);
         for (Map.Entry entry : modifyMap.entrySet()) {
             switch (checkModifiedName(entry.getKey().toString())) {
                 case 0:

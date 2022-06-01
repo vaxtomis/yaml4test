@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Converter;
+package com.vaxtomis.yaml4test.converter;
 
 /**
  * Custom conversion interface for adding custom conversion methods (String to class instance).

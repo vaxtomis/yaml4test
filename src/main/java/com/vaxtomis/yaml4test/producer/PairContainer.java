@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Producer;
+package com.vaxtomis.yaml4test.producer;
 
 import java.util.LinkedList;
 import java.util.WeakHashMap;
@@ -31,7 +31,9 @@ public class PairContainer {
 
     public <T> T getRawPairValue(String name) {
         RawPair<?> rawPair = cacheMap.get(name);
-        if (rawPair == null) return null;
+        if (rawPair == null) {
+            return null;
+        }
         return (T)rawPair.getValue();
     }
 

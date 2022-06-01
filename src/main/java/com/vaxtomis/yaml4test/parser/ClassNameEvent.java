@@ -1,8 +1,9 @@
-package com.vaxtomis.yaml4test.Parser;
+package com.vaxtomis.yaml4test.parser;
 
 /**
  * @description Indicator for get class name event.
  * 获取到类名的标志，用于触发对应的事件。
+ *
  */
 public class ClassNameEvent extends Event {
     private String name;

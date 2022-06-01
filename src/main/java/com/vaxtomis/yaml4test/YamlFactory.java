@@ -1,14 +1,16 @@
 package com.vaxtomis.yaml4test;
 
-import com.vaxtomis.yaml4test.Annotation.Yaml4test;
-import com.vaxtomis.yaml4test.Annotation.YamlInject;
-import com.vaxtomis.yaml4test.Parser.Parser;
-import com.vaxtomis.yaml4test.Producer.Producer;
+import com.vaxtomis.yaml4test.annotation.Yaml4test;
+import com.vaxtomis.yaml4test.annotation.YamlInject;
+import com.vaxtomis.yaml4test.parser.Parser;
+import com.vaxtomis.yaml4test.producer.Producer;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
 /**
  * @description
@@ -20,7 +22,7 @@ public class YamlFactory {
     private Parser parser;
     private Producer producer;
     private Map storageMap;
-    private String path = "";
+    private String path = EMPTY;
     private Class<?> clazz = null;
     private static YamlFactory yamlFactory;
 
@@ -89,23 +91,23 @@ public class YamlFactory {
 
     private void setPathByAnnotation() {
         if (!clazz.isAnnotationPresent(Yaml4test.class)) {
-            throw new YamlFactoryException("Do not find com.vaxtomis.yaml4test.Annotation 'Yaml4test'.");
+            throw new YamlFactoryException("Do not find com.vaxtomis.yaml4test.annotation 'Yaml4test'.");
         }
         Yaml4test annotation = clazz.getAnnotation(Yaml4test.class);
         path = annotation.Path();
-        if (path.equals("")) {
+        if (EMPTY.equals(path)) {
             throw new YamlFactoryException("The file path is not set.");
         }
         if (annotation.Pack().equals(Yaml4test.Pack.CrossPack)) {
-            producer.setClassPath("");
+            producer.setClassPath(EMPTY);
         } else {
             if (clazz.getPackage() != null) {
                 producer.setClassPath(clazz.getPackage().getName() + ".");
             } else {
-                producer.setClassPath("");
+                producer.setClassPath(EMPTY);
             }
         }
-        parser.setPath(Objects.requireNonNull(clazz.getClassLoader().getResource("")).getPath() + path);
+        parser.setPath(Objects.requireNonNull(clazz.getClassLoader().getResource(EMPTY)).getPath() + path);
         //System.out.println(clazz.getClassLoader().getResource("").getPath() + path);
     }
 
@@ -129,7 +131,7 @@ public class YamlFactory {
     private <T> void fieldAssignment(Field field, T context) {
         String name = field.getAnnotation(YamlInject.class).Name();
         YamlInject.Scope scope = field.getAnnotation(YamlInject.class).Scope();
-        name = name.equals("")?field.getName():name;
+        name = EMPTY.equals(name)?field.getName():name;
         try {
             if (scope.equals(YamlInject.Scope.Prototype)) {
                 field.set(context, BeanOperator.deepCopy(storageMap.get(name)));

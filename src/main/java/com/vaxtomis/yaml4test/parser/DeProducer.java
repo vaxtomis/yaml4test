@@ -1,6 +1,6 @@
-package com.vaxtomis.yaml4test.Parser;
+package com.vaxtomis.yaml4test.parser;
 
-import com.vaxtomis.yaml4test.Converter.ConverterRegister;
+import com.vaxtomis.yaml4test.converter.ConverterRegister;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
@@ -45,6 +45,8 @@ public class DeProducer {
                 case "PRIMITIVE":
                     parsePrimitive(parent, sField);
                     break;
+                default:
+
             }
         }
         events.add(Event.MAPPING_END);
@@ -52,32 +54,44 @@ public class DeProducer {
 
     private void parsePrimitive(Object parent, Field sField) throws IllegalAccessException {
         Object son = sField.get(parent);
-        if(son == null) return;
+        if(son == null) {
+            return;
+        }
         events.add(new NameEvent(sField.getName()));
         events.add(new ValueEvent((char)0, String.valueOf(son)));
     }
 
-    // 解析 Mapping
+    /**
+     * 解析 Mapping
+     */
     private void parseMapping(Object parent, Field sField) throws IllegalAccessException {
         String name = sField.getName();
         Object son = sField.get(parent);
-        if (son == null) return;
+        if (son == null) {
+            return;
+        }
         Class<?> sClazz = sField.getType();
         events.add(new NameEvent(name));
         events.add(new ClassNameEvent(path(sClazz)));
         parse(son, sClazz);
     }
 
-    // 解析 Sequence
+    /**
+     * 解析 Sequence
+     */
     private void parseSequence(Object parent, Field sField) throws IllegalAccessException {
         String cName = sField.getName();
         Object son = sField.get(parent);
-        if (son == null) return;
+        if (son == null) {
+            return;
+        }
         events.add(new NameEvent(cName));
         sequenceStrategy(son);
     }
 
-    // 处理 array 中的每一个实例
+    /**
+     * 处理 array 中的每一个实例
+     */
     private void sequenceStrategy(Object obj) throws IllegalAccessException {
         events.add(Event.SEQUENCE_START);
         if (!Object.class.isAssignableFrom(obj.getClass().getComponentType())) {

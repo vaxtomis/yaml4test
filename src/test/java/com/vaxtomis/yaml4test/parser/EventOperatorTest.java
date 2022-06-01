@@ -1,6 +1,6 @@
-package com.vaxtomis.yaml4test.Parser;
+package com.vaxtomis.yaml4test.parser;
 
-import com.vaxtomis.yaml4test.Producer.Producer;
+import com.vaxtomis.yaml4test.producer.Producer;
 import com.vaxtomis.yaml4test.TestPojo.classD;
 import com.vaxtomis.yaml4test.YamlFactory;
 import org.junit.Test;

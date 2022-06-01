@@ -1,6 +1,6 @@
-package com.vaxtomis.yaml4test.Producer;
+package com.vaxtomis.yaml4test.producer;
 
-import com.vaxtomis.yaml4test.Parser.*;
+import com.vaxtomis.yaml4test.parser.*;
 
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
@@ -11,8 +11,9 @@ import java.lang.reflect.Modifier;
 import java.util.LinkedList;
 import java.util.Map;
 
-import static com.vaxtomis.yaml4test.Converter.ConverterRegister.injectObj;
-import static com.vaxtomis.yaml4test.Converter.ConverterRegister.injectObjs;
+import static com.vaxtomis.yaml4test.converter.ConverterRegister.injectObj;
+import static com.vaxtomis.yaml4test.converter.ConverterRegister.injectObjs;
+import static com.vaxtomis.yaml4test.tokenizer.Define.*;
 
 /**
  * @description
@@ -145,7 +146,7 @@ public class Producer {
                 if (event instanceof EntryEvent) {
                     String entryType = ((EntryEvent)event).getEntryType();
                     String className = ((EntryEvent)event).getValue();
-                    if ("class".equals(entryType)) {
+                    if (CLASS.equals(entryType)) {
                         createRawPair();
                         try {
                             putClass(className);
@@ -154,7 +155,7 @@ public class Producer {
                         }
                         objectStack.getLast().setValue(className);
                     }
-                    else if ("value".equals(entryType)) {
+                    else if (VALUE.equals(entryType)) {
                         createRawPair();
                         // <=== Need to optimize. ===>
                         putValue("String", ((EntryEvent)event).getValue());
@@ -267,7 +268,7 @@ public class Producer {
         String className = (String) rawPair.getValue();
         Class<?> clazz = null;
         try {
-            if ("java.lang.String".equals(className)) {
+            if (STRING.equals(className)) {
                 clazz = String.class;
             } else {
                 clazz = Class.forName(classPath + className);

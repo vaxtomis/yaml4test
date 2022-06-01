@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.Tokenizer;
+package com.vaxtomis.yaml4test.tokenizer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +11,12 @@ import java.util.regex.Pattern;
  * '\u2029' Paragraph Separator
  **/
 public class Define {
+    public final static String CLASS = "class";
+
+    public final static String VALUE = "value";
+
+    public final static String STRING = "java.lang.String";
+    public final static String EMPTY = "";
     public final static String LINEBREAK = "\n\u0085\u2028\u2029";
     public final static String RN = "\r\n";
     public final static String BLANK_T = " \t";
@@ -29,7 +35,9 @@ public class Define {
     public final static String SPACES_AND_STUFF = "'\"\\\0 \t\r\n\u0085";
     public final static String DOUBLE_ESC = "\"\\";
 
-    //^[$_A-Za-z](\[)(0|[1-9][0-9]*)(\])$|[$_A-Za-z][A-Za-z0-9_-]+(\[)(0|[1-9][0-9]*)(\])
+    /**
+     * ^[$_A-Za-z](\[)(0|[1-9][0-9]*)(\])$|[$_A-Za-z][A-Za-z0-9_-]+(\[)(0|[1-9][0-9]*)(\])
+     */
     public final static Pattern PROPERTY_NAME_VARIABLE = Pattern.compile(
             "^[$_A-Za-z]$|[$_A-Za-z][A-Za-z0-9_-]+$" +
             "|^[$_A-Za-z](\\[)(0|[1-9][0-9]*)(\\])$" +
