@@ -47,28 +47,28 @@ public class YamlFactory {
         if (yamlFactory == null) {
             // init YamlFactory
             yamlFactory = new YamlFactory();
-            
-            // clear storageMap
-            yamlFactory.storageMap.clear();
-            
-            // init Parser
-            yamlFactory.parser = new Parser();
-            
-            // import the Class of context
-            yamlFactory.setClazz(context.getClass());
-            
-            // import the Path of yaml file by annotation
-            yamlFactory.setPathByAnnotation();
-
-            //System.out.println("<=== parser.events ===>");
-            //System.out.println(yamlFactory.parser.getEventList());
-            
-            // inject the event list to created parser
-            yamlFactory.producer.setEvents(yamlFactory.parser.getEventList());
-            
-            // start building
-            yamlFactory.producer.build();
         }
+        // clear storageMap
+        yamlFactory.storageMap.clear();
+
+        // init Parser
+        yamlFactory.parser.reset();
+
+        // import the Class of context
+        yamlFactory.setClazz(context.getClass());
+
+        // import the Path of yaml file by annotation
+        yamlFactory.setPathByAnnotation();
+
+        //System.out.println("<=== parser.events ===>");
+        //System.out.println(yamlFactory.parser.getEventList());
+
+        // inject the event list to created parser
+        yamlFactory.producer.setEvents(yamlFactory.parser.getEventList());
+
+        // start building
+        yamlFactory.producer.build();
+
         // autowiring parameters to context
         yamlFactory.autowiring(context);
     }

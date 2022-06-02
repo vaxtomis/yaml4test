@@ -28,6 +28,15 @@ public class Parser {
         blockStack = new LinkedList<Token>();
     }
 
+    public void reset() {
+        tokenizer = null;
+        path = null;
+        window.cursor = -1;
+        events.clear();
+        blockStack.clear();
+        flagTokensEnd = false;
+    }
+
     /**
      * @description
      * Sliding Window. Used to store recently used tokens.
