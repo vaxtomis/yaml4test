@@ -19,6 +19,10 @@ class ShortConverter extends AbstractConverter {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
             short temp = (isCorrectFormat(getV, "short"))?Short.parseShort(getV):0;
+            if (!newArray.getClass().isPrimitive()) {
+                Array.set(newArray, i, temp);
+                continue;
+            }
             Array.setShort(newArray, i, temp);
         }
     }

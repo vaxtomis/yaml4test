@@ -19,6 +19,10 @@ class BooleanConverter extends AbstractConverter {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
             boolean temp = (isCorrectFormat(getV, "boolean")) && Boolean.parseBoolean(getV);
+            if (!newArray.getClass().isPrimitive()) {
+                Array.set(newArray, i, temp);
+                continue;
+            }
             Array.setBoolean(newArray, i, temp);
         }
     }

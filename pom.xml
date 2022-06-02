@@ -6,7 +6,7 @@
 
     <groupId>org.vaxtomis</groupId>
     <artifactId>yaml4test</artifactId>
-    <version>0.0.1-INDEV</version>
+    <version>0.0.2</version>
 
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->

@@ -19,6 +19,10 @@ class LongConverter extends AbstractConverter {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
             long temp = (isCorrectFormat(getV, "long"))?Long.parseLong(getV):0L;
+            if (!newArray.getClass().isPrimitive()) {
+                Array.set(newArray, i, temp);
+                continue;
+            }
             Array.setLong(newArray, i, temp);
         }
     }

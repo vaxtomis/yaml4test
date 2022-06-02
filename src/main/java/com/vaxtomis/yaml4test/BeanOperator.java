@@ -1,6 +1,5 @@
 package com.vaxtomis.yaml4test;
 
-import com.sun.istack.internal.NotNull;
 import com.vaxtomis.yaml4test.parser.DeProducer;
 import com.vaxtomis.yaml4test.parser.Event;
 import com.vaxtomis.yaml4test.parser.EventOperator;
@@ -8,7 +7,10 @@ import com.vaxtomis.yaml4test.parser.ModifyCollector;
 import com.vaxtomis.yaml4test.producer.Producer;
 import com.vaxtomis.yaml4test.tokenizer.Define;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
@@ -34,7 +36,7 @@ public class BeanOperator {
      * @param <T>
      * @throws IllegalAccessException
      */
-    public static <T> T deepCopy(@NotNull T source) throws IllegalAccessException {
+    public static <T> T deepCopy(T source) throws IllegalAccessException {
         init(source);
         //System.out.println("<=== deProducer.getEventList ===>");
         //System.out.println(deProducer.getEventList());
@@ -42,14 +44,14 @@ public class BeanOperator {
         return (T) producer.getCopyInstance();
     }
 
-    public static <T> T modifyCopy(@NotNull T source, @NotNull String propName, @NotNull String value) throws IllegalAccessException {
+    public static <T> T modifyCopy(T source, String propName, String value) throws IllegalAccessException {
         init(source);
         EventOperator operator = new EventOperator(deProducer.getEventList(), formatName(propName), value);
         buildInstance(operator.rebuild());
         return (T) producer.getCopyInstance();
     }
 
-    public static <T> T modifyCopy(@NotNull T source, @NotNull ModifyCollector collector) throws IllegalAccessException {
+    public static <T> T modifyCopy(T source, ModifyCollector collector) throws IllegalAccessException {
         init(source);
         HashMap<String, String> modifyMap = new HashMap<>(16);
         String[] names = collector.getNames();
@@ -72,7 +74,7 @@ public class BeanOperator {
      * @return List
      * @throws IllegalAccessException
      */
-    public static <T> List<T> createModifiedGroup(@NotNull T source, @NotNull ModifyCollector collector) throws IllegalAccessException {
+    public static <T> List<T> createModifiedGroup(T source, ModifyCollector collector) throws IllegalAccessException {
         LinkedList<T> modifyGroup = new LinkedList<>();
         init(source);
         EventOperator operator = new EventOperator(deProducer.getEventList());
@@ -95,7 +97,7 @@ public class BeanOperator {
     /**
      * 初始化工作
      */
-    private static <T> void init(@NotNull T source) throws IllegalAccessException {
+    private static <T> void init(T source) throws IllegalAccessException {
         clazz = source.getClass();
         deProducer = new DeProducer();
         deProducer.parseToEvents(source, source.getClass());

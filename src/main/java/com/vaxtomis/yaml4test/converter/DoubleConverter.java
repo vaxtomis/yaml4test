@@ -19,6 +19,10 @@ class DoubleConverter extends AbstractConverter {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
             double temp = (isCorrectFormat(getV, "double"))?Double.parseDouble(getV):0.0d;
+            if (!newArray.getClass().isPrimitive()) {
+                Array.set(newArray, i, temp);
+                continue;
+            }
             Array.setDouble(newArray, i, temp);
         }
     }

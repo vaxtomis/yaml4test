@@ -19,6 +19,10 @@ class CharConverter extends AbstractConverter {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
             char temp = (getV != null)?getV.charAt(0):'\u0000';
+            if (!newArray.getClass().isPrimitive()) {
+                Array.set(newArray, i, temp);
+                continue;
+            }
             Array.setChar(newArray, i, temp);
         }
     }

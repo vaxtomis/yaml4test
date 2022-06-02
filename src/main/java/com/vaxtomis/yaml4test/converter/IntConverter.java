@@ -19,6 +19,10 @@ class IntConverter extends AbstractConverter {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
             int temp = (isCorrectFormat(getV, "int"))?Integer.parseInt(getV):0;
+            if (!newArray.getClass().isPrimitive()) {
+                Array.set(newArray, i, temp);
+                continue;
+            }
             Array.setInt(newArray, i, temp);
         }
     }

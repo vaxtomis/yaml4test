@@ -19,6 +19,10 @@ class FloatConverter extends AbstractConverter {
         for (int i = 0; i < pairValueArray.length; i++) {
             String getV = pairValueArray[i];
             float temp = (isCorrectFormat(getV, "float"))?Float.parseFloat(getV):0.0f;
+            if (!newArray.getClass().isPrimitive()) {
+                Array.set(newArray, i, temp);
+                continue;
+            }
             Array.setFloat(newArray, i, temp);
         }
     }
