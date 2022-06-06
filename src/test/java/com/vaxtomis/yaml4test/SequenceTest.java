@@ -1,7 +1,8 @@
 package com.vaxtomis.yaml4test;
 
-import com.vaxtomis.yaml4test.Annotation.Yaml4test;
-import com.vaxtomis.yaml4test.Annotation.YamlInject;
+import com.vaxtomis.yaml4test.TestPojo2.classF;
+import com.vaxtomis.yaml4test.annotation.Yaml4test;
+import com.vaxtomis.yaml4test.annotation.YamlInject;
 import com.vaxtomis.yaml4test.TestPojo.classC;
 import com.vaxtomis.yaml4test.TestPojo.classD;
 import org.junit.Test;
@@ -18,6 +19,9 @@ public class SequenceTest {
     private classC[] C;
     @YamlInject(Scope = YamlInject.Scope.Prototype)
     private classD[] E;
+    @YamlInject
+    classF F;
+
     {
         YamlFactory.refreshFactory(this);
     }
@@ -26,5 +30,6 @@ public class SequenceTest {
         System.out.println(D);
         System.out.println(Arrays.toString(C));
         System.out.println(Arrays.toString(E));
+        System.out.println(F);
     }
 }

@@ -1,15 +1,16 @@
 package com.vaxtomis.yaml4test;
 
-import com.vaxtomis.yaml4test.Annotation.Yaml4test;
-import com.vaxtomis.yaml4test.Annotation.YamlInject;
-import com.vaxtomis.yaml4test.Parser.Parser;
-import com.vaxtomis.yaml4test.Producer.Producer;
-import com.vaxtomis.yaml4test.Utils.BeanOperator;
+import com.vaxtomis.yaml4test.annotation.Yaml4test;
+import com.vaxtomis.yaml4test.annotation.YamlInject;
+import com.vaxtomis.yaml4test.parser.Parser;
+import com.vaxtomis.yaml4test.producer.Producer;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
 /**
  * @description
@@ -21,7 +22,7 @@ public class YamlFactory {
     private Parser parser;
     private Producer producer;
     private Map storageMap;
-    private String path = "";
+    private String path = EMPTY;
     private Class<?> clazz = null;
     private static YamlFactory yamlFactory;
 
@@ -44,14 +45,31 @@ public class YamlFactory {
      */
     public static <T> void refreshFactory(T context) {
         if (yamlFactory == null) {
+            // init YamlFactory
             yamlFactory = new YamlFactory();
-            yamlFactory.storageMap.clear();
-            yamlFactory.parser = new Parser();
-            yamlFactory.setClazz(context.getClass());
-            yamlFactory.setPathByAnnotation();
-            yamlFactory.producer.setEvents(yamlFactory.parser.getEventList());
-            yamlFactory.producer.build();
         }
+        // clear storageMap
+        yamlFactory.storageMap.clear();
+
+        // init Parser
+        yamlFactory.parser.reset();
+
+        // import the Class of context
+        yamlFactory.setClazz(context.getClass());
+
+        // import the Path of yaml file by annotation
+        yamlFactory.setPathByAnnotation();
+
+        //System.out.println("<=== parser.events ===>");
+        //System.out.println(yamlFactory.parser.getEventList());
+
+        // inject the event list to created parser
+        yamlFactory.producer.setEvents(yamlFactory.parser.getEventList());
+
+        // start building
+        yamlFactory.producer.build();
+
+        // autowiring parameters to context
         yamlFactory.autowiring(context);
     }
 
@@ -73,23 +91,23 @@ public class YamlFactory {
 
     private void setPathByAnnotation() {
         if (!clazz.isAnnotationPresent(Yaml4test.class)) {
-            throw new YamlFactoryException("Do not find com.vaxtomis.yaml4test.Annotation 'Yaml4test'.");
+            throw new YamlFactoryException("Do not find com.vaxtomis.yaml4test.annotation 'Yaml4test'.");
         }
         Yaml4test annotation = clazz.getAnnotation(Yaml4test.class);
         path = annotation.Path();
-        if (path.equals("")) {
+        if (EMPTY.equals(path)) {
             throw new YamlFactoryException("The file path is not set.");
         }
-        if (annotation.Pack().equals(Yaml4test.Pack.CrossPack)) {
-            producer.setClassPath("");
+        if (Yaml4test.Pack.CrossPack.equals(annotation.Pack())) {
+            producer.setClassPath(EMPTY);
         } else {
             if (clazz.getPackage() != null) {
                 producer.setClassPath(clazz.getPackage().getName() + ".");
             } else {
-                producer.setClassPath("");
+                producer.setClassPath(EMPTY);
             }
         }
-        parser.setPath(Objects.requireNonNull(clazz.getClassLoader().getResource("")).getPath() + path);
+        parser.setPath(Objects.requireNonNull(clazz.getClassLoader().getResource(EMPTY)).getPath() + path);
         //System.out.println(clazz.getClassLoader().getResource("").getPath() + path);
     }
 
@@ -113,9 +131,9 @@ public class YamlFactory {
     private <T> void fieldAssignment(Field field, T context) {
         String name = field.getAnnotation(YamlInject.class).Name();
         YamlInject.Scope scope = field.getAnnotation(YamlInject.class).Scope();
-        name = name.equals("")?field.getName():name;
+        name = EMPTY.equals(name)?field.getName():name;
         try {
-            if (scope.equals(YamlInject.Scope.Prototype)) {
+            if (YamlInject.Scope.Prototype.equals(scope)) {
                 field.set(context, BeanOperator.deepCopy(storageMap.get(name)));
             } else {
                 field.set(context, storageMap.get(name));

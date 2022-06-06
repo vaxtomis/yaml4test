@@ -1,0 +1,18 @@
+package com.vaxtomis.yaml4test.annotation;
+
+import java.lang.annotation.*;
+
+import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
+
+/**
+ * @description Annotation Yaml4test.
+ * @author vaxtomis
+ */
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Yaml4test {
+    String Path() default EMPTY;
+    enum Pack {CrossPack, InPack}
+    Pack Pack() default Pack.InPack;
+}

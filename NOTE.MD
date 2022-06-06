@@ -21,7 +21,7 @@ E   -> S         :value of entry
     -> BMS       :start sub block mapping  
 
 ```
-com.vaxtomis.yaml4test.Parser EXAMPLE:
+com.vaxtomis.yaml4test.parser EXAMPLE:
 <BMS> (push "Map" in)
     <GET_NAME> -> class                 {Map1: class -> !Class}
     <GET_CLASSNAME>
@@ -38,7 +38,7 @@ com.vaxtomis.yaml4test.Parser EXAMPLE:
 <BMS>
 ```
 ```
-com.vaxtomis.yaml4test.Parser EXAMPLE:
+com.vaxtomis.yaml4test.parser EXAMPLE:
 <BMS>
     <GET_NAME>
     <BSS>
@@ -55,7 +55,7 @@ com.vaxtomis.yaml4test.Parser EXAMPLE:
     <BSE>
 <BME>    
 
-com.vaxtomis.yaml4test.Parser EXAMPLE:
+com.vaxtomis.yaml4test.parser EXAMPLE:
 <BMS>
     <GET_NAME>
     <BSS>
