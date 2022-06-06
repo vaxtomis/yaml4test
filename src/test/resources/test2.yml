@@ -71,3 +71,4 @@ F: !TestPojo2.classF
   name: classF
   longs:
     - 123
+  fi: 7

@@ -19,7 +19,6 @@ public class SequenceTest {
     private classC[] C;
     @YamlInject(Scope = YamlInject.Scope.Prototype)
     private classD[] E;
-
     @YamlInject
     classF F;
 

@@ -68,9 +68,7 @@ public class ConverterRegister {
      * rawPairValue: 要注入的信息
      */
     public static boolean injectObj(Method method, Class<?> fClazz, Object beInject, Object rawPairValue) {
-        if (rawPairValue == null) {
-            return false;
-        }
+        assert rawPairValue != null;
         String getV = rawPairValue.toString();
         Convert convert = CONVERT_MAP.get(fClazz);
         if (convert == null) {

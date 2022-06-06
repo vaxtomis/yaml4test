@@ -83,31 +83,33 @@ public class Producer {
             Class<?> fClazz = field.getType();
             String fName = field.getName();
             Object rawPairValue = curContainer.getRawPairValue(fName);
-
+            if (rawPairValue == null) {
+                continue;
+            }
             PropertyDescriptor descriptor = null;
             try {
                 descriptor = new PropertyDescriptor(fName, clazz);
             } catch (IntrospectionException e) {
                 e.printStackTrace();
             }
-
             assert descriptor != null;
             Method method = descriptor.getWriteMethod();
+            // try setter inject
             setterSuccess = injectObj(method, fClazz, obj, rawPairValue);
             // If the injection fails (using the setter method),
             // try to assign the value directly.
             if (!setterSuccess) {
-                try {
-                    // 判断是 Array 的情况下
-                    if (rawPairValue != null && fClazz.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
-                        //Convert string array.
-                        Class<?> componentType = fClazz.getComponentType();
-                        injectObjs(componentType, field, obj, rawPairValue);
-                    } else {
+                // 判断是 Array 的情况下
+                if (fClazz.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
+                    // Convert string array.
+                    Class<?> componentType = fClazz.getComponentType();
+                    injectObjs(componentType, field, obj, rawPairValue);
+                } else {
+                    try {
                         field.set(obj, rawPairValue);
+                    } catch (IllegalAccessException e) {
+                        throw new RuntimeException(e);
                     }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
                 }
             }
         }
