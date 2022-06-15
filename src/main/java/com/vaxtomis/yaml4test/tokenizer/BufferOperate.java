@@ -10,9 +10,9 @@ interface BufferOperate {
 
     void forward(int length);
 
-    String preSub(int length);
+    String preSubstring(int length);
 
     String preForward(int length);
 
-    int spacesCount();
+    int countSpaces();
 }

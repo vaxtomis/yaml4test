@@ -1,7 +1,9 @@
 package com.vaxtomis.yaml4test.tokenizer;
 
 /**
- * @description Token Type Enum.
+ * <p>
+ * Token Type Enum.
+ * </p>
  */
 public enum TokenType {
     KEY,

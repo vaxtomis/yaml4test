@@ -9,7 +9,9 @@ import java.util.LinkedList;
 import static com.vaxtomis.yaml4test.tokenizer.TokenType.*;
 
 /**
- * @description Parser.
+ * <p>
+ * Parser.
+ * <p/>
  * @author vaxtomis
  */
 public class Parser {
@@ -38,8 +40,7 @@ public class Parser {
     }
 
     /**
-     * @description
-     * Sliding Window. Used to store recently used tokens.
+     * Sliding Window. Used to store recently used tokens.<br>
      * 滑动窗口，用来缓存最近经过的 Token。
      */
     class SlidingWindow {
@@ -85,35 +86,35 @@ public class Parser {
         }
 
         /**
-         * Get the [cur, pre, pre-pre] type of Token in sliding window.
+         * Get the [cur, pre, pre-pre] type of Token in sliding window.<br>
          * 从滑动窗口中获取当前，上一个，上上个 Token。
          */
         public TokenType getTokenType(String type) {
-            Token tk = null;
+            Token token = null;
             switch (type) {
                 case "DPre":
-                    tk = getDoublePre();
+                    token = getDoublePre();
                     break;
                 case "Pre":
-                    tk = getPre();
+                    token = getPre();
                     break;
                 case "Cur":
-                    tk = getCur();
+                    token = getCur();
                     break;
                 default:
 
             }
-            if (tk == null) {
+            if (token == null) {
                 return null;
             } else {
-                return tk.getType();
+                return token.getType();
             }
         }
     }
 
     /**
      * Traverse the Token to determine the correctness of the syntax,
-     * and obtain a set of Events.
+     * and obtain a set of Events.<br>
      * 遍历 Token 判断语法的正确性，得到一组 Events。
      */
     private void loopProcessing() {
@@ -133,9 +134,9 @@ public class Parser {
     }
 
     /**
-     * ConstraintMap defines Token grammar rules
-     * Generates corresponding Event arrangement according to the grammar rules.
-     * 限制路径图定义了 Token 的语法规则，根据语法规则生成对应的 Event 序列。
+     * ConstraintMap defines Token grammar rules<br>
+     * Generates corresponding Event arrangement according to the grammar rules.<br>
+     * 限制路径图定义了 Token 的语法规则，根据语法规则生成对应的 Event 序列。<br>
      */
     private void fetchEvent() {
         if (!ConstraintsMap.isAllowed(window)) {

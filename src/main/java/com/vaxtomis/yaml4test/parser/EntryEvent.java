@@ -1,8 +1,10 @@
 package com.vaxtomis.yaml4test.parser;
 
 /**
- * @description Indicator for get Entry, include class and value.
+ * <p>
+ * Indicator for get Entry, include class and value.<br>
  * 条目标志，说明要进入集合，类和值都可以放入集合。
+ * </p>
  */
 public class EntryEvent extends Event {
     private String entryType;

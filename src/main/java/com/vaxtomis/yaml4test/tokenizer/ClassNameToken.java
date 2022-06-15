@@ -1,7 +1,9 @@
 package com.vaxtomis.yaml4test.tokenizer;
 
 /**
- * @description Class name token.
+ * <p>
+ * Class name token.
+ * </p>
  */
 public class ClassNameToken extends Token {
     private String name;

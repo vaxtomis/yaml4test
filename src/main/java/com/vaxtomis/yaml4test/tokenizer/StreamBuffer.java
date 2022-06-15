@@ -3,17 +3,20 @@ package com.vaxtomis.yaml4test.tokenizer;
 import java.io.*;
 
 /**
- * @description Used to process the data stream.
- * @note -> Reference Project: com.esotericsoftware.yamlbeans
+ * <p>
+ * StreamBuffer<br>
+ * Used to process the data stream.<br><br>
+ * Reference Project: com.esotericsoftware.yamlbeans
  * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
+ * </p>
  **/
 class StreamBuffer implements BufferOperate {
     private final Reader reader;
     private final StringBuilder builder;
     private boolean flagEndOfFile;
     private int cursor;
-    private int cno = 0;
-    private int lno = 0;
+    private int columnNumber = 0;
+    private int lineNumber = 0;
 
     public StreamBuffer(Reader reader) {
         if (reader == null) {
@@ -43,7 +46,8 @@ class StreamBuffer implements BufferOperate {
 
     /**
      * Flush stream into builder.
-     * @param length
+     *
+     * @param length Length
      * @return null
      */
     private void flushIn(int length) {
@@ -73,7 +77,8 @@ class StreamBuffer implements BufferOperate {
 
     /**
      * Peek the most recent (offset)th character.
-     * @param offset
+     *
+     * @param offset Offset of cursor
      * @return char
      */
     public char peek (int offset) {
@@ -85,26 +90,30 @@ class StreamBuffer implements BufferOperate {
     }
 
     /**
+     * <p>
      * Get the n-length part after the cursor
-     * and return to the end of the buffer if it exceeds.
-     *
-     * [--cursor--][----length=7----]
-     *            56               12
+     * and return to the end of the buffer if it exceeds.<br>
+     * <br>
+     * <pre>
+     * [--cursor--] [----length=7----]
+     *            5 6               12
      * [-----builder.length-----]
      *                         10
      * return substring(5,10)
      *
      *
-     * [--cursor--][-length=3-]
-     *            56          8
+     * [--cursor--] [-length=3-]
+     *            5 6          8
      * [-----builder.length-----]
      *                         10
      * return substring(5,8)
+     * </pre>
+     * </p>
      *
-     * @param length
+     * @param length Length
      * @return String
      */
-    public String preSub (int length) {
+    public String preSubstring(int length) {
         if (cursor + length >= builder.length()) {
             flushIn(length);
         }
@@ -115,25 +124,28 @@ class StreamBuffer implements BufferOperate {
     }
 
     /**
-     * preSub and forward.
+     * preSubstring() and forward.
+     *
+     * @param length Length
+     * @return String
      */
     public String preForward(int length) {
-        String buff = preSub(length);
+        String buff = preSubstring(length);
         int start = cursor;
         for (char ch: buff.toCharArray()) {
             cursor++;
             if (Define.LINEBREAK.indexOf(ch) != -1 ||
                     ch == '\r' && buff.charAt(cursor - start) != '\n') {
-                cno = 0;
-                lno++;
-            } else if (ch != '\uFEFF') cno++;
+                columnNumber = 0;
+                lineNumber++;
+            } else if (ch != '\uFEFF') columnNumber++;
         }
         return buff;
     }
 
     /**
      * The cursor advances, and if it reaches the end of the builder, reads new content.
-     * @param length
+     * @param length Length
      * @return null
      */
     public void forward(int length) {
@@ -145,15 +157,15 @@ class StreamBuffer implements BufferOperate {
             ch = builder.charAt(cursor);
             cursor++;
             if (Define.LINEBREAK.indexOf(ch) != -1 || ch == '\r' && builder.charAt(cursor) != '\n') {
-                lno++;
-                cno = 0;
+                lineNumber++;
+                columnNumber = 0;
             } else if (ch != '\uFEFF') {
-                cno++;
+                columnNumber++;
             }
         }
     }
 
-    public int spacesCount() {
+    public int countSpaces() {
         int length = 0;
         while (peek(length) == ' ' || peek(length) == '\t') {
             length++;
@@ -169,12 +181,12 @@ class StreamBuffer implements BufferOperate {
                 ")";
     }
 
-    public int getCno() {
-        return cno;
+    public int getColumnNumber() {
+        return columnNumber;
     }
 
-    public int getLno() {
-        return lno;
+    public int getLineNumber() {
+        return lineNumber;
     }
 
     public boolean isFlagEndOfFile() {

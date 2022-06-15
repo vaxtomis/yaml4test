@@ -21,10 +21,8 @@ public abstract class AbstractConverter implements Convert {
     }
 
     /**
-     * TODO
-     *
-     * <=== Mark, Need to optimize. ===>
-     *
+     * TODO Need to optimize.
+     * <br>
      * Determine whether this type can be parsed.
      */
     public boolean isCorrectFormat(String getV, String type) {

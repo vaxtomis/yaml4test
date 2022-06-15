@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * 将 String 转换为类中属性定义的类型。
+ * 将 String 转换为类中属性定义的类型。<br>
  * 策略模式
  * @author vaxtomis
  */
@@ -62,10 +62,11 @@ public class ConverterRegister {
     }
 
     /**
-     * 单个实例的注入，优先尝试使用 Setter 方式去注入
-     * Method: setter 方法
-     * beInject: 被注入的类实例对象
-     * rawPairValue: 要注入的信息
+     * 单个实例的注入，优先尝试使用 Setter 方式去注入<br>
+     * @param method setter 方法
+     * @param beInject 被注入的类实例对象
+     * @param rawPairValue 要注入的信息
+     * @return boolean
      */
     public static boolean injectObj(Method method, Class<?> fClazz, Object beInject, Object rawPairValue) {
         assert rawPairValue != null;
@@ -78,11 +79,12 @@ public class ConverterRegister {
     }
 
     /**
-     * 对 Array 进行注入
-     * componentType: 被注入的对象类型
-     * field: 被注入类的对应被注入属性的 Field
-     * beInject: 被注入的类实例对象
-     * rawPairValue: 要注入的信息
+     * 对 Array 进行注入<br>
+     * @param componentType 被注入的对象类型
+     * @param field 被注入类的对应被注入属性的 Field
+     * @param beInject 被注入的类实例对象
+     * @param rawPairValue 要注入的信息
+     * @return
      */
     public static void injectObjs(Class<?> componentType, Field field, Object beInject, Object rawPairValue) {
         String[] pairValueArray = (String[]) rawPairValue;

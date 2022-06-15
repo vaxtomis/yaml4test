@@ -16,12 +16,11 @@ import static com.vaxtomis.yaml4test.converter.ConverterRegister.injectObjs;
 import static com.vaxtomis.yaml4test.tokenizer.Define.*;
 
 /**
- * @description
+ * <p>
  * Perform the corresponding function execution according to Events,
- * and finally store the mapping in the innerMap.
- *
+ * and finally store the mapping in the innerMap.<br>
  * 根据 Events 执行相应的方法，最后生成的对象存储到 InnerMap 中。
- *
+ * </p>
  * @author vaxtomis
  */
 public class Producer {
@@ -62,7 +61,7 @@ public class Producer {
      * After a BLOCK is closed,
      * a set of cached RawPairs are used to inject
      * the created class instance in the stack.
-     *
+     * <br>
      * 在一组区块闭合后，将缓存在栈中的生键值对信息注入进创建好的类实例中。
      */
     public void injectProperty() {
@@ -118,8 +117,7 @@ public class Producer {
     }
 
     /**
-     * @attention Need to optimize.
-     * TODO
+     * TODO Need to optimize.
      */
     private void processEvent(Event event) {
         switch (event.getType()) {
@@ -220,7 +218,7 @@ public class Producer {
 
     /**
      * 创建生键值对（即表示键值对的数据结构）
-     * @param name
+     * @param name Name of object/value
      */
     private void createRawPair(String name) {
         RawPair<?> pair = new RawPair<>(name);
@@ -233,13 +231,13 @@ public class Producer {
     }
 
     /**
-     * @attention Need to optimize.
-     * TODO
-     *
+     * TODO Need to optimize.
+     * <p>
      * Put the value(primitive type and their encapsulation class)
-     * into RawPair
-     *
+     * into RawPair.
+     * <br>
      * 将 Value（基本类型和其衍生类型）放入生键值对。
+     * </p>
      */
     private void putValue(String style, String value) {
         if (curContainer != null && curContainer.size() > 0) {
@@ -253,7 +251,7 @@ public class Producer {
     /**
      * Obtain the {Class} through class name,
      * create new instance and put it into RawPair.
-     *
+     * <br>
      * 通过全限定名获取 Class，并且创建新实例放入生键值对中。
      */
     private void putClass(String className) throws ClassNotFoundException, IllegalAccessException, InstantiationException {

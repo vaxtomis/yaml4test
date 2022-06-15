@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * @description Static condition.
- * '\u0085' Next Line
- * '\u2028' Line Separator
+ * <p>
+ * Static condition.<br>
+ * '\u0085' Next Line<br>
+ * '\u2028' Line Separator<br>
  * '\u2029' Paragraph Separator
+ * </p>
  **/
 public class Define {
     public final static String CLASS = "class";

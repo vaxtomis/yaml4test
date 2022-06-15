@@ -7,8 +7,9 @@ import java.lang.reflect.Field;
 import java.util.LinkedList;
 
 /**
- * @description
+ * <p>
  * 使用反射把类实例转换为 EventList。
+ * </p>
  * @author vaxtomis
  */
 public class DeProducer {

@@ -5,7 +5,9 @@ import java.lang.annotation.*;
 import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
 /**
- * @description Annotation YamlInject.
+ * <p>
+ * Annotation YamlInject.
+ * </p>
  * @author vaxtomis
  */
 @Target(ElementType.FIELD)

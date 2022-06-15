@@ -6,30 +6,35 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 /**
- * @description Define the constraints for tokens parser.
+ * <p>
+ * Define the constraints for tokens parser.<br>
  * 定义了分词语法限制的映射关系，路径不通即为语法错误。
- * @author vaxtomis
+ * </p>
+ * <pre>
  *
- * K   -> S         :k-v get key's scalar
- * KS  -> V         :k-v need value
- * VS  -> BE        :block end
- *     -> K         :next key
- * ES  -> E         :next entry
- *     -> BE        :block sequence close
- * BE  -> K         :new key
- *     -> E         :block entry
- *     -> BE        :block end include sequence end and mapping end
- *     -> SE        :stream end
- * V   -> S         :k-v complete
- *     -> C         :get sub class name
- *     -> BMS       :sub mapping start
- *     -> BSS       :sub sequencing start
- * C   -> BMS       :sub class start
- * BMS -> K         :first k-v
- * BSS -> E         :first entry
- * E   -> S         :value of entry
- *     -> C         :get entry class name
- *     -> BMS       :start sub block mapping
+ * K   to  S         :k-v get key's scalar
+ * KS  to  V         :k-v need value
+ * VS  to  BE        :block end
+ *     to  K         :next key
+ * ES  to  E         :next entry
+ *     to  BE        :block sequence close
+ * BE  to  K         :new key
+ *     to  E         :block entry
+ *     to  BE        :block end include sequence end and mapping end
+ *     to  SE        :stream end
+ * V   to  S         :k-v complete
+ *     to  C         :get sub class name
+ *     to  BMS       :sub mapping start
+ *     to  BSS       :sub sequencing start
+ * C   to  BMS       :sub class start
+ * BMS to  K         :first k-v
+ * BSS to  E         :first entry
+ * E   to  S         :value of entry
+ *     to  C         :get entry class name
+ *     to  BMS       :start sub block mapping
+ *
+ * </pre>
+ * @author vaxtomis
  */
 public class ConstraintsMap {
     private final static HashMap<TokenType, String> TOKEN_MAPPING = new HashMap<>();

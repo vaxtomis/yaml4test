@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @description
+ * <p>
  * 用于添加属性名和对应属性需要修改的值。
- *
+ * </p>
  * @author vaxotmis
  */
 public class ModifyCollector {
@@ -17,8 +17,8 @@ public class ModifyCollector {
 
     /**
      * 有重复返回 true，无重复则返回 false。
-     * @param propName
-     * @param value
+     * @param propName Name of the property
+     * @param value Value
      * @return boolean
      */
     public boolean add(String propName, String value) {
@@ -66,7 +66,7 @@ public class ModifyCollector {
     }
 
     /**
-     * 记录更变部分，生成矩阵。
+     * 记录更变部分，生成矩阵。<br>
      * 使用矩阵来存储的目的是减少内存占用。
      * @return String[][] matrix
      */
@@ -82,7 +82,7 @@ public class ModifyCollector {
 
     /**
      * TODO
-     *
+     * <br>
      * 生成全排列组,存储的是 {@link Position} 也就是矩阵中的坐标。
      * @return List
      */

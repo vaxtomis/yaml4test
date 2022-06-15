@@ -7,26 +7,28 @@ import java.util.regex.Pattern;
 import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
 
 /**
- * @description
- * Used to scan the stream and split out tokens.
- * @note -> Reference Project: com.esotericsoftware.yamlbeans
+ * <p>
+ * TokenScanner<br>
+ * Used to scan the stream and split out tokens.<br><br>
+ * Reference Project: com.esotericsoftware.yamlbeans
  * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
+ * </p>
  */
 class TokenScanner implements TokenScan {
     private static TokenScanner tokenScanner = null;
-    private StreamBuffer bf;
+    private StreamBuffer streamBuffer;
     private int indent;
     private int depth;
-    private boolean tkGetAble;
+    private boolean ableToGetToken;
     private final Stack<Integer> indents;
 
 
     public TokenScanner(String yaml) {
         indent = -1;
         depth = 0;
-        tkGetAble = true;
+        ableToGetToken = true;
         indents = new Stack<>();
-        bf = StreamBuffer.getInstance(yaml);
+        streamBuffer = StreamBuffer.getInstance(yaml);
     }
 
     public static TokenScanner getInstance(String yaml) {
@@ -41,9 +43,9 @@ class TokenScanner implements TokenScan {
     private void reset(String yaml) {
         indent = -1;
         depth = 0;
-        tkGetAble = true;
+        ableToGetToken = true;
         indents.clear();
-        bf = StreamBuffer.getInstance(yaml);
+        streamBuffer = StreamBuffer.getInstance(yaml);
     }
 
     /**
@@ -63,7 +65,7 @@ class TokenScanner implements TokenScan {
             }
             if (isLineBreak()) {
                 if (depth == 0) {
-                    tkGetAble = true;
+                    ableToGetToken = true;
                 }
             } else {
                 break;
@@ -107,7 +109,7 @@ class TokenScanner implements TokenScan {
             if (length == 0) {
                 break;
             }
-            tkGetAble = false;
+            ableToGetToken = false;
             chunks.append(spaces);
             chunks.append(getString(length));
             spaces = scanPlainSpaces();
@@ -131,17 +133,17 @@ class TokenScanner implements TokenScan {
      */
     public String scanPlainSpaces() {
         StringBuilder chunks = new StringBuilder();
-        String spaces = getString(bf.spacesCount());
+        String spaces = getString(streamBuffer.countSpaces());
         char ch = peekChar();
         if (Define.FULL_LINEBREAK.indexOf(ch) != -1) {
-            tkGetAble = true;
+            ableToGetToken = true;
             //Determine if it is start/end or not.
             if (Define.END_OR_START.matcher(peekString(4)).matches()) {
                 return EMPTY;
             }
             StringBuilder breaks = new StringBuilder();
             //Count the number of linebreaks.
-            while (Define.BLANK_OR_LINEBREAK.indexOf(peekChar()) != -1)
+            while (Define.BLANK_OR_LINEBREAK.indexOf(peekChar()) != -1) {
                 if (' ' == peekChar()) {
                     toNext();
                 } else {
@@ -152,6 +154,7 @@ class TokenScanner implements TokenScan {
                         return EMPTY;
                     }
                 }
+            }
             if (breaks.length() == 0) {
                 chunks.append(" ");
             }
@@ -163,7 +166,8 @@ class TokenScanner implements TokenScan {
     }
 
     /**
-     * @param style
+     * Scan The Scalar.
+     * @param style Token style
      * @return Token
      */
     public Token scanFlowScalar(char style) {
@@ -181,6 +185,7 @@ class TokenScanner implements TokenScan {
     }
 
     /**
+     * Scan scalar which does not contain spaces.
      * @param dbl
      * @return String
      */
@@ -222,7 +227,7 @@ class TokenScanner implements TokenScan {
                     if (Define.NOT_HEX.matcher(val).find()) {
                         throw new TokenScanningException("Scanning a double quoted scalar" +
                                 ", expected an escape sequence of" + length +
-                                " hexadecimal numbers but found: " + bf.ch(peekChar()));
+                                " hexadecimal numbers but found: " + streamBuffer.ch(peekChar()));
                     }
                     chunks.append(Character.toChars(Integer.parseInt(val, 16)));
                     toNext(length);
@@ -236,13 +241,13 @@ class TokenScanner implements TokenScan {
     }
 
     /**
-     * 1.Scan the '\0' (End of stream).
+     * 1.Scan the '\0' (End of stream).<br>
      * 2.Find line breaks.
      * @return String
      */
     private String scanFlowScalarSpaces() {
         StringBuilder chunks = new StringBuilder();
-        String spaces = getString(bf.spacesCount());
+        String spaces = getString(streamBuffer.countSpaces());
         // forward(length);
         char ch = peekChar();
         if (ch == '\0') {
@@ -263,8 +268,8 @@ class TokenScanner implements TokenScan {
     }
 
     /**
-     * 1.Scan the document separator.
-     * 2.Skip blank and tab.
+     * 1.Scan the document separator.<br>
+     * 2.Skip blank and tab.<br>
      * 3.Find linebreak and append "\n".
      * @return String
      */
@@ -338,16 +343,17 @@ class TokenScanner implements TokenScan {
     }
 
     /**
-     * Increase the indentation.
+     * Increase the indentation.<br>
      * If the indentation is less than the current position
      * it means that the new block is opened, record the indentation position indents header
      * then set curMaxIndent to the current line number as the current maximum indentation.
-     *
-     * 增加缩进。如果缩进小于当前位置表示新区块开启，
+     * <br><br>
+     * 增加缩进。<br>
+     * 如果缩进小于当前位置表示新区块开启，
      * 记录缩进位置 indents header，
      * 然后设置 curMaxIndent 为当前行号作为当前最大缩进。
      *
-     * @param col
+     * @param col col
      * @return boolean
      */
     public boolean addIndent(int col){
@@ -366,9 +372,9 @@ class TokenScanner implements TokenScan {
     /**
      * Pass in {col} to count BLOCKs
      * whose indentation is greater than or equal to {col}.
-     *
+     * <br>
      * 传入 {col} 以计算缩进大于或等于 {col} 的区块。
-     * @param col
+     * @param col col
      * @return int
      */
     public int countCloseBlock(int col) {
@@ -382,35 +388,35 @@ class TokenScanner implements TokenScan {
     }
 
     public char peekChar() {
-        return bf.peek(0);
+        return streamBuffer.peek(0);
     }
 
     public char peekChar(int length) {
-        return bf.peek(length);
+        return streamBuffer.peek(length);
     }
 
     public String peekString(int length) {
-        return bf.preSub(length);
+        return streamBuffer.preSubstring(length);
     }
 
     public boolean isColZero() {
-        return bf.getCno() == 0;
+        return streamBuffer.getColumnNumber() == 0;
     }
 
     public boolean isDepthZero() {
         return depth == 0;
     }
 
-    public boolean canGetKV() {
+    public boolean ableToGetKeyValue() {
         return depth != 0 || Define.NULL_OR_OTHER.indexOf(peekChar(1)) != -1;
     }
 
-    public void setTkGetAble(boolean tkGetAble) {
-        this.tkGetAble = tkGetAble;
+    public void setAbleToGetToken(boolean ableToGetToken) {
+        this.ableToGetToken = ableToGetToken;
     }
 
-    public boolean isTkGetAble() {
-        return tkGetAble;
+    public boolean isAbleToGetToken() {
+        return ableToGetToken;
     }
 
     public int getDepth() {
@@ -418,23 +424,23 @@ class TokenScanner implements TokenScan {
     }
 
     public void toNext(int length) {
-        bf.forward(length);
+        streamBuffer.forward(length);
     }
 
     public void toNext() {
-        bf.forward(1);
+        streamBuffer.forward(1);
     }
 
     public String getString(int length) {
-        return bf.preForward(length);
+        return streamBuffer.preForward(length);
     }
 
     public int getCno() {
-        return bf.getCno();
+        return streamBuffer.getColumnNumber();
     }
 
     public int getLno() {
-        return bf.getLno();
+        return streamBuffer.getLineNumber();
     }
 
     /**

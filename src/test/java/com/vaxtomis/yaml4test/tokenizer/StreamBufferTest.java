@@ -20,7 +20,7 @@ public class StreamBufferTest {
     @Test
     public void preSub() {
         for (int i = 0; i<5; i++) {
-            System.out.println(streamBuffer.preSub(i));
+            System.out.println(streamBuffer.preSubstring(i));
         }
     }
 

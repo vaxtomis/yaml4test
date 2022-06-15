@@ -1,7 +1,9 @@
 package com.vaxtomis.yaml4test.parser;
 
 /**
- * @description Event Type num.
+ * <p>
+ * Event Type num.
+ * </p>
  */
 public enum EventType {
     GET_NAME,
