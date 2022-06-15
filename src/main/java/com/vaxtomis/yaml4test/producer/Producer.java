@@ -164,7 +164,7 @@ public class Producer {
                         createRawPair();
                         // <=== Need to optimize. ===>
                         putValue("String", ((EntryEvent)event).getValue());
-                        objectStack.getLast().setValue("java.lang.String");
+                        objectStack.getLast().setValue(STRING);
                     }
                 }
                 break;
