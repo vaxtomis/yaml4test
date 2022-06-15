@@ -124,12 +124,13 @@ public class DeProducer {
     }
 
     /**
-     * @description
-     * 判断 Field 的类型，根据类型去筛选 parse 处理函数。
-     * Collection 对应为 Sequence
-     * Primitive 对应为 Key-Value
-     * 其余为 Class 实例，对应为 Mapping
-     * @param field
+     * <p>
+     * 判断 Field 的类型，根据类型去筛选 parse 处理函数。<br>
+     * Collection 对应为 Sequence<br>
+     * Primitive 对应为 Key-Value<br>
+     * 其余为 Class 实例，对应为 Mapping<br>
+     * </p>
+     * @param field Field
      * @return String
      */
     private String fieldType(Field field) {

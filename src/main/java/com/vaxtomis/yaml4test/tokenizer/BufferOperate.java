@@ -1,9 +1,12 @@
 package com.vaxtomis.yaml4test.tokenizer;
 
 /**
- * @description Operation interface to obtain the required value
+ * <p>
+ * Operation interface to obtain the required value
  * from the buffer stream.
+ * <br>
  * 从缓冲流中获取所需值的操作接口。
+ * </p>
  */
 interface BufferOperate {
     char peek(int offset);

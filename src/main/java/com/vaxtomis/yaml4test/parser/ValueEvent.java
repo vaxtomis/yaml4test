@@ -1,8 +1,10 @@
 package com.vaxtomis.yaml4test.parser;
 
 /**
- * @description Indicator for get value event.
+ * <p>
+ * Indicator for get value event.<br>
  * 获取键值对中的值的事件标志。
+ * </p>
  */
 public class ValueEvent extends Event {
     private String style;
