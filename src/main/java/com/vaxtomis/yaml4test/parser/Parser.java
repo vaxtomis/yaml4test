@@ -1,11 +1,14 @@
 package com.vaxtomis.yaml4test.parser;
 
+import com.vaxtomis.yaml4test.common.Define;
 import com.vaxtomis.yaml4test.tokenizer.*;
 import com.vaxtomis.yaml4test.YamlFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.LinkedList;
+
+import static com.vaxtomis.yaml4test.common.Define.*;
 import static com.vaxtomis.yaml4test.tokenizer.TokenType.*;
 
 /**
@@ -64,51 +67,50 @@ public class Parser {
             }
         }
 
-        public Token getCur() {
+        public Token getCurrent() {
             if (cursor == -1) {
                 return null;
             }
             return tks[cursor];
         }
 
-        public Token getPre() {
-            if (cursor-1 < 0) {
+        public Token getPrevious() {
+            if (cursor + PREVIOUS < 0) {
                 return null;
             }
-            return tks[cursor-1];
+            return tks[cursor + PREVIOUS];
         }
 
-        public Token getDoublePre() {
-            if (cursor-2 < 0) {
+        public Token getDoublePrevious() {
+            if (cursor + DOUBLE_PREVIOUS < 0) {
                 return null;
             }
-            return tks[cursor-2];
+            return tks[cursor + DOUBLE_PREVIOUS];
         }
 
         /**
          * Get the [cur, pre, pre-pre] type of Token in sliding window.<br>
          * 从滑动窗口中获取当前，上一个，上上个 Token。
          */
-        public TokenType getTokenType(String type) {
+        public TokenType getTokenType(int type) {
             Token token = null;
             switch (type) {
-                case "DPre":
-                    token = getDoublePre();
+                case DOUBLE_PREVIOUS:
+                    token = getDoublePrevious();
                     break;
-                case "Pre":
-                    token = getPre();
+                case PREVIOUS:
+                    token = getPrevious();
                     break;
-                case "Cur":
-                    token = getCur();
+                case CURRENT:
+                    token = getCurrent();
                     break;
                 default:
 
             }
             if (token == null) {
                 return null;
-            } else {
-                return token.getType();
             }
+            return token.getType();
         }
     }
 
@@ -141,9 +143,9 @@ public class Parser {
     private void fetchEvent() {
         if (!ConstraintsMap.isAllowed(window)) {
             throw new ParserException("Found a Token where it is not allowed."
-                    + " Token: " + window.getCur().toString());
+                    + " Token: " + window.getCurrent().toString());
         }
-        Token tk = window.getCur();
+        Token tk = window.getCurrent();
         switch (tk.getType()) {
             case SCALAR:
                 handleScalar((ScalarToken) tk);
@@ -165,22 +167,26 @@ public class Parser {
         }
     }
     private void handleScalar(ScalarToken tk) {
-        Token pre = window.getPre();
-        if (pre.getType() == KEY) {
-            events.add(new NameEvent(tk.getValue()));
-        }
-        else if (pre.getType() == VALUE) {
-            events.add(new ValueEvent(tk.getStyle(), tk.getValue()));
-        }
-        else if (pre.getType() == BLOCK_ENTRY) {
-            events.add(new EntryEvent("value", tk.getValue()));
+        Token pre = window.getPrevious();
+        switch (pre.getType()) {
+            case KEY:
+                events.add(new NameEvent(tk.getValue()));
+                break;
+            case VALUE:
+                events.add(new ValueEvent(tk.getStyle(), tk.getValue()));
+                break;
+            case BLOCK_ENTRY:
+                events.add(new EntryEvent(Define.VALUE, tk.getValue()));
+                break;
+            default:
+
         }
     }
 
     private void handleClassName(ClassNameToken tk) {
-        Token pre = window.getPre();
+        Token pre = window.getPrevious();
         if (pre.getType() == BLOCK_ENTRY) {
-            events.add(new EntryEvent("class", tk.getName()));
+            events.add(new EntryEvent(CLASS, tk.getName()));
         } else {
             events.add(new ClassNameEvent(tk.getName()));
         }
@@ -196,12 +202,12 @@ public class Parser {
 
     private void handleMappingStart() {
         events.add(Event.MAPPING_START);
-        blockStack.push(window.getCur());
+        blockStack.push(window.getCurrent());
     }
 
     private void handleSequenceStart() {
         events.add(Event.SEQUENCE_START);
-        blockStack.push(window.getCur());
+        blockStack.push(window.getCurrent());
     }
 
     public LinkedList<Event> getEventList() {

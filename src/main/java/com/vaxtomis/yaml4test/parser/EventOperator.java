@@ -5,6 +5,7 @@ import com.vaxtomis.yaml4test.common.Define;
 import java.util.*;
 
 import static com.vaxtomis.yaml4test.common.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.VALUE;
 
 /**
  * <p>
@@ -187,7 +188,7 @@ public class EventOperator {
                 fullName = getFullName();
                 //System.out.println(fullName);
                 if (modifyMap.containsKey(fullName)) {
-                    EntryEvent modifiedEvent = new EntryEvent("value", modifyMap.get(fullName));
+                    EntryEvent modifiedEvent = new EntryEvent(VALUE, modifyMap.get(fullName));
                     modifiedEvents.removeLast();
                     modifiedEvents.add(modifiedEvent);
                 }
@@ -241,7 +242,7 @@ public class EventOperator {
                 fullName = getFullName();
                 //System.out.println(fullName);
                 if (fullName.equals(modifiedEventName)) {
-                    EntryEvent modifiedEvent = new EntryEvent("value", value);
+                    EntryEvent modifiedEvent = new EntryEvent(VALUE, value);
                     modifiedEvents.removeLast();
                     modifiedEvents.add(modifiedEvent);
                     return true;

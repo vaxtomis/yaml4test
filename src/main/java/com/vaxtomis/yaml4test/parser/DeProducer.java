@@ -6,6 +6,8 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 
+import static com.vaxtomis.yaml4test.common.Define.*;
+
 /**
  * <p>
  * 使用反射把类实例转换为 EventList。
@@ -17,7 +19,7 @@ public class DeProducer {
 
     public void parseToEvents(Object source, Class<?> clazz) throws IllegalAccessException {
         events.add(Event.MAPPING_START);
-        events.add(new NameEvent("CopyInstance"));
+        events.add(new NameEvent(COPY_INSTANCE));
         if (clazz.isArray()) {
             sequenceStrategy(source);
         } else {
@@ -37,13 +39,13 @@ public class DeProducer {
         for (Field sField : sFields) {
             sField.setAccessible(true);
             switch (fieldType(sField)) {
-                case "MAPPING":
+                case MAPPING:
                     parseMapping(parent, sField);
                     break;
-                case "SEQUENCE":
+                case SEQUENCE:
                     parseSequence(parent, sField);
                     break;
-                case "PRIMITIVE":
+                case PRIMITIVE:
                     parsePrimitive(parent, sField);
                     break;
                 default:
@@ -112,15 +114,15 @@ public class DeProducer {
 
     private void parseEntry(Object parameter) throws IllegalAccessException {
         if (ConverterRegister.isPrimitive(parameter.getClass())) {
-            events.add(new EntryEvent("value", String.valueOf(parameter)));
+            events.add(new EntryEvent(VALUE, String.valueOf(parameter)));
         } else {
-            events.add(new EntryEvent("class", path(parameter.getClass())));
+            events.add(new EntryEvent(CLASS, path(parameter.getClass())));
             parse(parameter, parameter.getClass());
         }
     }
 
     private void parseEntry(String str) {
-        events.add(new EntryEvent("value", str));
+        events.add(new EntryEvent(VALUE, str));
     }
 
     /**
@@ -135,11 +137,11 @@ public class DeProducer {
      */
     private String fieldType(Field field) {
         if (field.getType().isArray()) {
-            return "SEQUENCE";
+            return SEQUENCE;
         } else if (ConverterRegister.isPrimitive(field.getType())) {
-            return "PRIMITIVE";
+            return PRIMITIVE;
         }
-        return "MAPPING";
+        return MAPPING;
     }
 
     private String path(Class<?> clazz) {

@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.vaxtomis.yaml4test.common.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.*;
 
 /**
  * <p>
@@ -140,10 +140,10 @@ public class BeanOperator {
                 case 0:
                     throw new InvalidFormatException("Invalid property name format.");
                 case 1:
-                    newModifyMap.put("CopyInstance." + entry.getKey(), entry.getValue().toString());
+                    newModifyMap.put(COPY_INSTANCE_DOT + entry.getKey(), entry.getValue().toString());
                     break;
                 case 2:
-                    newModifyMap.put("CopyInstance" + entry.getKey(), entry.getValue().toString());
+                    newModifyMap.put(COPY_INSTANCE + entry.getKey(), entry.getValue().toString());
                     break;
                 default:
 
@@ -157,9 +157,9 @@ public class BeanOperator {
             case 0:
                 throw new InvalidFormatException("Invalid property name format.");
             case 1:
-                return "CopyInstance." + propertyName;
+                return COPY_INSTANCE_DOT + propertyName;
             case 2:
-                return "CopyInstance" + propertyName;
+                return COPY_INSTANCE + propertyName;
             default:
                 return null;
 
