@@ -6,10 +6,9 @@
 
     <groupId>com.wujunhao1024</groupId>
     <artifactId>yaml4test</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3</version>
 
     <name>yaml4test</name>
-    <url>http://maven.apache.org</url>
     <description>Tool for unit testing with yaml files.</description>
 
     <properties>
@@ -44,7 +43,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

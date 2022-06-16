@@ -3,7 +3,7 @@ package com.vaxtomis.yaml4test.converter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
-import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.EMPTY;
 
 /**
  * String Converter.
@@ -11,21 +11,21 @@ import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
  */
 class StringConverter extends AbstractConverter {
     @Override
-    public boolean convertObj(Method method, Object beInject, String getV) {
-        if (getV == null) {
-            getV = EMPTY;
+    public boolean convertObj(Method method, Object beInject, String pairValue) {
+        if (pairValue == null) {
+            pairValue = EMPTY;
         }
-        return setterInject(method, beInject, getV);
+        return setterInject(method, beInject, pairValue);
     }
 
     @Override
     public void convertObjs(Object newArray, String[] pairValueArray) {
         for (int i = 0; i < pairValueArray.length; i++) {
-            String getV = pairValueArray[i];
-            if (getV == null) {
-                getV = EMPTY;
+            String pairValue = pairValueArray[i];
+            if (pairValue == null) {
+                pairValue = EMPTY;
             }
-            Array.set(newArray, i, getV);
+            Array.set(newArray, i, pairValue);
         }
     }
 }

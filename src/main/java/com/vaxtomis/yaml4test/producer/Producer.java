@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static com.vaxtomis.yaml4test.converter.ConverterRegister.injectObj;
 import static com.vaxtomis.yaml4test.converter.ConverterRegister.injectObjs;
-import static com.vaxtomis.yaml4test.tokenizer.Define.*;
+import static com.vaxtomis.yaml4test.common.Define.*;
 
 /**
  * <p>
@@ -70,38 +70,39 @@ public class Producer {
 
         //System.out.println(rawPair.getName() + " - " + rawPair.getValue());
         Object obj = rawPair.getValue();
-        Class<?> clazz = obj.getClass();
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
+        Class<?> objClass = obj.getClass();
+        Field[] objFields = objClass.getDeclaredFields();
+        for (Field field : objFields) {
             // Skip the serialVersionUID
             if (field.getModifiers() == (Modifier.PRIVATE | Modifier.STATIC | Modifier.FINAL)) {
                 continue;
             }
             field.setAccessible(true);
             boolean setterSuccess = false;
-            Class<?> fClazz = field.getType();
-            String fName = field.getName();
-            Object rawPairValue = curContainer.getRawPairValue(fName);
+            Class<?> fieldType = field.getType();
+            String fieldName = field.getName();
+            Object rawPairValue = curContainer.getRawPairValue(fieldName);
             if (rawPairValue == null) {
                 continue;
             }
             PropertyDescriptor descriptor = null;
             try {
-                descriptor = new PropertyDescriptor(fName, clazz);
+                descriptor = new PropertyDescriptor(fieldName, objClass);
             } catch (IntrospectionException e) {
                 e.printStackTrace();
             }
             assert descriptor != null;
             Method method = descriptor.getWriteMethod();
             // try setter inject
-            setterSuccess = injectObj(method, fClazz, obj, rawPairValue);
+            setterSuccess = injectObj(method, fieldType, obj, rawPairValue);
             // If the injection fails (using the setter method),
             // try to assign the value directly.
             if (!setterSuccess) {
                 // 判断是 Array 的情况下
-                if (fClazz.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
+                // array case
+                if (fieldType.isArray() && rawPairValue.getClass().getComponentType() == String.class) {
                     // Convert string array.
-                    Class<?> componentType = fClazz.getComponentType();
+                    Class<?> componentType = fieldType.getComponentType();
                     injectObjs(componentType, field, obj, rawPairValue);
                 } else {
                     try {

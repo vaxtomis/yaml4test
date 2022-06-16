@@ -9,16 +9,16 @@ import java.lang.reflect.Method;
  */
 class CharConverter extends AbstractConverter {
     @Override
-    public boolean convertObj(Method method, Object beInject, String getV) {
-        char temp = (getV != null)?getV.charAt(0):'\u0000';
+    public boolean convertObj(Method method, Object beInject, String pairValue) {
+        char temp = (pairValue != null)? pairValue.charAt(0):'\u0000';
         return setterInject(method, beInject, temp);
     }
 
     @Override
     public void convertObjs(Object newArray, String[] pairValueArray) {
         for (int i = 0; i < pairValueArray.length; i++) {
-            String getV = pairValueArray[i];
-            char temp = (getV != null)?getV.charAt(0):'\u0000';
+            String pairValue = pairValueArray[i];
+            char temp = (pairValue != null)?pairValue.charAt(0):'\u0000';
             if (!newArray.getClass().isPrimitive()) {
                 Array.set(newArray, i, temp);
                 continue;

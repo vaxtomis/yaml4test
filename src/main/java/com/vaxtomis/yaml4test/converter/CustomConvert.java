@@ -7,5 +7,5 @@ package com.vaxtomis.yaml4test.converter;
  * @author vaxtomis
  */
 public interface CustomConvert<T> {
-    T customConvert(String getV);
+    T customConvert(String pairValue);
 }

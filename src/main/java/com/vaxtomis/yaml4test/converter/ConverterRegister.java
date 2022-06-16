@@ -68,14 +68,13 @@ public class ConverterRegister {
      * @param rawPairValue 要注入的信息
      * @return boolean
      */
-    public static boolean injectObj(Method method, Class<?> fClazz, Object beInject, Object rawPairValue) {
+    public static boolean injectObj(Method method, Class<?> fieldType, Object beInject, Object rawPairValue) {
         assert rawPairValue != null;
-        String getV = rawPairValue.toString();
-        Convert convert = CONVERT_MAP.get(fClazz);
+        Convert convert = CONVERT_MAP.get(fieldType);
         if (convert == null) {
             return false;
         }
-        return convert.convertObj(method, beInject, getV);
+        return convert.convertObj(method, beInject, rawPairValue.toString());
     }
 
     /**

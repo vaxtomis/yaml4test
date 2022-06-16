@@ -8,9 +8,9 @@ import java.math.BigInteger;
  */
 class BigIntegerConverter extends AbstractCustomConverter {
     @Override
-    public BigInteger customConvert(String getV) {
-        if (getV.matches("^(-|\\+)?\\d+$")) {
-            return new BigInteger(getV);
+    public BigInteger customConvert(String pairValue) {
+        if (pairValue.matches("^(-|\\+)?\\d+$")) {
+            return new BigInteger(pairValue);
         } else {
             return new BigInteger("0");
         }

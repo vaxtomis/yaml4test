@@ -3,6 +3,8 @@ package com.vaxtomis.yaml4test.converter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import static com.vaxtomis.yaml4test.common.Define.*;
+
 /**
  * Abstract Converter, achieved some common functions.
  * @author vaxtomis
@@ -25,23 +27,23 @@ public abstract class AbstractConverter implements Convert {
      * <br>
      * Determine whether this type can be parsed.
      */
-    public boolean isCorrectFormat(String getV, String type) {
-        if (getV == null) {
+    public boolean isCorrectFormat(String value, String type) {
+        if (value == null) {
             return false;
         }
         switch (type) {
             case "int":
             case "short":
             case "long":
-                return getV.matches("^(-|\\+)?\\d+$");
+                return value.matches(MATCH_LONG);
             case "double":
             case "float":
-                return getV.matches("^(-?\\d+)(\\.\\d+)?$");
+                return value.matches(MATCH_FLOAT);
             case "byte":
-                if (!getV.matches("^[0-9a-fA-F]+$")) {
+                if (!value.matches(MATCH_BYTE)) {
                     return false;
                 }
-                int i = Integer.parseInt(getV, 16);
+                int i = Integer.parseInt(value, 16);
                 return  -128 <= i && i <= 127;
             case "boolean":
                 return true;

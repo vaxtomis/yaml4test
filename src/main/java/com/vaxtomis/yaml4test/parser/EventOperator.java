@@ -1,10 +1,10 @@
 package com.vaxtomis.yaml4test.parser;
 
-import com.vaxtomis.yaml4test.tokenizer.Define;
+import com.vaxtomis.yaml4test.common.Define;
 
 import java.util.*;
 
-import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.EMPTY;
 
 /**
  * <p>

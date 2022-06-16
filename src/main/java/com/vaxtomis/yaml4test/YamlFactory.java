@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.EMPTY;
 
 /**
  * <p>

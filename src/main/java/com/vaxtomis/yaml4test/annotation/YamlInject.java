@@ -2,7 +2,7 @@ package com.vaxtomis.yaml4test.annotation;
 
 import java.lang.annotation.*;
 
-import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.EMPTY;
 
 /**
  * <p>

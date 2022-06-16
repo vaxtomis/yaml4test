@@ -1,4 +1,4 @@
-package com.vaxtomis.yaml4test.tokenizer;
+package com.vaxtomis.yaml4test.common;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,14 @@ import java.util.regex.Pattern;
  **/
 public class Define {
     public final static String CLASS = "class";
-
     public final static String VALUE = "value";
-
     public final static String STRING = "java.lang.String";
     public final static String EMPTY = "";
+
+    public final static String MATCH_LONG = "^(-|\\+)?\\d+$";
+    public final static String MATCH_FLOAT = "^(-?\\d+)(\\.\\d+)?$";
+    public final static String MATCH_BYTE = "^[0-9a-fA-F]+$";
+
     public final static String LINEBREAK = "\n\u0085\u2028\u2029";
     public final static String RN = "\r\n";
     public final static String BLANK_T = " \t";

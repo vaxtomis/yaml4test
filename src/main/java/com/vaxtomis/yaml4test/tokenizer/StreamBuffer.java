@@ -1,5 +1,7 @@
 package com.vaxtomis.yaml4test.tokenizer;
 
+import com.vaxtomis.yaml4test.common.Define;
+
 import java.io.*;
 
 /**

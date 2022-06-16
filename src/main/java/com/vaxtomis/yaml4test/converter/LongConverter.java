@@ -9,16 +9,16 @@ import java.lang.reflect.Method;
  */
 class LongConverter extends AbstractConverter {
     @Override
-    public boolean convertObj(Method method, Object beInject, String getV) {
-        long temp = (isCorrectFormat(getV, "long"))?Long.parseLong(getV):0L;
+    public boolean convertObj(Method method, Object beInject, String pairValue) {
+        long temp = (isCorrectFormat(pairValue, "long"))?Long.parseLong(pairValue):0L;
         return setterInject(method, beInject, temp);
     }
 
     @Override
     public void convertObjs(Object newArray, String[] pairValueArray) {
         for (int i = 0; i < pairValueArray.length; i++) {
-            String getV = pairValueArray[i];
-            long temp = (isCorrectFormat(getV, "long"))?Long.parseLong(getV):0L;
+            String pairValue = pairValueArray[i];
+            long temp = (isCorrectFormat(pairValue, "long"))?Long.parseLong(pairValue):0L;
             if (!newArray.getClass().isPrimitive()) {
                 Array.set(newArray, i, temp);
                 continue;

@@ -8,8 +8,8 @@ import java.lang.reflect.Method;
  */
 public abstract class AbstractCustomConverter extends AbstractConverter implements CustomConvert {
     @Override
-    public boolean convertObj(Method method, Object beInject, String getV) {
-        return setterInject(method, beInject, customConvert(getV));
+    public boolean convertObj(Method method, Object beInject, String pairValue) {
+        return setterInject(method, beInject, customConvert(pairValue));
     }
 
     @Override

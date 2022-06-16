@@ -5,14 +5,14 @@ import com.vaxtomis.yaml4test.parser.Event;
 import com.vaxtomis.yaml4test.parser.EventOperator;
 import com.vaxtomis.yaml4test.parser.ModifyCollector;
 import com.vaxtomis.yaml4test.producer.Producer;
-import com.vaxtomis.yaml4test.tokenizer.Define;
+import com.vaxtomis.yaml4test.common.Define;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.EMPTY;
 
 /**
  * <p>

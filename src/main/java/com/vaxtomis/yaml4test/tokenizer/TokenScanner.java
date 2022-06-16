@@ -1,10 +1,12 @@
 package com.vaxtomis.yaml4test.tokenizer;
 
+import com.vaxtomis.yaml4test.common.Define;
+
 import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.EMPTY;
 
 /**
  * <p>
