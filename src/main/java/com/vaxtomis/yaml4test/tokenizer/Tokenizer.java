@@ -1,16 +1,19 @@
 package com.vaxtomis.yaml4test.tokenizer;
 
 import com.vaxtomis.yaml4test.YamlFactory;
+import com.vaxtomis.yaml4test.common.Define;
 
 import java.util.*;
 
 /**
- * @description Tokenizer.
- * @note -> Reference Project: com.esotericsoftware.yamlbeans
+ * <p>
+ * Tokenizer.<br>
+ * Reference Project: com.esotericsoftware.yamlbeans
  * (Copyright (c) 2008 Nathan Sweet, Copyright (c) 2006 Ola Bini)
+ * </p>
  */
 public class Tokenizer {
-    private TokenScanner ts;
+    private TokenScanner tokenScanner;
     private int taken = 0;
     private boolean flagStreamStart = false;
     private boolean flagStreamEnd = false;
@@ -18,16 +21,16 @@ public class Tokenizer {
     private final Map<Integer,TokenKey> tokenKeyMap = new HashMap<>();
 
     static class TokenKey {
-        public final int tkn;
-        public final int cno;
-        TokenKey(int tkn, int cno) {
-            this.tkn = tkn;
-            this.cno = cno;
+        public final int tokenNumber;
+        public final int columnNumber;
+        TokenKey(int tokenNumber, int columnNumber) {
+            this.tokenNumber = tokenNumber;
+            this.columnNumber = columnNumber;
         }
     }
 
-    public Tokenizer(TokenScanner ts) {
-        this.ts = ts;
+    public Tokenizer(TokenScanner tokenScanner) {
+        this.tokenScanner = tokenScanner;
         fetchStreamStart();
     }
 
@@ -56,8 +59,8 @@ public class Tokenizer {
             fetchToken();
         }
         if (!tokens.isEmpty()) {
-                taken++;
-                return tokens.remove(0);
+            taken++;
+            return tokens.remove(0);
         }
         return null;
     }
@@ -77,11 +80,11 @@ public class Tokenizer {
     }
 
     private void fetchToken() {
-        ts.scanNextToken();
-        for (int i = ts.countCloseBlock(); i > 0; i--) {
+        tokenScanner.scanNextToken();
+        for (int i = tokenScanner.countCloseBlock(); i > 0; i--) {
             tokens.add(Token.BLOCK_END);
         }
-        char ch = ts.peekChar();
+        char ch = tokenScanner.peekChar();
         switch (ch) {
             case '\0' :
                 fetchStreamEnd();
@@ -93,13 +96,13 @@ public class Tokenizer {
                 fetchFlowScalar('"');
                 return;
             case ':'  :
-                if (ts.canGetKV()) {
+                if (tokenScanner.ableToGetKeyValue()) {
                     fetchValue();
                     return;
                 }
                 break;
             case '-' :
-                if (Define.NULL_OR_OTHER.indexOf(ts.peekChar(1)) != -1) {
+                if (Define.NULL_OR_OTHER.indexOf(tokenScanner.peekChar(1)) != -1) {
                     fetchBlockEntry();
                     return;
                 }
@@ -110,7 +113,7 @@ public class Tokenizer {
             default:
 
         }
-        if (Define.BEG.matcher(ts.peekString(2)).find())
+        if (Define.BEG.matcher(tokenScanner.peekString(2)).find())
             fetchPlain();
     }
 
@@ -120,10 +123,10 @@ public class Tokenizer {
     }
 
     private void fetchStreamEnd() {
-        for (int i = ts.countCloseBlock(-1); i > 0; i--) {
+        for (int i = tokenScanner.countCloseBlock(-1); i > 0; i--) {
             tokens.add(Token.BLOCK_END);
         }
-        ts.setTkGetAble(false);
+        tokenScanner.setAbleToGetToken(false);
         tokenKeyMap.clear();
         tokens.add(Token.STREAM_END);
         flagStreamEnd = true;
@@ -131,80 +134,80 @@ public class Tokenizer {
 
     private void fetchFlowScalar(char style) {
         savePossibleTokenKey();
-        ts.setTkGetAble(false);
-        tokens.add(ts.scanFlowScalar(style));
+        tokenScanner.setAbleToGetToken(false);
+        tokens.add(tokenScanner.scanFlowScalar(style));
     }
 
     private void fetchKey() {
-        if (ts.isDepthZero()) {
-            if (!ts.isTkGetAble()) {
+        if (tokenScanner.isDepthZero()) {
+            if (!tokenScanner.isAbleToGetToken()) {
                 throw new TokenizerException("Found a mapping key where it is not allowed.");
             }
-            if (ts.addIndent(ts.getCno())) {
+            if (tokenScanner.addIndent(tokenScanner.getCno())) {
                 tokens.add(Token.BLOCK_MAPPING_START);
             }
         }
-        ts.setTkGetAble(ts.isDepthZero());
-        ts.toNext();
+        tokenScanner.setAbleToGetToken(tokenScanner.isDepthZero());
+        tokenScanner.toNext();
         tokens.add(Token.KEY);
     }
 
     private void fetchValue() {
-        TokenKey tk = tokenKeyMap.get(ts.getDepth());
+        TokenKey tk = tokenKeyMap.get(tokenScanner.getDepth());
         if (tk == null) {
-            if (ts.isDepthZero() && !ts.isTkGetAble()) {
+            if (tokenScanner.isDepthZero() && !tokenScanner.isAbleToGetToken()) {
                 throw new TokenizerException("Found a mapping value where it is not allowed.");
             }
         } else {
-            tokenKeyMap.remove(ts.getDepth());
-            tokens.add(tk.tkn - taken, Token.KEY);
-            if (ts.isDepthZero() && ts.addIndent(tk.cno)) {
-                tokens.add(tk.tkn - taken, Token.BLOCK_MAPPING_START);
+            tokenKeyMap.remove(tokenScanner.getDepth());
+            tokens.add(tk.tokenNumber - taken, Token.KEY);
+            if (tokenScanner.isDepthZero() && tokenScanner.addIndent(tk.columnNumber)) {
+                tokens.add(tk.tokenNumber - taken, Token.BLOCK_MAPPING_START);
             }
-            ts.setTkGetAble(false);
+            tokenScanner.setAbleToGetToken(false);
         }
-        ts.toNext();
+        tokenScanner.toNext();
         tokens.add(Token.VALUE);
     }
 
     private void fetchClassName() {
         savePossibleTokenKey();
-        ts.setTkGetAble(false);
-        ts.toNext();
-        tokens.add(ts.scanClassName());
+        tokenScanner.setAbleToGetToken(false);
+        tokenScanner.toNext();
+        tokens.add(tokenScanner.scanClassName());
     }
 
     private void fetchPlain() {
         savePossibleTokenKey();
-        ts.setTkGetAble(false);
-        tokens.add(ts.scanPlain());
+        tokenScanner.setAbleToGetToken(false);
+        tokens.add(tokenScanner.scanPlain());
     }
 
     private void fetchBlockEntry() {
-        if (ts.getDepth() == 0) {
-            if (!ts.isTkGetAble()) {
+        if (tokenScanner.getDepth() == 0) {
+            if (!tokenScanner.isAbleToGetToken()) {
                 throw new TokenizerException("Found a sequence entry where it is not allowed.");
             }
-            if (ts.addIndent(ts.getCno())) {
+            if (tokenScanner.addIndent(tokenScanner.getCno())) {
                 tokens.add(Token.BLOCK_SEQUENCE_START);
             }
         }
-        ts.setTkGetAble(true);
-        ts.toNext();
+        tokenScanner.setAbleToGetToken(true);
+        tokenScanner.toNext();
         tokens.add(Token.BLOCK_ENTRY);
     }
 
     private void savePossibleTokenKey() {
-        if (ts.isTkGetAble()) {
-            tokenKeyMap.put(ts.getDepth(),
-                    new TokenKey(tokens.size() + taken, ts.getCno()));
+        if (tokenScanner.isAbleToGetToken()) {
+            tokenKeyMap.put(tokenScanner.getDepth(),
+                    new TokenKey(tokens.size() + taken, tokenScanner.getCno()));
         }
     }
 
     private int nextPossibleTokenNo() {
         for (TokenKey tk : tokenKeyMap.values()) {
-            if (tk.tkn > 0) {
-                return tk.tkn;
+            if (tk.tokenNumber > 0) {
+                return tk.tokenNumber;
             }
         }
         return -1;

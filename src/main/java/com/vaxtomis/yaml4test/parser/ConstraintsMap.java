@@ -1,138 +1,159 @@
 package com.vaxtomis.yaml4test.parser;
 
 import com.vaxtomis.yaml4test.tokenizer.TokenType;
-
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static com.vaxtomis.yaml4test.common.Define.*;
+
 /**
- * @description Define the constraints for tokens parser.
+ * <p>
+ * Define the constraints for tokens parser.<br>
  * 定义了分词语法限制的映射关系，路径不通即为语法错误。
- * @author vaxtomis
+ * </p>
+ * <pre>
  *
- * K   -> S         :k-v get key's scalar
- * KS  -> V         :k-v need value
- * VS  -> BE        :block end
- *     -> K         :next key
- * ES  -> E         :next entry
- *     -> BE        :block sequence close
- * BE  -> K         :new key
- *     -> E         :block entry
- *     -> BE        :block end include sequence end and mapping end
- *     -> SE        :stream end
- * V   -> S         :k-v complete
- *     -> C         :get sub class name
- *     -> BMS       :sub mapping start
- *     -> BSS       :sub sequencing start
- * C   -> BMS       :sub class start
- * BMS -> K         :first k-v
- * BSS -> E         :first entry
- * E   -> S         :value of entry
- *     -> C         :get entry class name
- *     -> BMS       :start sub block mapping
+ * Key                to  Scalar             :k-v get key's scalar
+ *
+ * Key-Scalar         to  Value              :k-v need value
+ *
+ * Value-Scalar       to  BlockEnd           :block end
+ *                    to  Key                :next key
+ *
+ * BlockEntry-Scalar  to  BlockEntry         :next entry
+ *                    to  BlockEnd           :block sequence close
+ *
+ * BlockEnd           to  Key                :new key
+ *                    to  BlockEntry         :block entry
+ *                    to  BlockEnd           :block end include
+ *                                            sequence end and mapping end
+ *                    to  StreamEnd          :stream end
+ *
+ * Value              to  Scalar             :k-v complete
+ *                    to  ClassName          :get sub class name
+ *                    to  BlockMappingStart  :sub mapping start
+ *                    to  BlockSequenceStart :sub sequencing start
+ *
+ * ClassName          to  BlockMappingStart  :sub class start
+ *
+ * BlockMappingStart  to  Key                :first k-v
+ *
+ * BlockSequenceStart to  BlockEntry         :first entry
+ *
+ * BlockEntry         to  Scalar             :value of entry
+ *                    to  ClassName          :get entry class name
+ *                    to  BlockMappingStart  :start sub block mapping
+ *
+ * </pre>
+ * @author vaxtomis
  */
 public class ConstraintsMap {
-    private final static HashMap<TokenType, String> TOKEN_MAPPING = new HashMap<>();
+    private final static HashSet<TokenType> TOKEN_SET = new HashSet<>();
     private final static HashMap<String, HashSet<String>> CONSTRAINTS = new HashMap<>();
+
+    private final static String STREAM_START = "STREAM_START";
+    private final static String STREAM_END = "STREAM_END";
+    private final static String KEY = "KEY";
+    private final static String VALUE = "VALUE";
+    private final static String SCALAR = "SCALAR";
+    private final static String CLASSNAME = "CLASSNAME";
+    private final static String BLOCK_MAPPING_START = "BLOCK_MAPPING_START";
+    private final static String BLOCK_SEQUENCE_START = "BLOCK_SEQUENCE_START";
+    private final static String BLOCK_ENTRY = "BLOCK_ENTRY";
+    private final static String BLOCK_END = "BLOCK_END";
+
     static {
-        TOKEN_MAPPING.put(TokenType.STREAM_START, "SS");
-        TOKEN_MAPPING.put(TokenType.STREAM_END, "SE");
-        TOKEN_MAPPING.put(TokenType.KEY, "K");
-        TOKEN_MAPPING.put(TokenType.VALUE, "V");
-        TOKEN_MAPPING.put(TokenType.SCALAR, "S");
-        TOKEN_MAPPING.put(TokenType.CLASSNAME, "C");
-        TOKEN_MAPPING.put(TokenType.BLOCK_MAPPING_START, "BMS");
-        TOKEN_MAPPING.put(TokenType.BLOCK_SEQUENCE_START, "BSS");
-        TOKEN_MAPPING.put(TokenType.BLOCK_ENTRY, "E");
-        TOKEN_MAPPING.put(TokenType.BLOCK_END, "BE");
+        TOKEN_SET.addAll(
+                Arrays.asList(TokenType.values())
+        );
 
 
-        CONSTRAINTS.put("SS", new HashSet<String>() {
+        CONSTRAINTS.put(STREAM_START, new HashSet<String>() {
             {
-                add("BMS");
+                add(BLOCK_MAPPING_START);
             }
         });
 
-        CONSTRAINTS.put("K", new HashSet<String>() {
+        CONSTRAINTS.put(KEY, new HashSet<String>() {
             {
-                add("S");
+                add(SCALAR);
             }
         });
 
-        CONSTRAINTS.put("K-S", new HashSet<String>() {
+        CONSTRAINTS.put(merge(KEY, SCALAR), new HashSet<String>() {
             {
-                add("V");
+                add(VALUE);
             }
         });
 
-        CONSTRAINTS.put("V-S", new HashSet<String>() {
+        CONSTRAINTS.put(merge(VALUE, SCALAR), new HashSet<String>() {
             {
-                add("BE");
-                add("K");
+                add(BLOCK_END);
+                add(KEY);
             }
         });
 
-        CONSTRAINTS.put("E-S", new HashSet<String>() {
+        CONSTRAINTS.put(merge(BLOCK_ENTRY, SCALAR), new HashSet<String>() {
             {
-                add("E");
-                add("BE");
+                add(BLOCK_ENTRY);
+                add(BLOCK_END);
             }
         });
 
-        CONSTRAINTS.put("BE", new HashSet<String>() {
+        CONSTRAINTS.put(BLOCK_END, new HashSet<String>() {
             {
-                add("K");
-                add("E");
-                add("BE");
-                add("SE");
+                add(KEY);
+                add(BLOCK_ENTRY);
+                add(BLOCK_END);
+                add(STREAM_END);
             }
         });
 
-        CONSTRAINTS.put("V", new HashSet<String>() {
+        CONSTRAINTS.put(VALUE, new HashSet<String>() {
             {
-                add("S");
-                add("C");
-                add("BMS");
-                add("BSS");
+                add(SCALAR);
+                add(CLASSNAME);
+                add(BLOCK_MAPPING_START);
+                add(BLOCK_SEQUENCE_START);
             }
         });
 
-        CONSTRAINTS.put("C", new HashSet<String>() {
+        CONSTRAINTS.put(CLASSNAME, new HashSet<String>() {
             {
-                add("BMS");
+                add(BLOCK_MAPPING_START);
             }
         });
 
-        CONSTRAINTS.put("BMS", new HashSet<String>() {
+        CONSTRAINTS.put(BLOCK_MAPPING_START, new HashSet<String>() {
             {
-                add("K");
+                add(KEY);
             }
         });
 
-        CONSTRAINTS.put("BSS", new HashSet<String>() {
+        CONSTRAINTS.put(BLOCK_SEQUENCE_START, new HashSet<String>() {
             {
-                add("E");
+                add(BLOCK_ENTRY);
             }
         });
 
-        CONSTRAINTS.put("E", new HashSet<String>() {
+        CONSTRAINTS.put(BLOCK_ENTRY, new HashSet<String>() {
             {
-                add("S");
-                add("C");
-                add("BMS");
+                add(SCALAR);
+                add(CLASSNAME);
+                add(BLOCK_MAPPING_START);
             }
         });
     }
     public static boolean isAllowed(Parser.SlidingWindow window) {
-        String doublePre = TOKEN_MAPPING.get(window.getTokenType("DPre"));
-        String pre = TOKEN_MAPPING.get(window.getTokenType("Pre"));
-        if (pre == null || doublePre == null) {
+        TokenType doublePre = window.getTokenType(DOUBLE_PREVIOUS);
+        TokenType pre = window.getTokenType(PREVIOUS);
+        if (!TOKEN_SET.contains(pre) || !TOKEN_SET.contains(doublePre)) {
             return true;
         }
-
-        String cur = TOKEN_MAPPING.get(window.getTokenType("Cur"));
-        HashSet<String> single = CONSTRAINTS.get(pre);
-        HashSet<String> combine = CONSTRAINTS.get(doublePre + "-" + pre);
+        String cur = window.getTokenType(CURRENT).name();
+        HashSet<String> single = CONSTRAINTS.get(pre.name());
+        HashSet<String> combine = CONSTRAINTS.get(merge(doublePre.name(), pre.name()));
         if (combine != null) {
             return combine.contains(cur);
         }
@@ -140,5 +161,9 @@ public class ConstraintsMap {
             return single.contains(cur);
         }
         return false;
+    }
+
+    private static String merge(String tokenNameA, String tokenNameB) {
+        return tokenNameA + "-" + tokenNameB;
     }
 }

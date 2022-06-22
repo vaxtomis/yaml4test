@@ -1,7 +1,9 @@
 package com.vaxtomis.yaml4test.tokenizer;
 
 /**
- * @description Token.
+ * <p>
+ * Token.
+ * </p>
  */
 public class Token {
     private TokenType type;

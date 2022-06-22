@@ -1,16 +1,18 @@
 package com.vaxtomis.yaml4test.parser;
 
-import com.vaxtomis.yaml4test.tokenizer.Define;
+import com.vaxtomis.yaml4test.common.Define;
 
 import java.util.*;
 
-import static com.vaxtomis.yaml4test.tokenizer.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.EMPTY;
+import static com.vaxtomis.yaml4test.common.Define.VALUE;
 
 /**
- * @description
- * 遍历 EventList，并对符合条件的 Event 进行修改。
- * 需要传入需要修改的属性名和值 (HashMap)。
+ * <p>
+ * 遍历 EventList，并对符合条件的 Event 进行修改。<br>
+ * 需要传入需要修改的属性名和值 (HashMap)。<br>
  * 添加了 EventList 切分，用于降低修改 EventList 的开销。
+ * </p>
  * @author vaxtomis
  */
 public class EventOperator {
@@ -64,6 +66,7 @@ public class EventOperator {
     }
 
     /**
+     *
      * @return LinkedList events
      */
     public LinkedList<Event> cutEvents() {
@@ -80,14 +83,14 @@ public class EventOperator {
     }
 
     /**
-     * 切分 Events，只取参与修改的部分，降低运行时开销。
+     * 切分 Events，只取参与修改的部分，降低运行时开销。<br>
      * 切分完成的 EventList 依然通过 Producer 创建对应的 Map，
      * 但是会缺失未修改的类。
-     *
-     * start end 用来标记 BLOCK，deep 保证 BLOCK 粒度最大。
+     * <br>
+     * start end 用来标记 BLOCK，deep 保证 BLOCK 粒度最大。<br>
      * 检测到当前 BLOCK 中存在需要修改的 Event 名，将整个 BLOCK 的 Events
      * 放到 cutEvents 中。
-     * @param modifiedEventNames
+     * @param modifiedEventNames Name of event which be modified
      */
     private LinkedList<Event> getCutEvents(Set<String> modifiedEventNames) {
         LinkedList<Event> cutEvents = new LinkedList<>();
@@ -185,7 +188,7 @@ public class EventOperator {
                 fullName = getFullName();
                 //System.out.println(fullName);
                 if (modifyMap.containsKey(fullName)) {
-                    EntryEvent modifiedEvent = new EntryEvent("value", modifyMap.get(fullName));
+                    EntryEvent modifiedEvent = new EntryEvent(VALUE, modifyMap.get(fullName));
                     modifiedEvents.removeLast();
                     modifiedEvents.add(modifiedEvent);
                 }
@@ -239,7 +242,7 @@ public class EventOperator {
                 fullName = getFullName();
                 //System.out.println(fullName);
                 if (fullName.equals(modifiedEventName)) {
-                    EntryEvent modifiedEvent = new EntryEvent("value", value);
+                    EntryEvent modifiedEvent = new EntryEvent(VALUE, value);
                     modifiedEvents.removeLast();
                     modifiedEvents.add(modifiedEvent);
                     return true;

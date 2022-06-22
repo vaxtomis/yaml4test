@@ -1,9 +1,10 @@
 package com.vaxtomis.yaml4test.parser;
 
 /**
- * @description
- * Indicator for get name event.
+ * <p>
+ * Indicator for get name event.<br>
  * 获取键值对中的键的事件标志。
+ * </p>
  */
 public class NameEvent extends Event {
     private String name;

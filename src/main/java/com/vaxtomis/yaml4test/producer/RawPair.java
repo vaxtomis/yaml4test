@@ -2,8 +2,10 @@ package com.vaxtomis.yaml4test.producer;
 import java.util.Objects;
 
 /**
- * @description Unassigned key-value pair.
+ * <p>
+ * Unassigned key-value pair.<br>
  * 未分配的键值对
+ * </p>
  * @author vaxtomis
  */
 public class RawPair<T> {

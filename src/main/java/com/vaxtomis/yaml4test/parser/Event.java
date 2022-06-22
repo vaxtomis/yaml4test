@@ -1,7 +1,9 @@
 package com.vaxtomis.yaml4test.parser;
 
 /**
- * @description Event.
+ * <p>
+ * Event.
+ * </p>
  */
 public class Event implements Cloneable {
     private EventType type;

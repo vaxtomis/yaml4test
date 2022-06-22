@@ -5,7 +5,7 @@ package com.vaxtomis.yaml4test.converter;
  */
 class DateConverter extends AbstractCustomConverter {
     @Override
-    public Object customConvert(String getV) {
+    public Object customConvert(String pairValue) {
         return null;
     }
 }

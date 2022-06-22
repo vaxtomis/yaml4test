@@ -1,22 +1,40 @@
-package com.vaxtomis.yaml4test.tokenizer;
+package com.vaxtomis.yaml4test.common;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * @description Static condition.
- * '\u0085' Next Line
- * '\u2028' Line Separator
+ * <p>
+ * Static condition.<br>
+ * '\u0085' Next Line<br>
+ * '\u2028' Line Separator<br>
  * '\u2029' Paragraph Separator
+ * </p>
  **/
 public class Define {
     public final static String CLASS = "class";
-
     public final static String VALUE = "value";
-
     public final static String STRING = "java.lang.String";
     public final static String EMPTY = "";
+
+    public final static String MATCH_LONG = "^(-|\\+)?\\d+$";
+    public final static String MATCH_FLOAT = "^(-?\\d+)(\\.\\d+)?$";
+    public final static String MATCH_BYTE = "^[0-9a-fA-F]+$";
+    public final static String MATCH_BIG_DECIMAL = "^(-?\\d+)(\\.\\d+)?$";
+    public final static String MATCH_BIG_INTEGER = "^(-|\\+)?\\d+$";
+
+    public final static String MAPPING = "MAPPING";
+    public final static String SEQUENCE = "SEQUENCE";
+    public final static String PRIMITIVE = "PRIMITIVE";
+    public final static String COPY_INSTANCE = "CopyInstance";
+    public final static String COPY_INSTANCE_DOT = "CopyInstance.";
+
+    public final static int DOUBLE_PREVIOUS = -2;
+    public final static int PREVIOUS = -1;
+    public final static int CURRENT = 0;
+
+
     public final static String LINEBREAK = "\n\u0085\u2028\u2029";
     public final static String RN = "\r\n";
     public final static String BLANK_T = " \t";

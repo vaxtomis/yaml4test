@@ -4,10 +4,10 @@ import java.util.LinkedList;
 import java.util.WeakHashMap;
 
 /**
- * @description
- * Used to store key-value pairs for later injection.
+ * <p>
+ * Used to store key-value pairs for later injection.<br>
  * 存储 {@link RawPair} 的容器类。
- *
+ * </p>
  * @author vaxtomis
  */
 public class PairContainer {

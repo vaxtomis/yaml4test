@@ -1,7 +1,9 @@
 package com.vaxtomis.yaml4test.tokenizer;
 
 /**
- * @description Scalar Token.
+ * <p>
+ * Scalar Token.
+ * </p>
  */
 public class ScalarToken extends Token {
     private final char style;

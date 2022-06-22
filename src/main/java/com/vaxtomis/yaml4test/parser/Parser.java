@@ -1,15 +1,20 @@
 package com.vaxtomis.yaml4test.parser;
 
+import com.vaxtomis.yaml4test.common.Define;
 import com.vaxtomis.yaml4test.tokenizer.*;
 import com.vaxtomis.yaml4test.YamlFactory;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.LinkedList;
+
+import static com.vaxtomis.yaml4test.common.Define.*;
 import static com.vaxtomis.yaml4test.tokenizer.TokenType.*;
 
 /**
- * @description Parser.
+ * <p>
+ * Parser.
+ * <p/>
  * @author vaxtomis
  */
 public class Parser {
@@ -38,8 +43,7 @@ public class Parser {
     }
 
     /**
-     * @description
-     * Sliding Window. Used to store recently used tokens.
+     * Sliding Window. Used to store recently used tokens.<br>
      * 滑动窗口，用来缓存最近经过的 Token。
      */
     class SlidingWindow {
@@ -63,57 +67,56 @@ public class Parser {
             }
         }
 
-        public Token getCur() {
+        public Token getCurrent() {
             if (cursor == -1) {
                 return null;
             }
             return tks[cursor];
         }
 
-        public Token getPre() {
-            if (cursor-1 < 0) {
+        public Token getPrevious() {
+            if (cursor + PREVIOUS < 0) {
                 return null;
             }
-            return tks[cursor-1];
+            return tks[cursor + PREVIOUS];
         }
 
-        public Token getDoublePre() {
-            if (cursor-2 < 0) {
+        public Token getDoublePrevious() {
+            if (cursor + DOUBLE_PREVIOUS < 0) {
                 return null;
             }
-            return tks[cursor-2];
+            return tks[cursor + DOUBLE_PREVIOUS];
         }
 
         /**
-         * Get the [cur, pre, pre-pre] type of Token in sliding window.
+         * Get the [cur, pre, pre-pre] type of Token in sliding window.<br>
          * 从滑动窗口中获取当前，上一个，上上个 Token。
          */
-        public TokenType getTokenType(String type) {
-            Token tk = null;
+        public TokenType getTokenType(int type) {
+            Token token = null;
             switch (type) {
-                case "DPre":
-                    tk = getDoublePre();
+                case DOUBLE_PREVIOUS:
+                    token = getDoublePrevious();
                     break;
-                case "Pre":
-                    tk = getPre();
+                case PREVIOUS:
+                    token = getPrevious();
                     break;
-                case "Cur":
-                    tk = getCur();
+                case CURRENT:
+                    token = getCurrent();
                     break;
                 default:
 
             }
-            if (tk == null) {
+            if (token == null) {
                 return null;
-            } else {
-                return tk.getType();
             }
+            return token.getType();
         }
     }
 
     /**
      * Traverse the Token to determine the correctness of the syntax,
-     * and obtain a set of Events.
+     * and obtain a set of Events.<br>
      * 遍历 Token 判断语法的正确性，得到一组 Events。
      */
     private void loopProcessing() {
@@ -133,16 +136,16 @@ public class Parser {
     }
 
     /**
-     * ConstraintMap defines Token grammar rules
-     * Generates corresponding Event arrangement according to the grammar rules.
-     * 限制路径图定义了 Token 的语法规则，根据语法规则生成对应的 Event 序列。
+     * ConstraintMap defines Token grammar rules<br>
+     * Generates corresponding Event arrangement according to the grammar rules.<br>
+     * 限制路径图定义了 Token 的语法规则，根据语法规则生成对应的 Event 序列。<br>
      */
     private void fetchEvent() {
         if (!ConstraintsMap.isAllowed(window)) {
             throw new ParserException("Found a Token where it is not allowed."
-                    + " Token: " + window.getCur().toString());
+                    + " Token: " + window.getCurrent().toString());
         }
-        Token tk = window.getCur();
+        Token tk = window.getCurrent();
         switch (tk.getType()) {
             case SCALAR:
                 handleScalar((ScalarToken) tk);
@@ -164,22 +167,26 @@ public class Parser {
         }
     }
     private void handleScalar(ScalarToken tk) {
-        Token pre = window.getPre();
-        if (pre.getType() == KEY) {
-            events.add(new NameEvent(tk.getValue()));
-        }
-        else if (pre.getType() == VALUE) {
-            events.add(new ValueEvent(tk.getStyle(), tk.getValue()));
-        }
-        else if (pre.getType() == BLOCK_ENTRY) {
-            events.add(new EntryEvent("value", tk.getValue()));
+        Token pre = window.getPrevious();
+        switch (pre.getType()) {
+            case KEY:
+                events.add(new NameEvent(tk.getValue()));
+                break;
+            case VALUE:
+                events.add(new ValueEvent(tk.getStyle(), tk.getValue()));
+                break;
+            case BLOCK_ENTRY:
+                events.add(new EntryEvent(Define.VALUE, tk.getValue()));
+                break;
+            default:
+
         }
     }
 
     private void handleClassName(ClassNameToken tk) {
-        Token pre = window.getPre();
+        Token pre = window.getPrevious();
         if (pre.getType() == BLOCK_ENTRY) {
-            events.add(new EntryEvent("class", tk.getName()));
+            events.add(new EntryEvent(CLASS, tk.getName()));
         } else {
             events.add(new ClassNameEvent(tk.getName()));
         }
@@ -195,12 +202,12 @@ public class Parser {
 
     private void handleMappingStart() {
         events.add(Event.MAPPING_START);
-        blockStack.push(window.getCur());
+        blockStack.push(window.getCurrent());
     }
 
     private void handleSequenceStart() {
         events.add(Event.SEQUENCE_START);
-        blockStack.push(window.getCur());
+        blockStack.push(window.getCurrent());
     }
 
     public LinkedList<Event> getEventList() {
