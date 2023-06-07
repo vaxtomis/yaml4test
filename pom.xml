@@ -9,6 +9,7 @@
     <version>0.0.3</version>
 
     <name>yaml4test</name>
+    <url>https://github.com/vaxtomis/yaml4test</url>
     <description>Tool for unit testing with yaml files.</description>
 
     <properties>
@@ -49,7 +50,7 @@
     </dependencies>
 
     <!-- 打包到 Maven 公有库 -->
-    <distributionManagement>
+    <!--<distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
@@ -83,7 +84,7 @@
                 </configuration>
             </plugin>
 
-            <!-- 上传到共有库插件 -->
+            &lt;!&ndash; 上传到共有库插件 &ndash;&gt;
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -123,7 +124,7 @@
                         <goals>
                             <goal>jar</goal>
                         </goals>
-                        <configuration> <!-- add this to disable checking -->
+                        <configuration> &lt;!&ndash; add this to disable checking &ndash;&gt;
                             <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                     </execution>
@@ -146,5 +147,5 @@
             </plugin>
 
         </plugins>
-    </build>
+    </build>-->
 </project>

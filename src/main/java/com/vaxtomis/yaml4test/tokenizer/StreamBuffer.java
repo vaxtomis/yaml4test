@@ -140,7 +140,9 @@ class StreamBuffer implements BufferOperate {
                     ch == '\r' && buff.charAt(cursor - start) != '\n') {
                 columnNumber = 0;
                 lineNumber++;
-            } else if (ch != '\uFEFF') columnNumber++;
+            } else if (ch != '\uFEFF') {
+                columnNumber++;
+            }
         }
         return buff;
     }
@@ -148,7 +150,6 @@ class StreamBuffer implements BufferOperate {
     /**
      * The cursor advances, and if it reaches the end of the builder, reads new content.
      * @param length Length
-     * @return null
      */
     public void forward(int length) {
         if(cursor + 1 + length >= builder.length()){

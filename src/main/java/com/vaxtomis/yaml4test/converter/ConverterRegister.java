@@ -83,7 +83,6 @@ public class ConverterRegister {
      * @param field 被注入类的对应被注入属性的 Field
      * @param beInject 被注入的类实例对象
      * @param rawPairValue 要注入的信息
-     * @return
      */
     public static void injectObjs(Class<?> componentType, Field field, Object beInject, Object rawPairValue) {
         String[] pairValueArray = (String[]) rawPairValue;

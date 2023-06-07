@@ -15,8 +15,8 @@ public abstract class AbstractCustomConverter extends AbstractConverter implemen
     @Override
     public void convertObjs(Object newArray, String[] pairValueArray) {
         for (int i = 0; i < pairValueArray.length; i++) {
-            String getV = pairValueArray[i];
-            Array.set(newArray, i, customConvert(getV));
+            String pairValue = pairValueArray[i];
+            Array.set(newArray, i, customConvert(pairValue));
         }
     }
 }

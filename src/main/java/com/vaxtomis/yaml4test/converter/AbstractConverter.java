@@ -10,12 +10,12 @@ import static com.vaxtomis.yaml4test.common.Define.*;
  * @author vaxtomis
  */
 public abstract class AbstractConverter implements Convert {
-    public boolean setterInject(Method method, Object obj, Object getV) {
+    public boolean setterInject(Method method, Object obj, Object value) {
         if (method == null || obj == null) {
             return false;
         }
         try {
-            method.invoke(obj, getV);
+            method.invoke(obj, value);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
